@@ -1,4 +1,4 @@
-import { _decorator, BoxCollider, CCFloat, CCInteger, clamp, clamp01, Component, game, Material, Node, ParticleSystem, Quat, RigidBody, Vec2, Vec3, Vec4 } from 'cc';
+import { _decorator, BoxCollider, CCFloat, CCInteger, clamp01, Component, game, Material, Node, ParticleSystem, Quat, RigidBody, Vec3, Vec4 } from 'cc';
 import { CheckPointManager } from './CheckPointManager';
 import MapSplineManager from './MapSplineManager';
 import { BaseGraphicCarRotationModule } from './BaseGraphicCarRotationModule';
@@ -12,6 +12,17 @@ export abstract class BaseMovement extends Component {
     public currentIndex: number = 0;
     public maxSpeed: number = 100;
     public isStartGame: boolean = false;
+
+    protected isFallOutOfRoad: boolean = false;
+    protected isCheckGround: boolean = false;
+    protected onDie: boolean = false;
+
+    private currentPosition: Vec3 = new Vec3();
+    private currentRotation: Quat = new Quat();
+    private currentEulerAngles: Vec3 = new Vec3();
+    private currentCaculatorPosition: Vec3 = new Vec3();
+    private currentPoint1Rotation: Vec3 = new Vec3();
+    private currentPoint2Rotation: Vec3 = new Vec3();
 
     @property({ group: { name: 'Car Settings' , displayOrder: 1}, type: CCInteger }) 
     public rank: number = 0;
@@ -27,13 +38,6 @@ export abstract class BaseMovement extends Component {
 
     @property({ group: { name: 'Module' , displayOrder: 4}, type: BaseGraphicCarRotationModule }) 
     protected rotationModule: BaseGraphicCarRotationModule;
-
-    private currentPosition: Vec3 = new Vec3();
-    private currentRotation: Quat = new Quat();
-    private currentEulerAngles: Vec3 = new Vec3();
-    private currentCaculatorPosition: Vec3 = new Vec3();
-    private currentPoint1Rotation: Vec3 = new Vec3();
-    private currentPoint2Rotation: Vec3 = new Vec3();
 
     //#region Physic Propeties
 
@@ -172,26 +176,15 @@ export abstract class BaseMovement extends Component {
 
     //#endregion
 
-
-    @property(Node)
-    rotateGraphicNode: Node;
-
-   
-    isFallOutOfRoad: boolean = false;
-    isCheckGround: boolean = false;
-    onDie: boolean = false;
+    //#region GameState
 
     resetState(): void
     {
         this.positionModule.resetState();
         this.rotationModule.resetState();
-
-        // this.graphicOffset = new Vec3(0,0,0);
-        this.physicBody.node.setPosition(new Vec3(0,0,0));
+        this.physicBody.node.setPosition(Vec3.ZERO);
         this.physicBody.clearState();
-        
         this.graphicLocalPostLerpTime = 0.0;
-        
         this.isFallOutOfRoad = false;
         this.isCheckGround = false;
     }
@@ -215,18 +208,14 @@ export abstract class BaseMovement extends Component {
         var reviveContent = CheckPointManager.current.revive();
         this.currentIndex = reviveContent.indexRevive;
         this.revivePosition(this.currentIndex);
-        var rotation = MapSplineManager.current.roadPoints[this.currentIndex].eulerAngles.clone();
         this.progress = this.currentIndex;
         this.colliderNode.enabled = true;
-    
-        if (Math.abs(rotation.y - reviveContent.rotation.y) > 150) rotation.y -= 360;
-        if (Math.abs(rotation.x - reviveContent.rotation.x) > 150) rotation.x -= 360;
-    
-        this.node.eulerAngles = rotation;
+        var rotation = MapSplineManager.current.roadPoints[this.currentIndex].eulerAngles;
+        this.convertVector(this.node.eulerAngles,rotation,reviveContent.rotation);
         this.rotationModule.localGraphicAngle = this.carGraphic.eulerAngles;
     }
 
     abstract revivePosition(index: number) : void;
 
-
+    //#endregion
 }
