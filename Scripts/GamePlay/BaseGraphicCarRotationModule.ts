@@ -6,10 +6,7 @@ const { ccclass, property } = _decorator;
 export abstract class BaseGraphicCarRotationModule extends Component {
     @property(Node)
     rotateGraphicNode: Node;
- 
     currentGraphicRotate: Vec2 = new Vec2(0,0);
-    localGraphicAngle: Vec3;
-
 
     protected movement: BaseMovement;
 
@@ -22,4 +19,5 @@ export abstract class BaseGraphicCarRotationModule extends Component {
     }
     
     abstract updateCarGraphic(dt: number): void;
+    abstract teleport(): void;
 }

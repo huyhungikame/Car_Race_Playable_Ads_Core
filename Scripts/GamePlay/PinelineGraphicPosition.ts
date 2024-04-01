@@ -4,7 +4,6 @@ const { ccclass, property } = _decorator;
 
 @ccclass('PinelineGraphicPosition')
 export class PinelineGraphicPosition extends BaseGraphicCarPositionModule {
-
     updateCarGraphic(dt: number): void {
         // var roadPoint = MapSplineManager.current.roadPoints[this.currentIndex];
         // var roadLateral = MapSplineManager.current.roadLaterals[roadPoint.lateralIndex];
@@ -54,6 +53,9 @@ export class PinelineGraphicPosition extends BaseGraphicCarPositionModule {
         // this.materialWheel(dt);
     }
     
+    teleport(): void {
+       
+    }
 }
 
 

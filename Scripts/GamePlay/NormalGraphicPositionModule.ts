@@ -14,4 +14,8 @@ export class NormalGraphicPositionModule extends BaseGraphicCarPositionModule {
         this.movement.updateGraphicLocalPos();
         this.movement.materialWheel(dt);
     }
+
+    teleport(): void {
+       
+    }
 }

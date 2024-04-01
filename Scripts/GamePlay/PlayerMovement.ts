@@ -124,7 +124,6 @@ export class PlayerMovement extends BaseMovement {
         input.on(Input.EventType.TOUCH_START, this.onMouseDown, this);
         input.on(Input.EventType.TOUCH_MOVE, this.onMouseMove, this);
 
-        console.log(this.node)
         this.length = MapSplineManager.current.roadPoints.length;
         this.currentIndex = this.startIndex;
         this.cameraCurrentIndex = this.currentIndex + this.cameraOffsetIndex;
@@ -136,7 +135,7 @@ export class PlayerMovement extends BaseMovement {
         this.node.rotation = rotation;
         this.setRotation();
         this.setCameraPositionAndRotation();
-        this.rotationModule.localGraphicAngle = this.carGraphic.eulerAngles;
+        this.rotationModule.teleport();
         this.lastCameraTargetX = this.node.inverseTransformPoint(new Vec3(), this.physicBody.node.worldPosition.clone()).x;
         this.carMaterial.setProperty("offset", this.offsetMaterial);
         this.carMaterial.setProperty("strength", this.strength);
@@ -247,7 +246,7 @@ export class PlayerMovement extends BaseMovement {
         this.offsetMaterial.w = value;
         this.carMaterial.setProperty("offset", this.offsetMaterial);
         // this.carMaterial.setProperty("strength", this.strength);
-        this.rotateGraphicNode.eulerAngles = new Vec3(this.currentXRotate, this.yRatio * this.rotationModule.currentGraphicRotate.x, this.zRatio * this.rotationModule.currentGraphicRotate.y) 
+        this.rotationModule.rotateGraphicNode.eulerAngles = new Vec3(this.currentXRotate, this.yRatio * this.rotationModule.currentGraphicRotate.x, this.zRatio * this.rotationModule.currentGraphicRotate.y) 
     }
 
 

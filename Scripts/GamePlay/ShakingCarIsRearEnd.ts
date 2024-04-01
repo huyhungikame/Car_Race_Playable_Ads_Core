@@ -7,4 +7,8 @@ export class ShakingCarIsRearEnd extends BaseGraphicCarRotationModule {
     updateCarGraphic(dt: number): void {
         
     }
+
+    teleport(): void {
+        
+    }
 }

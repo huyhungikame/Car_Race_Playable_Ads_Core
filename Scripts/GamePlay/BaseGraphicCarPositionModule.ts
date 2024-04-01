@@ -20,4 +20,5 @@ export abstract class BaseGraphicCarPositionModule extends Component {
     }
 
     abstract updateCarGraphic(dt: number): void;
+    abstract teleport(): void;
 }

@@ -41,9 +41,6 @@ export abstract class BaseMovement extends Component {
 
     //#region Physic Propeties
 
-    @property({ group: { name: 'Physic' , displayOrder: 2}, type: Node }) 
-    public carGraphic: Node;
-
     @property({ group: { name: 'Physic' , displayOrder: 2}, type: RigidBody }) 
     protected physicBody: RigidBody;
 
@@ -212,7 +209,7 @@ export abstract class BaseMovement extends Component {
         this.colliderNode.enabled = true;
         var rotation = MapSplineManager.current.roadPoints[this.currentIndex].eulerAngles;
         this.convertVector(this.node.eulerAngles,rotation,reviveContent.rotation);
-        this.rotationModule.localGraphicAngle = this.carGraphic.eulerAngles;
+        this.rotationModule.teleport();
     }
 
     abstract revivePosition(index: number) : void;

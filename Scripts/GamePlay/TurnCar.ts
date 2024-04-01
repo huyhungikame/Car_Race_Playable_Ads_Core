@@ -4,8 +4,9 @@ const { ccclass, property } = _decorator;
 
 @ccclass('TurnCar')
 export class TurnCar extends BaseGraphicCarRotationModule {
+
         // graphicOffset : Vec3 = new Vec3(0,0,0);
-    
+        // localGraphicAngle: Vec3;
     updateCarGraphic(dt: number): void {
         // var roadPoint = MapSplineManager.current.roadPoints[this.currentIndex];
         // var roadLateral = MapSplineManager.current.roadLaterals[roadPoint.lateralIndex];
@@ -53,5 +54,9 @@ export class TurnCar extends BaseGraphicCarRotationModule {
         // // this.localGraphicAngle = Vec3.lerp(new Vec3(),new Vec3(0, this.currentGraphicRotate, 0), this.localGraphicAngle, 0.35);
         // // this.carGraphic.eulerAngles = this.localGraphicAngle;
         // this.materialWheel(dt);
+    }
+
+    teleport(): void {
+        // this.rotationModule.localGraphicAngle = this.positionModule.positionGraphic.eulerAngles;
     }
 }
