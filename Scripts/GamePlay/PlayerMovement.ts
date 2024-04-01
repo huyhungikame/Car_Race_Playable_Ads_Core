@@ -1,29 +1,62 @@
-import { _decorator, CCBoolean, clamp, clamp01, Enum, EventTouch, game, Input, input, Node, Quat, Vec2, Vec3, Tween, ParticleSystem, Game, Material, Vec4, Camera, lerp, CCFloat, CCInteger, Color, math } from 'cc';
+import { _decorator, CCBoolean, clamp, clamp01, Enum, EventTouch, game, Input, input, Node, Quat, Vec2, Vec3, Tween, ParticleSystem, Game, Material, Vec4, Camera, lerp, CCFloat, CCInteger, Color, math, Button, EventHandler, Component } from 'cc';
 import { BaseMovement } from './BaseMovement';
 import { GameManager } from './GameManager';
-import { ReviveView } from '../../../../Scripts/UI/ReviveView';
 import { ScriptExtensions } from '../ScriptExtensions';
 import MapSplineManager from './MapSplineManager';
 import { CheckPointManager } from './CheckPointManager';
+import { ReviveView } from '../UI/ReviveView';
 const { ccclass, property} = _decorator;
-
-// export enum PlayerControlType {
-    // Normal = 0,
-    // Hard_Drive = 1
-// }
 
 @ccclass('PlayerMovement')
 export class PlayerMovement extends BaseMovement {
+
+    //#region Camera Properties
+
+    @property({ group: { name: 'Camera' , displayOrder: 1}, type: CCBoolean }) 
+    controlCamera: boolean = true;
+
+    @property({ group: { name: 'Camera' , displayOrder: 1}, type: Node }) 
+    cameraTransform: Node;
+
+    @property({ group: { name: 'Camera' , displayOrder: 1}, type: Camera }) 
+    camera: Camera;
+
+    @property({ group: { name: 'Camera' , displayOrder: 1}, type: Node }) 
+    cameraPosSmooth: Node;
+
+    @property({ group: { name: 'Camera' , displayOrder: 1}, type: Node }) 
+    cameraForwardPosSmooth: Node;
+
+    //#endregion
+
+    @property(ReviveView)
+    uiReviveView : ReviveView;
+
+
+
+
+
+    //#region Camera
+
+    //#endregion
+
+
+
+
+
+
+
+
+
+
+
+
+
     public endGame: boolean = false;
 
-    @property([Node])
-    reviveViews : Node[] = [];
+ 
 
-    // @property ({type:Enum(PlayerControlType)})
-    // controlType: PlayerControlType = PlayerControlType.Normal;
 
-    @property(Node)
-    cameraTransform: Node;
 
     @property({type: CCBoolean})
     useFallOut: false;
@@ -39,21 +72,13 @@ export class PlayerMovement extends BaseMovement {
     timeFallOut: number = 0.0;
     cameraValue: number = 0.0;
 
-    @property(Camera)
-    camera: Camera;
 
-    @property(CCBoolean)
-    controlCamera: boolean = true;
-
-    @property(ParticleSystem)
+    @property({ group: { name: 'Effect' , displayOrder: 3}, type: ParticleSystem }) 
     windEffect: ParticleSystem;
 
     lastCameraTargetX: number;
-    @property(Node)
-    cameraPosSmooth: Node;
 
-    @property(Node)
-    cameraForwardPosSmooth: Node;
+
 
     @property(CCFloat)
     yRatio: number = -17.5;
@@ -119,7 +144,6 @@ export class PlayerMovement extends BaseMovement {
     smokeEffect2: Node;
 
     start() {
-        // this.camera.camera.initGeometryRenderer();
         input.on(Input.EventType.TOUCH_END, this.onMouseUp, this);
         input.on(Input.EventType.TOUCH_START, this.onMouseDown, this);
         input.on(Input.EventType.TOUCH_MOVE, this.onMouseMove, this);
@@ -225,7 +249,6 @@ export class PlayerMovement extends BaseMovement {
         }
 
         this.cameraForwardPosSmooth.position = position;
-        // this.camera?.camera?.geometryRenderer?.addSphere(this.cameraForwardPosSmooth.worldPosition, 1, Color.GREEN, 5);
     }
 
     setRotation(){
@@ -429,10 +452,7 @@ export class PlayerMovement extends BaseMovement {
         this.deltaInputHorizontal = 0.0;
         this.timeFallOut = 0;
         setTimeout(() => {
-            for (let i = 0; i < this.reviveViews.length; i++) {
-                this.reviveViews[i].active = true;
-                this.reviveViews[i].getComponent(ReviveView).TweenPopup();
-            }   
+            this.uiReviveView.TweenPopup();   
         }, 350)    
         this.windEffect.node.active = false;
         this.smokeEffect1.active = false;

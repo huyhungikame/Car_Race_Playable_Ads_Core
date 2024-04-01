@@ -24,13 +24,13 @@ export abstract class BaseMovement extends Component {
     private currentPoint1Rotation: Vec3 = new Vec3();
     private currentPoint2Rotation: Vec3 = new Vec3();
 
-    @property({ group: { name: 'Car Settings' , displayOrder: 1}, type: CCInteger }) 
+    @property({ group: { name: 'Settings' , displayOrder: 1}, type: CCInteger }) 
     public rank: number = 0;
 
-    @property({ group: { name: 'Car Settings' , displayOrder: 1}, type: CCFloat }) 
+    @property({ group: { name: 'Settings' , displayOrder: 1}, type: CCFloat }) 
     public progress: number = 0;
 
-    @property({ group: { name: 'Car Settings' , displayOrder: 1}, type: CCFloat }) 
+    @property({ group: { name: 'Settings' , displayOrder: 1}, type: CCFloat }) 
     protected speedFactor: number = 0.25;
 
     @property({ group: { name: 'Module' , displayOrder: 4}, type: BaseGraphicCarPositionModule }) 
