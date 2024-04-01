@@ -2,6 +2,9 @@ import { _decorator, CCBoolean, clamp, clamp01, Enum, EventTouch, game, Input, i
 import { BaseMovement } from './BaseMovement';
 import { GameManager } from './GameManager';
 import { ReviveView } from '../../../../Scripts/UI/ReviveView';
+import { ScriptExtensions } from '../ScriptExtensions';
+import MapSplineManager from './MapSplineManager';
+import { CheckPointManager } from './CheckPointManager';
 const { ccclass, property} = _decorator;
 
 // export enum PlayerControlType {
@@ -121,18 +124,19 @@ export class PlayerMovement extends BaseMovement {
         input.on(Input.EventType.TOUCH_START, this.onMouseDown, this);
         input.on(Input.EventType.TOUCH_MOVE, this.onMouseMove, this);
 
-        this.length = this.splineManager.roadPoints.length;
+        console.log(this.node)
+        this.length = MapSplineManager.current.roadPoints.length;
         this.currentIndex = this.startIndex;
         this.cameraCurrentIndex = this.currentIndex + this.cameraOffsetIndex;
         
-        this.player.position = this.splineManager.roadPoints[this.startIndex].position.clone();
-        this.cameraForwardPosSmooth.setPosition(this.splineManager.roadPoints[this.cameraCurrentIndex].position.clone())
+        this.node.position = MapSplineManager.current.roadPoints[this.startIndex].position.clone();
+        this.cameraForwardPosSmooth.setPosition(MapSplineManager.current.roadPoints[this.cameraCurrentIndex].position.clone())
         this.progress = this.startIndex;
-        var rotation = this.splineManager.roadPoints[this.startIndex].rotation.clone();
-        this.player.rotation = rotation;
+        var rotation = MapSplineManager.current.roadPoints[this.startIndex].rotation.clone();
+        this.node.rotation = rotation;
         this.setRotation();
         this.setCameraPositionAndRotation();
-        this.localGraphicAngle = this.carGraphic.eulerAngles;
+        this.rotationModule.localGraphicAngle = this.carGraphic.eulerAngles;
         this.lastCameraTargetX = this.node.inverseTransformPoint(new Vec3(), this.physicBody.node.worldPosition.clone()).x;
         this.carMaterial.setProperty("offset", this.offsetMaterial);
         this.carMaterial.setProperty("strength", this.strength);
@@ -158,7 +162,7 @@ export class PlayerMovement extends BaseMovement {
         if(GameManager.instance.openningTutorial) GameManager.instance.closeTutorial();
         if(!this.isStartGame) return;
         this.isMouseDown = true;
-        this.currentGraphicRotate = new Vec2(0,0);
+        this.rotationModule.currentGraphicRotate = new Vec2(0,0);
         if (!this.isTouchDrag)
         {
             this.previousTouchPosition = new Vec2(event.getLocation());
@@ -183,12 +187,12 @@ export class PlayerMovement extends BaseMovement {
         this.setPosition(dt);
         this.setCameraPosition(dt);
         this.setRotation();
-        this.checkPointManager.onPlayerChangeCheckPoint(this.currentIndex, this.player.eulerAngles.clone());
+        CheckPointManager.current.onPlayerChangeCheckPoint(this.currentIndex, this.node.eulerAngles.clone());
         this.updateCarGraphic(dt);
         this.updateMaterial(dt);
         if (!this.useFallOut) return;
         if (this.isFallOutOfRoad) this.fallOutOfRoad(dt);
-        if (this.splineManager.roadPoints[this.currentIndex].ignoreControl || this.isFallOutOfRoad)
+        if (MapSplineManager.current.roadPoints[this.currentIndex].ignoreControl || this.isFallOutOfRoad)
         {
             this.isFly(dt);
             return
@@ -205,8 +209,8 @@ export class PlayerMovement extends BaseMovement {
         while (speedLength > 0)
         {
             if (this.cameraCurrentIndex == this.length - 2) return;
-            var roadPoint1 = this.splineManager.roadPoints[this.cameraCurrentIndex];
-            var roadPoint2 = this.splineManager.roadPoints[this.cameraCurrentIndex + 1];
+            var roadPoint1 = MapSplineManager.current.roadPoints[this.cameraCurrentIndex];
+            var roadPoint2 = MapSplineManager.current.roadPoints[this.cameraCurrentIndex + 1];
             var distanceCompletedPath = (roadPoint2.position.clone().subtract(position)).length();
             if (speedLength > distanceCompletedPath)
             {
@@ -226,24 +230,24 @@ export class PlayerMovement extends BaseMovement {
     }
 
     setRotation(){
-        var targetUp =  Vec3.transformQuat(new Vec3(), Vec3.UP, this.player.rotation);
-        var lookDirection = (this.cameraForwardPosSmooth.position.clone().subtract(this.player.position)).normalize();
-        var playerEuler = this.player.eulerAngles.clone();
+        var targetUp =  Vec3.transformQuat(new Vec3(), Vec3.UP, this.node.rotation);
+        var lookDirection = (this.cameraForwardPosSmooth.position.clone().subtract(this.node.position)).normalize();
+        var playerEuler = this.node.eulerAngles.clone();
         var lockAt = new Vec3()
         Quat.fromViewUp(new Quat(),lookDirection,targetUp).getEulerAngles(lockAt);
-        lockAt = this.convertVector(playerEuler,lockAt);
-        this.player.eulerAngles = lockAt;
+        this.convertVector(lockAt,playerEuler,lockAt);
+        this.node.eulerAngles = lockAt;
     }
 
 
     updateMaterial(dt: number): void {
-        var value = this.currentGraphicRotate.y * this.yOffsetRatio;
+        var value = this.rotationModule.currentGraphicRotate.y * this.yOffsetRatio;
         value = math.clamp(value,-1,1);
         this.offsetMaterial.z = value;
         this.offsetMaterial.w = value;
         this.carMaterial.setProperty("offset", this.offsetMaterial);
         // this.carMaterial.setProperty("strength", this.strength);
-        this.rotateGraphicNode.eulerAngles = new Vec3(this.currentXRotate, this.yRatio * this.currentGraphicRotate.x, this.zRatio * this.currentGraphicRotate.y) 
+        this.rotateGraphicNode.eulerAngles = new Vec3(this.currentXRotate, this.yRatio * this.rotationModule.currentGraphicRotate.x, this.zRatio * this.rotationModule.currentGraphicRotate.y) 
     }
 
 
@@ -257,7 +261,7 @@ export class PlayerMovement extends BaseMovement {
 
         if(!this.controlCamera) return;
         if(this.endGame) return;
-        this.cameraValue = this.inverseLerp(0, 100, this.currentSpeed);
+        this.cameraValue = ScriptExtensions.inverseLerp(0, 100, this.currentSpeed);
 
         // this.cameraValue = clamp01(this.test / 10);
 
@@ -282,7 +286,7 @@ export class PlayerMovement extends BaseMovement {
 
     setCameraPositionAndRotation(): void
     {
-        var rotation = new Quat(this.player.rotation);
+        var rotation = new Quat(this.node.rotation);
         var graphicPosition =  new Vec3(this.cameraPosSmooth.worldPosition);
         graphicPosition.x *= -1;
         this.cameraTransform.position = graphicPosition.clone().add(Vec3.transformQuat(new Vec3(), new Vec3(0,2.91,-3.62), rotation));
@@ -305,7 +309,7 @@ export class PlayerMovement extends BaseMovement {
 
     input(dt: number): void {
         this.lastHorizontal = 0;
-        var ignoreControl = this.splineManager.roadPoints[this.currentIndex].ignoreControl;
+        var ignoreControl = MapSplineManager.current.roadPoints[this.currentIndex].ignoreControl;
         if (this.isMouseDown && this.lockDirection.y == 0)
         {
             this.currentSpeed += this.speedChange * 2 * dt;
@@ -318,10 +322,10 @@ export class PlayerMovement extends BaseMovement {
         this.currentSpeed = clamp(this.currentSpeed, 0, this.maxSpeed);
 
         if(this.isMouseDown && this.lastHorizontal == 0){
-            this.currentGraphicRotate.x = lerp(this.currentGraphicRotate.x, 0 , 0.1);
-            this.currentGraphicRotate.y = lerp(this.currentGraphicRotate.y, 0 , 0.1);
+            this.rotationModule.currentGraphicRotate.x = lerp(this.rotationModule.currentGraphicRotate.x, 0 , 0.1);
+            this.rotationModule.currentGraphicRotate.y = lerp(this.rotationModule.currentGraphicRotate.y, 0 , 0.1);
         }else{
-            this.currentGraphicRotate.y = lerp(this.currentGraphicRotate.y, 0 , 0.3);
+            this.rotationModule.currentGraphicRotate.y = lerp(this.rotationModule.currentGraphicRotate.y, 0 , 0.3);
         }
     }
 
@@ -336,7 +340,7 @@ export class PlayerMovement extends BaseMovement {
             {
                 var currentTouchPosition = new Vec2(event.getLocation());
                 
-                if(!this.splineManager.roadPoints[this.currentIndex].ignoreControl && !this.isCheckGround)
+                if(!MapSplineManager.current.roadPoints[this.currentIndex].ignoreControl && !this.isCheckGround)
                 {
                      this.normalControl(currentTouchPosition);
                 }
@@ -363,11 +367,11 @@ export class PlayerMovement extends BaseMovement {
         
         this.deltaInputHorizontal = clamp(this.deltaInputHorizontal, -this.minMaxDelta, this.minMaxDelta);
 
-        this.lastHorizontal = this.xOffset;
-        var offset = this.splineManager.roadLaterals[this.splineManager.roadPoints[this.currentIndex].lateralIndex].maxOffset;
-        this.xOffset = clamp(this.xOffset + this.deltaInputHorizontal, -offset, offset);
+        this.lastHorizontal = this.positionModule.graphicLocalPosition.x;
+        var offset = MapSplineManager.current.roadLaterals[MapSplineManager.current.roadPoints[this.currentIndex].lateralIndex].maxOffset;
+        this.positionModule.graphicLocalPosition.x = clamp(this.positionModule.graphicLocalPosition.x + this.deltaInputHorizontal, -offset, offset);
 
-        this.lastHorizontal = this.xOffset - this.lastHorizontal;
+        this.lastHorizontal = this.positionModule.graphicLocalPosition.x - this.lastHorizontal;
         this.addRotateHorizontal();
     }
 
@@ -375,8 +379,8 @@ export class PlayerMovement extends BaseMovement {
     addRotateHorizontal() : void
     {
         var dt = game.deltaTime;
-        this.currentGraphicRotate.x = clamp(this.currentGraphicRotate.x - this.lastHorizontal * 25 *dt, -1, 1);
-        this.currentGraphicRotate.y = this.currentGraphicRotate.x;
+        this.rotationModule.currentGraphicRotate.x = clamp(this.rotationModule.currentGraphicRotate.x - this.lastHorizontal * 25 *dt, -1, 1);
+        this.rotationModule.currentGraphicRotate.y = this.rotationModule.currentGraphicRotate.x;
         // this.currentGraphicRotate.x = lerp(this.currentGraphicRotate.x, 0 , 0.05);
         // this.currentGraphicRotate.y = lerp(this.currentGraphicRotate.y, 0 , 0.05)
     }
@@ -384,15 +388,15 @@ export class PlayerMovement extends BaseMovement {
 
     isFly(dt: number){
         this.isCheckGround = true;
-        var ratio = clamp01(this.inverseLerp(5, 55, this.currentSpeed) + 0.1);
-        this.lastHorizontal = this.xOffset;
-        this.xOffset = this.xOffset + this.deltaInputHorizontal * ratio;
+        var ratio = clamp01(ScriptExtensions.inverseLerp(5, 55, this.currentSpeed) + 0.1);
+        this.lastHorizontal = this.positionModule.graphicLocalPosition.x;
+        this.positionModule.graphicLocalPosition.x = this.positionModule.graphicLocalPosition.x + this.deltaInputHorizontal * ratio;
     
-        this.lastHorizontal = this.xOffset - this.lastHorizontal;
+        this.lastHorizontal = this.positionModule.graphicLocalPosition.x - this.lastHorizontal;
     
         if (this.lastHorizontal != 0)
         {
-            this.lastHorizontal = (this.inverseLerp(-0.05, 0.05, this.lastHorizontal) - 0.5) * 2;
+            this.lastHorizontal = (ScriptExtensions.inverseLerp(-0.05, 0.05, this.lastHorizontal) - 0.5) * 2;
             // this.currentGraphicRotate = clamp(this.currentGraphicRotate + this.lastHorizontal * 1.5, -25, 25);
         }
     }
@@ -401,15 +405,15 @@ export class PlayerMovement extends BaseMovement {
     {
         if(!this.isCheckGround) return;
         this.isCheckGround = false;
-        var roadLateral = this.splineManager.roadLaterals[this.splineManager.roadPoints[this.currentIndex].lateralIndex];
+        var roadLateral = MapSplineManager.current.roadLaterals[MapSplineManager.current.roadPoints[this.currentIndex].lateralIndex];
         var offset = roadLateral.maxOffset;
-        if(Math.abs(this.xOffset) <= offset) return;
+        if(Math.abs(this.positionModule.graphicLocalPosition.x) <= offset) return;
         this.isFallOutOfRoad = true;
     }
 
     fallOutOfRoad(dt: number)
     {
-        this.yOffset -= dt * 30;
+        this.positionModule.graphicLocalPosition.y -= dt * 30;
         this.timeFallOut += dt;
         if(this.timeFallOut > 0.75)
         {
@@ -440,7 +444,7 @@ export class PlayerMovement extends BaseMovement {
     {
         this.revive();
         GameManager.instance.openTutorial();
-        var quatRotation = this.player.rotation;
+        var quatRotation = this.node.rotation;
         this.cameraTransform.rotation = quatRotation;
         this.cameraOffsetRotation = quatRotation;
         this.windEffect.node.active = true;
@@ -448,9 +452,9 @@ export class PlayerMovement extends BaseMovement {
     }
 
     revivePosition(index: number): void {
-        this.player.position = this.splineManager.roadPoints[index].position.clone();
+        this.node.position = MapSplineManager.current.roadPoints[index].position.clone();
         this.cameraCurrentIndex = this.currentIndex + this.cameraOffsetIndex;
-        this.cameraForwardPosSmooth.setPosition(this.splineManager.roadPoints[this.cameraCurrentIndex].position.clone())
+        this.cameraForwardPosSmooth.setPosition(MapSplineManager.current.roadPoints[this.cameraCurrentIndex].position.clone())
         this.smokeEffect1.active = true;
         this.smokeEffect2.active = true;
     }
