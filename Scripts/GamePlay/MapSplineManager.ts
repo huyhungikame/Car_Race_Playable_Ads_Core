@@ -5,31 +5,31 @@ const { ccclass, executeInEditMode, property} = _decorator;
 @ccclass("RoadPoint")
 export class RoadPoint {
     @property(CCFloat)
-    distanceToNext: number = 0;
+    public distanceToNext: number = 0;
 
     @property(CCFloat)
-    progress: number = 0;
+    public progress: number = 0;
 
     @property(CCInteger)
-    lateralIndex: number = 0;
+    public lateralIndex: number = 0;
 
     @property(CCBoolean) 
-    semilast: boolean = false;
+    public semilast: boolean = false;
 
     @property(CCBoolean) 
-    ignoreControl: boolean = false;
+    public ignoreControl: boolean = false;
 
     @property(Vec3)
-    position: Vec3 = new Vec3();
+    public position: Vec3 = new Vec3();
 
     @property(Quat)
-    rotation: Quat = new Quat();
+    public rotation: Quat = new Quat();
     
     @property(Vec3)
-    eulerAngles: Vec3 = new Vec3();
+    public eulerAngles: Vec3 = new Vec3();
     
     @property(Vec3)
-    directionToNext: Vec3 = new Vec3();
+    public directionToNext: Vec3 = new Vec3();
 
     public setData(
         posX: number = 0,
@@ -58,39 +58,35 @@ export class RoadPoint {
         this.semilast = semilast;
         this.ignoreControl = ignoreControl;
     }
-
-    constructor() {
-
-    }
 }
 
 @ccclass("RoadLateral")
 export class RoadLateral {
     @property(CCFloat)
-    maxOffset: number = 0;
+    public maxOffset: number = 0;
 
     @property(CCFloat)
-    radius: number = 0;
+    public radius: number = 0;
 }
 
 @ccclass("MapSplineManager")
 @executeInEditMode(true)
 export default class MapSplineManager extends Component {
     @property(CCBoolean)
-    needUpdate: boolean = false;
+    private needUpdate: boolean = false;
 
     @property({ 
         type: [RoadPoint],
         visible: false,
         serializable: true
     })
-    roadPoints: RoadPoint[] = [];
+    public roadPoints: RoadPoint[] = [];
 
     @property({ type: [RoadLateral] })
-    roadLaterals: RoadLateral[] = [];
+    public roadLaterals: RoadLateral[] = [];
 
     @property({ type: TextAsset })
-    text: TextAsset = null;
+    private text: TextAsset = null;
 
     protected onLoad(): void {
         this.needUpdate = false;
@@ -102,7 +98,7 @@ export default class MapSplineManager extends Component {
         this.dataConvert();
     }
 
-    dataConvert() 
+    private dataConvert() 
     {
         var content = this.text.text;
         var road = content.split('\n');
