@@ -4,6 +4,13 @@ const { ccclass, property } = _decorator;
 
 @ccclass('CheckPointManager')
 export class CheckPointManager extends Component {
+    public static current: CheckPointManager;
+
+    protected onLoad(): void {
+        CheckPointManager.current = this;
+    }
+
+
     @property({ type:CCInteger})
     roadLaterals: number[] = [];
 

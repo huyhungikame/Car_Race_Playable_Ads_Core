@@ -72,6 +72,8 @@ export class RoadLateral {
 @ccclass("MapSplineManager")
 @executeInEditMode(true)
 export default class MapSplineManager extends Component {
+    public static current: MapSplineManager;
+
     @property(CCBoolean)
     private needUpdate: boolean = false;
 
@@ -89,6 +91,7 @@ export default class MapSplineManager extends Component {
     private text: TextAsset = null;
 
     protected onLoad(): void {
+        MapSplineManager.current = this;
         this.needUpdate = false;
     }
 

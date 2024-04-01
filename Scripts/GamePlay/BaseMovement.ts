@@ -7,7 +7,6 @@ const { ccclass, property } = _decorator;
 export abstract class BaseMovement extends Component {
     public currentSpeed: number = 0;
     public length: number = 0;
-    @property(CCFloat)
     public currentIndex: number = 0;
     public maxSpeed: number = 100;
     public isStartGame: boolean = false;
@@ -17,12 +16,6 @@ export abstract class BaseMovement extends Component {
 
     @property(Node)
     player: Node
-    
-    @property(MapSplineManager)
-    splineManager: MapSplineManager;
-
-    @property(CheckPointManager)
-    checkPointManager: CheckPointManager = null;
 
     @property(RigidBody)
     physicBody: RigidBody;
@@ -119,11 +112,12 @@ export abstract class BaseMovement extends Component {
         var speedLength = this.currentSpeed * this.speedFactor * dt;
         var position = new Vec3(this.player.position);
         var rotation = new Vec3(this.player.eulerAngles);
+        var roadPoints = MapSplineManager.current.roadPoints;
         while (speedLength > 0)
         {
             if (this.currentIndex == this.length - 2) return;
-            var roadPoint1 = this.splineManager.roadPoints[this.currentIndex];
-            var roadPoint2 = this.splineManager.roadPoints[this.currentIndex + 1];
+            var roadPoint1 = roadPoints[this.currentIndex];
+            var roadPoint2 = roadPoints[this.currentIndex + 1];
             var distanceCompletedPath = (roadPoint2.position.clone().subtract(position)).length();
             if (speedLength > distanceCompletedPath)
             {
@@ -165,8 +159,8 @@ export abstract class BaseMovement extends Component {
 
     updateCarGraphic(dt: number): void
     {
-        var roadLateral = this.splineManager.roadLaterals[this.splineManager.roadPoints[this.currentIndex].lateralIndex];
-        var ignoreControl = this.splineManager.roadPoints[this.currentIndex].ignoreControl;
+        var roadLateral = MapSplineManager.current.roadLaterals[MapSplineManager.current.roadPoints[this.currentIndex].lateralIndex];
+        var ignoreControl = MapSplineManager.current.roadPoints[this.currentIndex].ignoreControl;
         var offset = roadLateral.maxOffset;
         if (!ignoreControl && !this.isFallOutOfRoad && !this.isCheckGround) this.xOffset = clamp(this.xOffset, -offset, offset);
         // var radius = roadLateral.radius;
@@ -229,10 +223,10 @@ export abstract class BaseMovement extends Component {
         this.onDie = false;
         this.explosionCar.node.active = false;
         this.resetState();
-        var reviveContent = this.checkPointManager.revive();
+        var reviveContent = CheckPointManager.current.revive();
         this.currentIndex = reviveContent.indexRevive;
         this.revivePosition(this.currentIndex);
-        var rotation = this.splineManager.roadPoints[this.currentIndex].eulerAngles.clone();
+        var rotation = MapSplineManager.current.roadPoints[this.currentIndex].eulerAngles.clone();
         this.progress = this.currentIndex;
         this.colliderNode.enabled = true;
     
