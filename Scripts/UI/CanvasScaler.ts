@@ -5,7 +5,7 @@ const { ccclass, property } = _decorator;
 @ccclass('CanvasScaler')
 export class CanvasScaler extends Component {
     @property(CCFloat)
-    matchWidthOrHeight: number = 1;
+    matchWidthOrHeight: number = 0.5;
     private designSize: Size;
     private currentSize: Size;
     protected onLoad(): void {
