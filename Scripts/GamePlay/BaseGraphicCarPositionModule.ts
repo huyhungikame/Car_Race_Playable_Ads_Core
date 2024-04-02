@@ -1,4 +1,4 @@
-import { _decorator, CCBoolean, CCInteger, clamp01, Component, Node, Vec3 } from 'cc';
+import { _decorator, CCBoolean, Component, Node, Vec3 } from 'cc';
 import { BaseMovement } from './BaseMovement';
 import MapSplineManager from './MapSplineManager';
 const { ccclass, property } = _decorator;

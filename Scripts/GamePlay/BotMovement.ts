@@ -147,6 +147,9 @@ export class BotMovement extends BaseMovement {
         this.positionModule.graphicLocalPosition.x = this.initHorizontal;
         this.carGraphic.setPosition(new Vec3(this.positionModule.graphicLocalPosition.x,0,0));
     }
+        fallout(): void {
+        
+    }
 }
 
 

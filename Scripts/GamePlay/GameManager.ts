@@ -1,18 +1,14 @@
 import { _decorator, Camera, Component, EventTouch, Input, input, Vec2 } from 'cc';
 import { BotMovement } from './BotMovement';
 import { PlayerMovement } from './PlayerMovement';
-import { StartView } from '../../../../Scripts/UI/StartView';
+import { StartView } from '../UI/StartView';
+import { PlayableAdsManager } from '../../../../TemplatePA/PlayableAdsManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameManager')
 export class GameManager extends Component {
     @property(StartView)
-    startViews: StartView[] = [];
-    
-
-
-    @property(PlayerMovement)
-    playerMovement: PlayerMovement;
+    startView: StartView;
 
     @property({ type: [BotMovement] })
     botMovementInScene: BotMovement[] = [];
@@ -33,9 +29,6 @@ export class GameManager extends Component {
         this.hasAI = this.botMovementInScene.length > 0;
         GameManager.instance = this;
     }
-
-
-
 
     synchronizeCamera() {
         this.effectCamera.orthoHeight = this.mainCamera.orthoHeight;
@@ -60,43 +53,36 @@ export class GameManager extends Component {
         this.updateRank();
         if(!this.hasAI) return;
         for (let i = 0; i < this.botMovementInScene.length; i++) { 
-           this.botMovementInScene[i].speedConvert(this.playerMovement.currentSpeed);
+           this.botMovementInScene[i].speedConvert(PlayerMovement.current.currentSpeed);
         }
     }
 
     RevivePlayer(){
-        if(this.playerMovement.onDie){
-            this.playerMovement.revivePlayer();
+        if (PlayerMovement.current.onDie){
+            PlayerMovement.current.revivePlayer();
         }
-        
     }
 
     openningTutorial : boolean = false;
     openTutorial(){
         this.openningTutorial = true;
-        for (let i = 0; i < this.startViews.length; i++) {
-            this.startViews[i].node.active = true;
-            this.startViews[i].titleImage.active = false;
-            this.startViews[i].openHoldToRide();
-        }
+        this.startView.node.active = true;
+        this.startView.titleImage.active = false;
+        this.startView.openHoldToRide();
     }
     closeTutorial(){
         this.openningTutorial = false;
-        for (let i = 0; i < this.startViews.length; i++) {
-            this.startViews[i].node.active = false;
-        }
+        this.startView.node.active = false;
     }
 
     uiStartGame(): void
     {
-        for (let i = 0; i < this.startViews.length; i++) {
-            this.startViews[i].startUi();
-        }
+        this.startView.startUi();
     }
 
     static startGame(): void
     {
-        GameManager.instance.playerMovement.startGame(GameManager.mousePos);
+        PlayerMovement.current.startGame(GameManager.mousePos);
         for (let i = 0; i < GameManager.instance.botMovementInScene.length; i++) { 
             GameManager.instance.botMovementInScene[i].isStartGame = true;
         }
@@ -105,17 +91,16 @@ export class GameManager extends Component {
 
     onClickInstalGame(): void
     {
-        // GoToStore.Open();
-        // PlayableAdsManager.instance.OpenURL_Button();    
+        PlayableAdsManager.instance.OpenURL_Button();    
     }
 
     updateRank(): void 
     {
         var rank = 1;
-        var playerProgress = this.playerMovement.progress;
+        var playerProgress = PlayerMovement.current.progress;
         for (let i = 0; i < this.botMovementInScene.length; i++) { 
             if(this.botMovementInScene[i].progress > playerProgress) rank++;
          }
-         this.playerMovement.rank = rank;
+         PlayerMovement.current.rank = rank;
     }
 }

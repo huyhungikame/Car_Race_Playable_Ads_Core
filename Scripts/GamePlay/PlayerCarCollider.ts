@@ -1,13 +1,18 @@
-import { _decorator, Component, ICollisionEvent, Node, ParticleSystem, randomRange, Vec3 } from 'cc';
+import { _decorator, ICollisionEvent, Node, ParticleSystem, randomRange, Vec3 } from 'cc';
 import { CarCollider } from './CarCollider';
+import { CameraShake } from './Feels/CameraShake';
 
 const { ccclass, property } = _decorator;
 
 @ccclass('PlayerCarCollider')
 export class PlayerCarCollider extends CarCollider {
-    @property([Node])
-    spankParticle : Node[] = [];
+    @property(CameraShake)
+    cameraShake: CameraShake;
 
+    @property(Node)
+    effectPool: Node;
+
+    spankParticle : ParticleSystem[] = [];
     spankLength: number;
     spankCurrentIndex: number = 0;
 
@@ -15,25 +20,28 @@ export class PlayerCarCollider extends CarCollider {
         this.spankCurrentIndex = 0;
         this.spankLength = this.spankParticle.length;
         this.collider.on('onCollisionStay', this.onCollisionStay, this);
+        this.collider.on('onCollisionEnter', this.onCollisionEnter, this);
+        this.spankParticle = this.effectPool.getComponentsInChildren(ParticleSystem);
+    }
+
+    private onCollisionEnter (_event: ICollisionEvent) {
+        if(this.controller.currentSpeed > 50) this.cameraShake.shake();
     }
 
     private onCollisionStay (event: ICollisionEvent) {
         this.frameCount++;
         if(this.frameCount % 2 != 0) return;
-        var effect = this.spankParticle[this.spankCurrentIndex];
-        var effect2 = this.spankParticle[this.spankCurrentIndex].children[0];
+        var effect = this.spankParticle[this.spankCurrentIndex * 2];
+        var effect2 = this.spankParticle[this.spankCurrentIndex * 2 + 1];
         this.spankCurrentIndex++;
-        if(this.spankCurrentIndex >= this.spankLength) this.spankCurrentIndex = 0;
-        var position = new Vec3(0,0,0);
-        event.contacts[0].getWorldPointOnA(position);
-        effect.worldPosition =  position;
-        effect.active = true;
-        var eulerAngles = effect.eulerAngles.clone();
+        if(this.spankCurrentIndex >= (this.spankLength / 2)) this.spankCurrentIndex = 0;
+        event.contacts[0].getWorldPointOnA(effect.node.worldPosition);
+        effect.node.active = true;
+        var eulerAngles = effect.node.eulerAngles.clone();
         eulerAngles.y = randomRange(-160,-195);
-        effect.eulerAngles = eulerAngles;
-        //
-        effect.getComponent(ParticleSystem).play();
-        effect2.getComponent(ParticleSystem).play();
+        effect.node.eulerAngles = eulerAngles;
+        effect.play();
+        effect2.play();
     }
 }
 

@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, Vec2, Vec3 } from 'cc';
+import { _decorator, Component, Node, Vec2 } from 'cc';
 import { BaseMovement } from './BaseMovement';
 const { ccclass, property } = _decorator;
 

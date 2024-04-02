@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, random, randomRange, Tween, tween, Vec3 } from 'cc';
+import { _decorator, Component, Tween, tween, Vec3 } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('CameraShake')

@@ -1,0 +1,99 @@
+import { _decorator, Component, Label, Node, ParticleSystem, Quat, Sprite, SpriteFrame, tween, UIOpacity, UITransform, Vec3 } from 'cc';
+import { PlayerMovement } from '../GamePlay/PlayerMovement';
+import { GameStateManager } from '../../../../Scripts/Template/PaManager/GameStateManager';
+import { TouchManager } from '../../../../Scripts/Template/PaManager/TouchManager';
+
+const { ccclass, property } = _decorator;
+
+@ccclass('CompletedView')
+export class CompletedView extends Component {
+    @property(UIOpacity)
+    completedView: UIOpacity;
+
+    @property(Node)
+    cupGraphic: Node;
+
+    @property(Node)
+    titleGraphic: Node;
+
+    @property(Node)
+    button: Node;
+
+    @property(Node)
+    effectGlow: Node;
+
+    @property(Node)
+    effectFirework: Node;
+
+    @property(Sprite)
+    cupSprite: Sprite;
+
+    @property(Label)
+    buttonText: Label;
+
+    @property(SpriteFrame)
+    cupFailSpriteFrame: SpriteFrame;
+
+    @property(Sprite)
+    buttonSprite: Sprite;
+
+    @property(SpriteFrame)
+    buttonSpriteFrame: SpriteFrame;
+
+    playedEffect : boolean = false;
+
+    protected start(): void {
+        PlayerMovement.current.endGame = true;
+        GameStateManager.instance.clickAutoShowStore = true;
+        TouchManager.instance.touchNode.active = true;
+        
+        if(PlayerMovement.current.rank != 1){
+            this.cupSprite.spriteFrame = this.cupFailSpriteFrame;
+            this.buttonText.string = "TRY AGAIN";
+            this.buttonSprite.spriteFrame = this.buttonSpriteFrame;
+        }
+
+        tween(this.completedView).to(0.5,{opacity: 255},{
+            onComplete: () =>{
+                this.startAnimationCompleted();
+            }
+        }).start();
+
+        tween(PlayerMovement.current.camera.node).to(1.75,{ worldPosition: new Vec3(228,17.82,-236.1)}).start();
+    }
+
+    startAnimationCompleted(): void
+    {
+        tween(this.titleGraphic).to(0.333,{scale: Vec3.ONE},{
+            easing: "backOut",
+            onComplete: () =>{
+                tween(this.cupGraphic).to(0.333,{scale: Vec3.ONE},{
+                    easing: "backOut",
+                    onComplete: () =>{
+                        tween(this.button).to(0.333,{scale: Vec3.ONE},{
+                            easing: "backOut",
+                            onComplete: () =>{
+                                if(!GameStateManager.instance.playedEffectFinish){
+                                    this.effectFirework.active = true;
+                                    this.effectFirework.children[0].children[0].getComponent(ParticleSystem).play();
+                                    this.effectFirework.children[1].children[0].getComponent(ParticleSystem).play();
+                                    GameStateManager.instance.playedEffectFinish = true;
+                                }
+                                tween(this.button)
+                                .to(1.2,{scale: new Vec3(1.15,1.15,1)},{
+                                    easing: "linear",
+                                })
+                                .to(0.5,{scale: Vec3.ONE},{
+                                    easing: "linear",
+                                })
+                                .union()
+                                .repeat(90000)
+                                .start();
+                            }
+                        }).start();
+                    }
+                }).start();
+            }
+        }).start();
+    }
+}

@@ -16,7 +16,7 @@ export abstract class BaseMovement extends Component {
 
     public isFallOutOfRoad: boolean = false;
     public isCheckGround: boolean = false;
-    protected onDie: boolean = false;
+    public onDie: boolean = false;
     lastHorizontal: number = 0.0;
     deltaInputHorizontal: number = 0.0;
 

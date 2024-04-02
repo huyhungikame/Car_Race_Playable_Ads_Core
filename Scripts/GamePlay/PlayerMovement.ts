@@ -1,4 +1,4 @@
-import { _decorator, CCBoolean, clamp, clamp01, Enum, EventTouch, game, Input, input, Node, Quat, Vec2, Vec3, Tween, ParticleSystem, Game, Material, Vec4, Camera, lerp, CCFloat, CCInteger, Color, math, Button, EventHandler, Component } from 'cc';
+import { _decorator, CCBoolean, clamp, EventTouch, game, Input, input, Node, Quat, Vec2, Vec3, ParticleSystem, Camera, lerp, CCFloat, CCInteger, math } from 'cc';
 import { BaseMovement } from './BaseMovement';
 import { GameManager } from './GameManager';
 import { ScriptExtensions } from '../ScriptExtensions';
@@ -58,7 +58,7 @@ export class PlayerMovement extends BaseMovement {
     @property({ group: { name: 'Camera' , displayOrder: 1}, type: CCInteger }) 
     cameraOffsetIndex = 3;
 
-    @property({ group: { name: 'Camera' , displayOrder: 1}, type: Vec3 }) 
+    @property({ group: { name: 'Camera' , displayOrder: 1} }) 
     cameraOffset: Vec3 = new Vec3(0, 2.91, -3.62)
 
     private cameraCurrentIndex : number;

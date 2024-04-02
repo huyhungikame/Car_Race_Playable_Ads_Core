@@ -1,15 +1,9 @@
-import { _decorator, CCInteger, Component, Node, Quat, Vec3 } from 'cc';
-// import { GoToStore } from './GoToStore';
+import { _decorator, CCInteger, Component, Node, Vec3 } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('CheckPointManager')
 export class CheckPointManager extends Component {
     public static current: CheckPointManager;
-
-    protected onLoad(): void {
-        CheckPointManager.current = this;
-    }
-
 
     @property({ type:CCInteger})
     roadLaterals: number[] = [];
@@ -20,21 +14,23 @@ export class CheckPointManager extends Component {
     @property(CCInteger)
     endIndex: number = 390;
 
-    @property([Node])
-    completedViews: Node[] = [];
+    @property(Node)
+    completedView: Node;
 
-    current: number = 4;
+    current: number = 4; 
     currentRotation: Vec3 = new Vec3();
-    index: number = 0;
+    index: number = 0; 
     indexGoToStore: number = 0;
+
+    protected onLoad(): void {
+        CheckPointManager.current = this;
+    }
 
     onPlayerChangeCheckPoint(currentIndex: number,rotation: Vec3): void
     {
         if(currentIndex == this.endIndex)
         {
-            for(let i = 0; i < this.completedViews.length; i++){
-                this.completedViews[i].active = true;
-            }
+            this.completedView.active = true;
             return;
         }
 
