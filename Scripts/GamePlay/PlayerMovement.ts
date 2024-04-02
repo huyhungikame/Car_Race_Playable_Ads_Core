@@ -27,6 +27,60 @@ export class PlayerMovement extends BaseMovement {
     @property({ group: { name: 'Camera' , displayOrder: 1}, type: Node }) 
     cameraForwardPosSmooth: Node;
 
+    @property({ group: { name: 'Camera' , displayOrder: 1}, type: CCInteger }) 
+    startCameraFOV: number = 45;
+
+    @property({ group: { name: 'Camera' , displayOrder: 1}, type: CCInteger }) 
+    cameraFOV: number = 8;
+
+    @property({ group: { name: 'Camera' , displayOrder: 1}, type: CCFloat }) 
+    startYCamera: number = 0;
+
+    @property({ group: { name: 'Camera' , displayOrder: 1}, type: CCFloat }) 
+    yCamera: number = -0.1;
+
+    @property({ group: { name: 'Camera' , displayOrder: 1}, type: CCFloat }) 
+    startZCamera: number = -4;
+
+    @property({ group: { name: 'Camera' , displayOrder: 1}, type: CCFloat }) 
+    zCamera: number = 3.1;
+
+    @property({ group: { name: 'Camera' , displayOrder: 1}, type: CCFloat }) 
+    cameraTargetXOffset: number = 0.3;
+
+    @property({ group: { name: 'Camera' , displayOrder: 1}, type: CCFloat }) 
+    startXRotate: number = -7.5;
+
+    @property({ group: { name: 'Camera' , displayOrder: 1}, type: CCFloat }) 
+    xRotate: number = -7.5;
+
+    @property({ group: { name: 'Camera' , displayOrder: 1}, type: CCFloat }) 
+    startXRotateCamera: number = -1.6;
+
+    @property({ group: { name: 'Camera' , displayOrder: 1}, type: CCFloat }) 
+    xRotateCamera: number = -2.5;
+
+    @property({ group: { name: 'Camera' , displayOrder: 1}, type: CCInteger }) 
+    cameraOffsetIndex = 3;
+
+    @property({ group: { name: 'Camera' , displayOrder: 1}, type: Vec3 }) 
+    cameraOffset: Vec3 = new Vec3(0, 2.91, -3.62)
+
+    private cameraCurrentIndex : number;
+    private cameraCurrentTargetPosition: Vec3 = new Vec3();
+    private cameraCaculatorPosition: Vec3 = new Vec3();
+
+    private cameraNextPosSmooth: Vec3 = new Vec3();
+    private cameraGraphicPos: Vec3 = new Vec3();
+    private cameraGraphicRotation: Quat = new Quat();
+    private cameraGraphicEulerAngles: Vec3 = new Vec3();
+    private setCameraPositionAndRotation_rotation: Quat = new Quat();
+    private setCameraPositionAndRotation_graphicPosition: Vec3 = new Vec3();
+    private setCameraPositionAndRotation_offsetDirection: Vec3 = new Vec3();
+    private setCameraPositionAndRotation_targetUp: Vec3 = new Vec3();
+    private setCameraPositionAndRotation_outRotation: Quat = new Quat();
+    private currentXRotate: number = -7.5;
+
     //#endregion
 
     @property(ReviveView)
@@ -37,6 +91,81 @@ export class PlayerMovement extends BaseMovement {
 
 
     //#region Camera
+ 
+    setCameraPosition(dt: number): void{
+        var speedLength = this.currentSpeed * this.speedFactor * dt;
+        this.cameraForwardPosSmooth.getPosition(this.cameraCurrentTargetPosition);
+        var roadPoints = MapSplineManager.current.roadPoints;
+ 
+        while (speedLength > 0)
+        {
+            if (this.cameraCurrentIndex == this.length - 2) return;
+            var roadPoint1 = roadPoints[this.cameraCurrentIndex];
+            var roadPoint2 = roadPoints[this.cameraCurrentIndex + 1];
+            this.cameraCaculatorPosition.set(roadPoint2.position);
+            var distanceCompletedPath = (this.cameraCaculatorPosition.subtract(this.cameraCurrentTargetPosition)).length();
+            if (speedLength > distanceCompletedPath)
+            {
+                this.cameraCurrentTargetPosition.set(roadPoint2.position);
+                speedLength -= distanceCompletedPath;
+                this.cameraCurrentIndex++;
+                continue;
+            }
+
+            var ratio = (roadPoint1.distanceToNext - distanceCompletedPath + speedLength) / roadPoint1.distanceToNext;
+            Vec3.lerp(this.cameraCurrentTargetPosition, roadPoint1.position, roadPoint2.position, ratio);
+            speedLength = 0;
+        }
+
+        this.cameraForwardPosSmooth.position = this.cameraCurrentTargetPosition;
+    }
+
+    protected lateUpdate(dt: number): void {
+       
+        this.node.inverseTransformPoint(this.cameraNextPosSmooth, this.physicBody.node.worldPosition);
+        this.lastCameraTargetX = lerp(this.lastCameraTargetX, this.cameraNextPosSmooth.x, this.cameraTargetXOffset);
+        this.cameraNextPosSmooth.x = this.lastCameraTargetX;
+        this.cameraPosSmooth.setPosition(this.cameraNextPosSmooth);
+
+        if(!this.controlCamera) return;
+        if(this.endGame) return;
+        this.cameraValue = ScriptExtensions.inverseLerp(0, 100, this.currentSpeed);
+        var valueConvert = ScriptExtensions.easeOutQuad(this.cameraValue);
+
+        this.camera.fov = valueConvert * this.cameraFOV + this.startCameraFOV;
+        
+        this.camera.node.parent.getPosition(this.cameraGraphicPos);
+        this.camera.node.parent.getRotation(this.cameraGraphicRotation);
+        this.cameraGraphicRotation.getEulerAngles(this.cameraGraphicEulerAngles);
+
+        this.cameraGraphicPos.y = this.startYCamera + this.yCamera * valueConvert;
+        this.cameraGraphicPos.z = this.startZCamera + this.zCamera * valueConvert;
+        this.cameraGraphicEulerAngles.x = this.startXRotateCamera + this.xRotateCamera * valueConvert;
+
+        this.camera.node.parent.position = this.cameraGraphicPos;
+        this.camera.node.parent.eulerAngles = this.cameraGraphicEulerAngles;
+        
+        this.currentXRotate = this.startXRotate + this.cameraValue * this.xRotate;
+
+        this.setCameraPositionAndRotation();
+    }
+
+    setCameraPositionAndRotation(): void
+    {
+        this.node.getRotation(this.setCameraPositionAndRotation_rotation);
+        this.cameraPosSmooth.getWorldPosition(this.setCameraPositionAndRotation_graphicPosition)
+        this.setCameraPositionAndRotation_graphicPosition.x *= -1;
+        Vec3.transformQuat(this.setCameraPositionAndRotation_offsetDirection, this.cameraOffset, this.setCameraPositionAndRotation_rotation)
+        this.cameraTransform.setPosition(this.setCameraPositionAndRotation_offsetDirection.add(this.setCameraPositionAndRotation_graphicPosition));
+
+        this.cameraOffsetRotation = this.setCameraPositionAndRotation_rotation;
+    
+        Vec3.transformQuat(this.setCameraPositionAndRotation_targetUp, Vec3.UP, this.cameraOffsetRotation);
+        var lookDirection = (this.setCameraPositionAndRotation_graphicPosition.subtract(this.cameraTransform.position)).normalize();
+      
+        this.cameraTransform.rotation = Quat.fromViewUp(this.setCameraPositionAndRotation_outRotation,lookDirection,this.setCameraPositionAndRotation_targetUp);
+    }
+
 
     //#endregion
 
@@ -86,47 +215,8 @@ export class PlayerMovement extends BaseMovement {
     @property(CCFloat)
     zRatio: number = 5;
 
-    @property(CCInteger)
-    startCameraFOV: number = 55;
-
-    @property(CCInteger)
-    cameraFOV: number = 40;
-
-    @property(CCFloat)
-    startYCamera: number = 0;
-
-    @property(CCFloat)
-    yCamera: number = -0.1;
-
-    @property(CCFloat)
-    startZCamera: number = -4;
-
-    @property(CCFloat)
-    zCamera: number = 3.1;
-
-    @property(CCFloat)
-    test: number = 0;
-
-    @property(CCFloat)
-    cameraTargetXOffset: number = 0.3;
-
-    @property(CCFloat)
-    startXRotate: number = -7.5;
-
-    @property(CCFloat)
-    xRotate: number = -7.5;
-
-    currentXRotate: number = -7.5;
 
 
-    @property(CCFloat)
-    startXRotateCamera: number = -1.6;
-
-    @property(CCFloat)
-    xRotateCamera: number = -2.5;
-
-    @property(CCInteger)
-    cameraOffsetIndex = 3;
 
     @property(Vec4)
     offsetMaterial: Vec4 = new Vec4(0,0,0,1);
@@ -165,6 +255,7 @@ export class PlayerMovement extends BaseMovement {
         this.carMaterial.setProperty("strength", this.strength);
         this.smokeEffect1.active = true;
         this.smokeEffect2.active = true;
+        this.currentXRotate = this.startXRotate;
     }
 
     onDestroy() {
@@ -224,32 +315,7 @@ export class PlayerMovement extends BaseMovement {
         if (!this.isFallOutOfRoad) this.isGround();
     }
 
-    cameraCurrentIndex : number;
-    setCameraPosition(dt: number): void{
-        var speedLength = this.currentSpeed * this.speedFactor * dt;
-        var position = new Vec3(this.cameraForwardPosSmooth.position);
- 
-        while (speedLength > 0)
-        {
-            if (this.cameraCurrentIndex == this.length - 2) return;
-            var roadPoint1 = MapSplineManager.current.roadPoints[this.cameraCurrentIndex];
-            var roadPoint2 = MapSplineManager.current.roadPoints[this.cameraCurrentIndex + 1];
-            var distanceCompletedPath = (roadPoint2.position.clone().subtract(position)).length();
-            if (speedLength > distanceCompletedPath)
-            {
-                position = roadPoint2.position.clone();
-                speedLength -= distanceCompletedPath;
-                this.cameraCurrentIndex++;
-                continue;
-            }
 
-            var ratio = (roadPoint1.distanceToNext - distanceCompletedPath + speedLength) / roadPoint1.distanceToNext;
-            Vec3.lerp(position,roadPoint1.position, roadPoint2.position, ratio);
-            speedLength = 0;
-        }
-
-        this.cameraForwardPosSmooth.position = position;
-    }
 
     setRotation(){
         var targetUp =  Vec3.transformQuat(new Vec3(), Vec3.UP, this.node.rotation);
@@ -270,63 +336,6 @@ export class PlayerMovement extends BaseMovement {
         this.carMaterial.setProperty("offset", this.offsetMaterial);
         // this.carMaterial.setProperty("strength", this.strength);
         this.rotationModule.rotateGraphicNode.eulerAngles = new Vec3(this.currentXRotate, this.yRatio * this.rotationModule.currentGraphicRotate.x, this.zRatio * this.rotationModule.currentGraphicRotate.y) 
-    }
-
-
-    protected lateUpdate(dt: number): void {
-       
-        var next = this.node.inverseTransformPoint(new Vec3(),this.physicBody.node.worldPosition);
-        this.lastCameraTargetX = lerp(this.lastCameraTargetX, next.x, this.cameraTargetXOffset);
-        next.x = this.lastCameraTargetX;
-        
-        this.cameraPosSmooth.setPosition(next);
-
-        if(!this.controlCamera) return;
-        if(this.endGame) return;
-        this.cameraValue = ScriptExtensions.inverseLerp(0, 100, this.currentSpeed);
-
-        // this.cameraValue = clamp01(this.test / 10);
-
-        var valueConvert = this.easeOutQuad(this.cameraValue);
-        this.camera.fov = valueConvert * this.cameraFOV + this.startCameraFOV;
-        
-        var cameraGraphicPos = this.camera.node.parent.position.clone();
-        var cameraGraphicRotation = this.camera.node.parent.eulerAngles.clone();
-
-        cameraGraphicPos.y = this.startYCamera + this.yCamera * valueConvert;
-        cameraGraphicPos.z = this.startZCamera + this.zCamera * valueConvert;
-        cameraGraphicRotation.x = this.startXRotateCamera + this.xRotateCamera * valueConvert;
-
-        this.camera.node.parent.position = cameraGraphicPos;
-        this.camera.node.parent.eulerAngles = cameraGraphicRotation;
-        
-        this.currentXRotate = this.startXRotate + this.cameraValue * this.xRotate;
-
-
-        this.setCameraPositionAndRotation();
-    }
-
-    setCameraPositionAndRotation(): void
-    {
-        var rotation = new Quat(this.node.rotation);
-        var graphicPosition =  new Vec3(this.cameraPosSmooth.worldPosition);
-        graphicPosition.x *= -1;
-        this.cameraTransform.position = graphicPosition.clone().add(Vec3.transformQuat(new Vec3(), new Vec3(0,2.91,-3.62), rotation));
-
-        this.cameraOffsetRotation = rotation;
-    
-        var targetUp =  Vec3.transformQuat(new Vec3(), Vec3.UP, this.cameraOffsetRotation);
-        var lookDirection = (graphicPosition.subtract(this.cameraTransform.position)).normalize();
-      
-        this.cameraTransform.rotation = Quat.fromViewUp(new Quat(),lookDirection,targetUp);
-    }
-
-    easeOutCirc(x: number): number {
-        return Math.sqrt(1 - Math.pow(x - 1, 2));
-    }
-
-    easeOutQuad(x: number): number {
-        return 1 - (1 - x) * (1 - x);
     }
 
     input(dt: number): void {

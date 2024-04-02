@@ -8,4 +8,12 @@ export class ScriptExtensions {
             return 0;
         }
     }
+
+    static easeOutCirc(x: number): number {
+        return Math.sqrt(1 - Math.pow(x - 1, 2));
+    }
+
+    static easeOutQuad(x: number): number {
+        return 1 - (1 - x) * (1 - x);
+    }
 }
