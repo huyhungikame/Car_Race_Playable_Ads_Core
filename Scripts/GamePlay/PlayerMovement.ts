@@ -1,7 +1,6 @@
 import { _decorator, CCBoolean, clamp, EventTouch, game, Input, input, Node, Quat, Vec2, Vec3, ParticleSystem, Camera, lerp, CCFloat, CCInteger, math } from 'cc';
 import { BaseMovement } from './BaseMovement';
 import { GameManager } from './GameManager';
-import { ScriptExtensions } from '../ScriptExtensions';
 import MapSplineManager from './MapSplineManager';
 import { CheckPointManager } from './CheckPointManager';
 import { ReviveView } from '../UI/ReviveView';
@@ -14,72 +13,21 @@ export class PlayerMovement extends BaseMovement {
 
     //#region Camera Properties
 
-    @property({ group: { name: 'Camera' , displayOrder: 1}, type: CCBoolean }) 
-    controlCamera: boolean = true;
-
     @property({ group: { name: 'Camera' , displayOrder: 1}, type: BaseCameraFollow }) 
     cameraFollow: BaseCameraFollow;
 
     @property({ group: { name: 'Camera' , displayOrder: 1}, type: Node }) 
     cameraTransform: Node;
 
-    @property({ group: { name: 'Camera' , displayOrder: 1}, type: Camera }) 
-    camera: Camera;
-
-    @property({ group: { name: 'Camera' , displayOrder: 1}, type: Node }) 
-    cameraPosSmooth: Node;
-
     @property({ group: { name: 'Camera' , displayOrder: 1}, type: Node }) 
     cameraForwardPosSmooth: Node;
 
     @property({ group: { name: 'Camera' , displayOrder: 1}, type: CCInteger }) 
-    startCameraFOV: number = 45;
-
-    @property({ group: { name: 'Camera' , displayOrder: 1}, type: CCInteger }) 
-    cameraFOV: number = 8;
-
-    @property({ group: { name: 'Camera' , displayOrder: 1}, type: CCFloat }) 
-    startYCamera: number = 0;
-
-    @property({ group: { name: 'Camera' , displayOrder: 1}, type: CCFloat }) 
-    yCamera: number = -0.1;
-
-    @property({ group: { name: 'Camera' , displayOrder: 1}, type: CCFloat }) 
-    startZCamera: number = -4;
-
-    @property({ group: { name: 'Camera' , displayOrder: 1}, type: CCFloat }) 
-    zCamera: number = 3.1;
-
-    @property({ group: { name: 'Camera' , displayOrder: 1}, type: CCFloat }) 
-    cameraTargetXOffset: number = 0.3;
-
-    @property({ group: { name: 'Camera' , displayOrder: 1}, type: CCFloat }) 
-    startXRotateCamera: number = -1.6;
-
-    @property({ group: { name: 'Camera' , displayOrder: 1}, type: CCFloat }) 
-    xRotateCamera: number = -2.5;
-
-    @property({ group: { name: 'Camera' , displayOrder: 1}, type: CCInteger }) 
     cameraOffsetIndex = 3;
 
-    @property({ group: { name: 'Camera' , displayOrder: 1} }) 
-    cameraOffset: Vec3 = new Vec3(0, 2.91, -3.62)
-
-    private cameraCurrentIndex : number;
-    private cameraCurrentTargetPosition: Vec3 = new Vec3();
-    private cameraCaculatorPosition: Vec3 = new Vec3();
-
-    private cameraNextPosSmooth: Vec3 = new Vec3();
-    private cameraGraphicPos: Vec3 = new Vec3();
-    private cameraGraphicRotation: Quat = new Quat();
-    private cameraGraphicEulerAngles: Vec3 = new Vec3();
-    private setCameraPositionAndRotation_rotation: Quat = new Quat();
-    private setCameraPositionAndRotation_graphicPosition: Vec3 = new Vec3();
-    private setCameraPositionAndRotation_offsetDirection: Vec3 = new Vec3();
-    private setCameraPositionAndRotation_targetUp: Vec3 = new Vec3();
-    private setCameraPositionAndRotation_outRotation: Quat = new Quat();
-    private cameraValue: number = 0.0;
-    private lastCameraTarget: Vec3 = new Vec3();
+    public cameraCurrentIndex : number;
+    public cameraCurrentTargetPosition: Vec3 = new Vec3();
+    public cameraCaculatorPosition: Vec3 = new Vec3();
 
     //#endregion
 
@@ -119,10 +67,9 @@ export class PlayerMovement extends BaseMovement {
         input.on(Input.EventType.TOUCH_MOVE, this.onMouseMove, this);
 
         this.positionModule.startGame(this.startIndex);
-        this.setCameraStartGame();
         this.rotationModule.startGame(this.startIndex);
         this.setRotation();
-        this.setCameraPositionAndRotation();
+        this.cameraFollow.onStart(this);
         this.smokeEffect1.active = true;
         this.smokeEffect2.active = true;
     }
@@ -262,12 +209,6 @@ export class PlayerMovement extends BaseMovement {
 
 
     //#region Camera
-
-    setCameraStartGame(): void {
-        this.cameraCurrentIndex = this.currentIndex + this.cameraOffsetIndex;
-        this.cameraForwardPosSmooth.setPosition(MapSplineManager.current.roadPoints[this.cameraCurrentIndex].position)
-        this.node.inverseTransformPoint(this.lastCameraTarget, this.physicBody.node.worldPosition);
-    }
  
     setCameraPosition(dt: number): void{
         var speedLength = this.currentSpeed * this.speedFactor * dt;
@@ -298,31 +239,7 @@ export class PlayerMovement extends BaseMovement {
     }
 
     protected lateUpdate(dt: number): void {
-       
-        this.node.inverseTransformPoint(this.cameraNextPosSmooth, this.physicBody.node.worldPosition);
-        this.lastCameraTarget.x = lerp(this.lastCameraTarget.x, this.cameraNextPosSmooth.x, this.cameraTargetXOffset);
-        this.cameraNextPosSmooth.x = this.lastCameraTarget.x;
-        this.cameraPosSmooth.setPosition(this.cameraNextPosSmooth);
-
-        if(!this.controlCamera) return;
-        if(this.endGame) return;
-        this.cameraValue = ScriptExtensions.inverseLerp(0, 100, this.currentSpeed);
-        var valueConvert = ScriptExtensions.easeOutQuad(this.cameraValue);
-
-        this.camera.fov = valueConvert * this.cameraFOV + this.startCameraFOV;
-        
-        this.camera.node.parent.getPosition(this.cameraGraphicPos);
-        this.camera.node.parent.getRotation(this.cameraGraphicRotation);
-        this.cameraGraphicRotation.getEulerAngles(this.cameraGraphicEulerAngles);
-
-        this.cameraGraphicPos.y = this.startYCamera + this.yCamera * valueConvert;
-        this.cameraGraphicPos.z = this.startZCamera + this.zCamera * valueConvert;
-        this.cameraGraphicEulerAngles.x = this.startXRotateCamera + this.xRotateCamera * valueConvert;
-
-        this.camera.node.parent.position = this.cameraGraphicPos;
-        this.camera.node.parent.eulerAngles = this.cameraGraphicEulerAngles;
-        this.rotationModule.updateCameraValue(this.cameraValue);
-        this.setCameraPositionAndRotation();
+       this.cameraFollow.onLateUpdate(dt); 
     }
 
     // protected lateUpdate(dt: number): void {
@@ -348,21 +265,7 @@ export class PlayerMovement extends BaseMovement {
     //     this.cameraTransform.rotation = Quat.fromViewUp(new Quat(),lookDirection,targetUp);
     // }
 
-    setCameraPositionAndRotation(): void
-    {
-        this.node.getRotation(this.setCameraPositionAndRotation_rotation);
-        this.cameraPosSmooth.getWorldPosition(this.setCameraPositionAndRotation_graphicPosition)
-        this.setCameraPositionAndRotation_graphicPosition.x *= -1;
-        Vec3.transformQuat(this.setCameraPositionAndRotation_offsetDirection, this.cameraOffset, this.setCameraPositionAndRotation_rotation)
-        this.cameraTransform.setPosition(this.setCameraPositionAndRotation_offsetDirection.add(this.setCameraPositionAndRotation_graphicPosition));
 
-        this.cameraOffsetRotation = this.setCameraPositionAndRotation_rotation;
-    
-        Vec3.transformQuat(this.setCameraPositionAndRotation_targetUp, Vec3.UP, this.cameraOffsetRotation);
-        var lookDirection = (this.setCameraPositionAndRotation_graphicPosition.subtract(this.cameraTransform.position)).normalize();
-      
-        this.cameraTransform.rotation = Quat.fromViewUp(this.setCameraPositionAndRotation_outRotation,lookDirection,this.setCameraPositionAndRotation_targetUp);
-    }
 
     //#endregion
 

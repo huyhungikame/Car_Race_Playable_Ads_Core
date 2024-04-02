@@ -45,7 +45,7 @@ export abstract class BaseMovement extends Component {
     //#region Physic Propeties
 
     @property({ group: { name: 'Physic' , displayOrder: 2}, type: RigidBody }) 
-    protected physicBody: RigidBody;
+    public physicBody: RigidBody;
 
     private graphicLocalPostLerpTime: number = 0.0;
     //  down,up, left , right

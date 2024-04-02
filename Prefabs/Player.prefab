@@ -30,7 +30,7 @@
     "_active": true,
     "_components": [],
     "_prefab": {
-      "__id__": 399
+      "__id__": 401
     },
     "_lpos": {
       "__type__": "cc.Vec3",
@@ -700,10 +700,13 @@
       },
       {
         "__id__": 394
+      },
+      {
+        "__id__": 396
       }
     ],
     "_prefab": {
-      "__id__": 398
+      "__id__": 400
     },
     "_lpos": {
       "__type__": "cc.Vec3",
@@ -804,7 +807,7 @@
     "_active": true,
     "_components": [],
     "_prefab": {
-      "__id__": 397
+      "__id__": 399
     },
     "_lpos": {
       "__type__": "cc.Vec3",
@@ -867,7 +870,7 @@
       }
     ],
     "_prefab": {
-      "__id__": 396
+      "__id__": 398
     },
     "_lpos": {
       "__type__": "cc.Vec3",
@@ -5459,35 +5462,16 @@
       "__uuid__": "5acb3f9c-9270-4aa5-9aee-a73feda6bb64",
       "__expectedType__": "cc.Material"
     },
-    "controlCamera": true,
+    "cameraFollow": {
+      "__id__": 396
+    },
     "cameraTransform": {
       "__id__": 4
-    },
-    "camera": {
-      "__id__": 33
-    },
-    "cameraPosSmooth": {
-      "__id__": 41
     },
     "cameraForwardPosSmooth": {
       "__id__": 2
     },
-    "startCameraFOV": 45,
-    "cameraFOV": 8,
-    "startYCamera": -4.15,
-    "yCamera": 1.05375,
-    "startZCamera": -6,
-    "zCamera": 1.8,
-    "cameraTargetXOffset": 0.175,
-    "startXRotateCamera": 29.6,
-    "xRotateCamera": 0.8,
     "cameraOffsetIndex": 4,
-    "cameraOffset": {
-      "__type__": "cc.Vec3",
-      "x": 0,
-      "y": 2.91,
-      "z": -3.62
-    },
     "startIndex": 4,
     "windEffect": null,
     "smokeEffect1": {
@@ -5516,6 +5500,7 @@
     "positionGraphic": {
       "__id__": 43
     },
+    "initHorizontal": 0,
     "_id": ""
   },
   {
@@ -5554,6 +5539,52 @@
   {
     "__type__": "cc.CompPrefabInfo",
     "fileId": "5fQ423V9BKh7j0bbL7vwXX"
+  },
+  {
+    "__type__": "89284CNc0RF7IxgUC+PtAt1",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 40
+    },
+    "_enabled": true,
+    "__prefab": {
+      "__id__": 397
+    },
+    "controlCamera": true,
+    "cameraTransform": {
+      "__id__": 4
+    },
+    "camera": {
+      "__id__": 33
+    },
+    "cameraPosSmooth": {
+      "__id__": 41
+    },
+    "cameraForwardPosSmooth": {
+      "__id__": 2
+    },
+    "startCameraFOV": 45,
+    "cameraFOV": 8,
+    "startYCamera": -4.15,
+    "yCamera": 1.05375,
+    "startZCamera": -6,
+    "zCamera": 1.8,
+    "cameraTargetXOffset": 0.175,
+    "startXRotateCamera": 29.6,
+    "xRotateCamera": 0.8,
+    "cameraOffsetIndex": 4,
+    "cameraOffset": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 2.91,
+      "z": -3.62
+    },
+    "_id": ""
+  },
+  {
+    "__type__": "cc.CompPrefabInfo",
+    "fileId": "c5i5Wb3i9IPK+CoYS2bieG"
   },
   {
     "__type__": "cc.PrefabInfo",
@@ -5606,10 +5637,10 @@
     "instance": null,
     "targetOverrides": [
       {
-        "__id__": 400
+        "__id__": 402
       },
       {
-        "__id__": 402
+        "__id__": 404
       }
     ],
     "nestedPrefabInstanceRoots": [
@@ -5667,7 +5698,7 @@
       "__id__": 7
     },
     "targetInfo": {
-      "__id__": 401
+      "__id__": 403
     }
   },
   {
@@ -5689,7 +5720,7 @@
       "__id__": 194
     },
     "targetInfo": {
-      "__id__": 403
+      "__id__": 405
     }
   },
   {
