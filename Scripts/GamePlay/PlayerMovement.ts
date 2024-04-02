@@ -9,6 +9,7 @@ const { ccclass, property} = _decorator;
 
 @ccclass('PlayerMovement')
 export class PlayerMovement extends BaseMovement {
+    public static current: PlayerMovement;
 
     //#region Camera Properties
 
@@ -80,17 +81,68 @@ export class PlayerMovement extends BaseMovement {
     private setCameraPositionAndRotation_targetUp: Vec3 = new Vec3();
     private setCameraPositionAndRotation_outRotation: Quat = new Quat();
     private currentXRotate: number = -7.5;
+    private cameraValue: number = 0.0;
+    private lastCameraTarget: Vec3 = new Vec3();
 
     //#endregion
 
     @property(ReviveView)
     uiReviveView : ReviveView;
 
+    @property({ group: { name: 'Settings' , displayOrder: 1}, type: CCBoolean }) 
+    useFallOut: false;
 
+    @property({ group: { name: 'Settings' , displayOrder: 1}, type: CCInteger }) 
+    startIndex: number = 4;
 
+    private setRotation_targetUp: Vec3 = new Vec3();
 
+    start() {
+        PlayerMovement.current = this;
+        input.on(Input.EventType.TOUCH_END, this.onMouseUp, this);
+        input.on(Input.EventType.TOUCH_START, this.onMouseDown, this);
+        input.on(Input.EventType.TOUCH_MOVE, this.onMouseMove, this);
+
+        this.positionModule.startGame(this.startIndex);
+        this.setCameraStartGame();
+        this.rotationModule.startGame(this.startIndex);
+        this.setRotation();
+        this.setCameraPositionAndRotation();
+        this.rotationModule.teleport();
+
+        
+        this.carMaterial.setProperty("offset", this.offsetMaterial);
+        this.carMaterial.setProperty("strength", this.strength);
+        this.currentXRotate = this.startXRotate;
+
+        this.smokeEffect1.active = true;
+        this.smokeEffect2.active = true;
+    }
+
+    onDestroy() {
+        input.off(Input.EventType.TOUCH_END, this.onMouseUp, this);
+        input.off(Input.EventType.TOUCH_START, this.onMouseDown, this);
+        input.off(Input.EventType.TOUCH_MOVE, this.onMouseMove, this);
+    }
+
+    setRotation(): void {
+        Vec3.transformQuat(this.setRotation_targetUp, Vec3.UP, this.node.rotation);
+
+        var lookDirection = (this.cameraForwardPosSmooth.position.clone().subtract(this.node.position)).normalize();
+        var playerEuler = this.node.eulerAngles.clone();
+        var lockAt = new Vec3();
+        Quat.fromViewUp(new Quat(),lookDirection,this.setRotation_targetUp).getEulerAngles(lockAt);
+        this.convertVector(lockAt,playerEuler,lockAt);
+        this.node.eulerAngles = lockAt;
+    }
 
     //#region Camera
+
+    setCameraStartGame(): void {
+        this.cameraCurrentIndex = this.currentIndex + this.cameraOffsetIndex;
+        this.cameraForwardPosSmooth.setPosition(MapSplineManager.current.roadPoints[this.cameraCurrentIndex].position)
+        this.node.inverseTransformPoint(this.lastCameraTarget, this.physicBody.node.worldPosition);
+    }
  
     setCameraPosition(dt: number): void{
         var speedLength = this.currentSpeed * this.speedFactor * dt;
@@ -123,8 +175,8 @@ export class PlayerMovement extends BaseMovement {
     protected lateUpdate(dt: number): void {
        
         this.node.inverseTransformPoint(this.cameraNextPosSmooth, this.physicBody.node.worldPosition);
-        this.lastCameraTargetX = lerp(this.lastCameraTargetX, this.cameraNextPosSmooth.x, this.cameraTargetXOffset);
-        this.cameraNextPosSmooth.x = this.lastCameraTargetX;
+        this.lastCameraTarget.x = lerp(this.lastCameraTarget.x, this.cameraNextPosSmooth.x, this.cameraTargetXOffset);
+        this.cameraNextPosSmooth.x = this.lastCameraTarget.x;
         this.cameraPosSmooth.setPosition(this.cameraNextPosSmooth);
 
         if(!this.controlCamera) return;
@@ -166,31 +218,12 @@ export class PlayerMovement extends BaseMovement {
         this.cameraTransform.rotation = Quat.fromViewUp(this.setCameraPositionAndRotation_outRotation,lookDirection,this.setCameraPositionAndRotation_targetUp);
     }
 
-
     //#endregion
 
 
-
-
-
-
-
-
-
-
-
-
-
     public endGame: boolean = false;
-
  
-
-
-
-    @property({type: CCBoolean})
-    useFallOut: false;
- 
-    startIndex: number = 4;
+    
     speedChange: number = 35;
     cameraOffsetRotation: Quat;
     isMouseDown: boolean = false;
@@ -199,13 +232,16 @@ export class PlayerMovement extends BaseMovement {
     lastHorizontal: number = 0.0;
     deltaInputHorizontal: number = 0.0;
     timeFallOut: number = 0.0;
-    cameraValue: number = 0.0;
 
 
     @property({ group: { name: 'Effect' , displayOrder: 3}, type: ParticleSystem }) 
     windEffect: ParticleSystem;
 
-    lastCameraTargetX: number;
+    @property({ group: { name: 'Effect' , displayOrder: 3}, type: Node }) 
+    smokeEffect1: Node;
+
+    @property({ group: { name: 'Effect' , displayOrder: 3}, type: Node }) 
+    smokeEffect2: Node;
 
 
 
@@ -214,8 +250,6 @@ export class PlayerMovement extends BaseMovement {
 
     @property(CCFloat)
     zRatio: number = 5;
-
-
 
 
     @property(Vec4)
@@ -227,42 +261,6 @@ export class PlayerMovement extends BaseMovement {
     @property(CCFloat)
     yOffsetRatio : number = 0;
 
-    @property(Node)
-    smokeEffect1: Node;
-
-    @property(Node)
-    smokeEffect2: Node;
-
-    start() {
-        input.on(Input.EventType.TOUCH_END, this.onMouseUp, this);
-        input.on(Input.EventType.TOUCH_START, this.onMouseDown, this);
-        input.on(Input.EventType.TOUCH_MOVE, this.onMouseMove, this);
-
-        this.length = MapSplineManager.current.roadPoints.length;
-        this.currentIndex = this.startIndex;
-        this.cameraCurrentIndex = this.currentIndex + this.cameraOffsetIndex;
-        
-        this.node.position = MapSplineManager.current.roadPoints[this.startIndex].position.clone();
-        this.cameraForwardPosSmooth.setPosition(MapSplineManager.current.roadPoints[this.cameraCurrentIndex].position.clone())
-        this.progress = this.startIndex;
-        var rotation = MapSplineManager.current.roadPoints[this.startIndex].rotation.clone();
-        this.node.rotation = rotation;
-        this.setRotation();
-        this.setCameraPositionAndRotation();
-        this.rotationModule.teleport();
-        this.lastCameraTargetX = this.node.inverseTransformPoint(new Vec3(), this.physicBody.node.worldPosition.clone()).x;
-        this.carMaterial.setProperty("offset", this.offsetMaterial);
-        this.carMaterial.setProperty("strength", this.strength);
-        this.smokeEffect1.active = true;
-        this.smokeEffect2.active = true;
-        this.currentXRotate = this.startXRotate;
-    }
-
-    onDestroy() {
-        input.off(Input.EventType.TOUCH_END, this.onMouseUp, this);
-        input.off(Input.EventType.TOUCH_START, this.onMouseDown, this);
-        input.off(Input.EventType.TOUCH_MOVE, this.onMouseMove, this);
-    }
 
     onMouseUp(_event: EventTouch) {
         if(this.onDie) return;
@@ -313,18 +311,6 @@ export class PlayerMovement extends BaseMovement {
         }
 
         if (!this.isFallOutOfRoad) this.isGround();
-    }
-
-
-
-    setRotation(){
-        var targetUp =  Vec3.transformQuat(new Vec3(), Vec3.UP, this.node.rotation);
-        var lookDirection = (this.cameraForwardPosSmooth.position.clone().subtract(this.node.position)).normalize();
-        var playerEuler = this.node.eulerAngles.clone();
-        var lockAt = new Vec3()
-        Quat.fromViewUp(new Quat(),lookDirection,targetUp).getEulerAngles(lockAt);
-        this.convertVector(lockAt,playerEuler,lockAt);
-        this.node.eulerAngles = lockAt;
     }
 
 
