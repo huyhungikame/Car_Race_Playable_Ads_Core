@@ -9,7 +9,21 @@ export class TurnCar extends BaseGraphicCarRotationModule {
        
     }
     removeRotate(isMouseDown: boolean): void {
-        
+        // if (this.lastHorizontal == 0.0)
+        // {
+        //     var ratio = clamp01(this.inverseLerp(8, 65, this.currentSpeed) + 0.2);
+        //     if (this.currentGraphicRotate > 0)
+        //     {
+        //         this.currentGraphicRotate -= 65 * ratio * dt;
+        //         if (this.currentGraphicRotate < 0) this.currentGraphicRotate = 0;
+        //     }
+        //     else if (this.currentGraphicRotate < 0)
+        //     {
+        //         this.currentGraphicRotate += 65 * ratio * dt;
+        //         if (this.currentGraphicRotate > 0) this.currentGraphicRotate = 0;
+        //     }
+        // }
+
     }
 
     updateCameraValue(cameraValue: number): void {

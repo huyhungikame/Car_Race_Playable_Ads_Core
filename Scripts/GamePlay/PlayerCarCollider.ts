@@ -15,12 +15,15 @@ export class PlayerCarCollider extends CarCollider {
     spankParticle : ParticleSystem[] = [];
     spankLength: number;
     spankCurrentIndex: number = 0;
+    hasSpank: boolean = false;
 
     protected start(): void {
         this.spankCurrentIndex = 0;
         this.spankLength = this.spankParticle.length;
         this.collider.on('onCollisionStay', this.onCollisionStay, this);
         this.collider.on('onCollisionEnter', this.onCollisionEnter, this);
+        this.hasSpank = this.effectPool != null;
+        if(!this.hasSpank) return;
         this.spankParticle = this.effectPool.getComponentsInChildren(ParticleSystem);
     }
 
@@ -29,6 +32,7 @@ export class PlayerCarCollider extends CarCollider {
     }
 
     private onCollisionStay (event: ICollisionEvent) {
+        if(!this.hasSpank) return;
         this.frameCount++;
         if(this.frameCount % 2 != 0) return;
         var effect = this.spankParticle[this.spankCurrentIndex * 2];

@@ -5,6 +5,7 @@ import { ScriptExtensions } from '../ScriptExtensions';
 import MapSplineManager from './MapSplineManager';
 import { CheckPointManager } from './CheckPointManager';
 import { ReviveView } from '../UI/ReviveView';
+import { BaseCameraFollow } from './BaseCameraFollow';
 const { ccclass, property} = _decorator;
 
 @ccclass('PlayerMovement')
@@ -15,6 +16,9 @@ export class PlayerMovement extends BaseMovement {
 
     @property({ group: { name: 'Camera' , displayOrder: 1}, type: CCBoolean }) 
     controlCamera: boolean = true;
+
+    @property({ group: { name: 'Camera' , displayOrder: 1}, type: BaseCameraFollow }) 
+    cameraFollow: BaseCameraFollow;
 
     @property({ group: { name: 'Camera' , displayOrder: 1}, type: Node }) 
     cameraTransform: Node;
@@ -211,6 +215,22 @@ export class PlayerMovement extends BaseMovement {
         this.rotationModule.addRotate();
     }
 
+    // this.deltaInputHorizontal = (currentTouchPosition.x - this.previousTouchPosition.x) * 2.25 * game.deltaTime;
+    // var ratio = clamp01(this.inverseLerp(5, 55, this.currentSpeed) + 0.1);
+    // this.deltaInputHorizontal = clamp(this.deltaInputHorizontal, -0.55, 0.55);
+
+    // this.lastHorizontal = this.xOffset;
+    // var offset = this.splineManager.roadLaterals[this.splineManager.roadPoints[this.currentIndex].lateralIndex].maxOffset;
+    // this.xOffset = clamp(this.xOffset + this.deltaInputHorizontal * ratio, -offset, offset);
+
+    // this.lastHorizontal = this.xOffset - this.lastHorizontal;
+
+    // if (this.lastHorizontal != 0)
+    // {
+    //     this.lastHorizontal = (this.inverseLerp(-0.05, 0.05, this.lastHorizontal) - 0.5) * 2;
+    //     this.currentGraphicRotate = clamp(this.currentGraphicRotate + this.lastHorizontal * 1.5, -25, 25);
+    // }
+
     input(dt: number): void {
         this.lastHorizontal = 0;
         var ignoreControl = MapSplineManager.current.roadPoints[this.currentIndex].ignoreControl;
@@ -304,6 +324,29 @@ export class PlayerMovement extends BaseMovement {
         this.rotationModule.updateCameraValue(this.cameraValue);
         this.setCameraPositionAndRotation();
     }
+
+    // protected lateUpdate(dt: number): void {
+    //     var rotation = new Quat(this.player.rotation);
+
+    //     var graphicPosition =  new Vec3(this.carGraphic.worldPosition);
+    //     graphicPosition.x *= -1;
+
+    //     var offset = new Vec3(this.cameraOffset);
+    //     offset.add(new Vec3(0, 0, -1.75 * this.inverseLerp(0, 100, this.currentSpeed)));
+    //     if(this.endGame) return;
+    //     this.cameraTransform.position = graphicPosition.add(Vec3.transformQuat(new Vec3(), offset, rotation));
+
+    //     this.cameraOffsetRotation = Quat.slerp(new Quat(),this.cameraOffsetRotation, rotation, 0.25);
+    
+    //     var cameraPosition =  new Vec3(this.carGraphic.worldPosition);
+    //     cameraPosition.x *= -1;
+    //     cameraPosition.add(Vec3.transformQuat(new Vec3(), new Vec3(0,0,3.5), rotation));
+        
+    //     var targetUp =  Vec3.transformQuat(new Vec3(), Vec3.UP, this.cameraOffsetRotation);
+    //     var lookDirection = (cameraPosition.subtract(this.cameraTransform.position)).normalize();
+      
+    //     this.cameraTransform.rotation = Quat.fromViewUp(new Quat(),lookDirection,targetUp);
+    // }
 
     setCameraPositionAndRotation(): void
     {

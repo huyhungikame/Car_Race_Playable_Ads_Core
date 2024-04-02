@@ -141,6 +141,7 @@ export abstract class BaseMovement extends Component {
         if (this.lastHorizontal != 0)
         {
             this.lastHorizontal = (ScriptExtensions.inverseLerp(-0.05, 0.05, this.lastHorizontal) - 0.5) * 2;
+            // this.currentGraphicRotate = clamp(this.currentGraphicRotate + this.lastHorizontal * 1.5, -25, 25);
         }
     }
 
