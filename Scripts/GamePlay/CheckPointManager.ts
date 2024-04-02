@@ -24,7 +24,7 @@ export class CheckPointManager extends Component {
     completedViews: Node[] = [];
 
     current: number = 4;
-    currentRotation: Vec3;
+    currentRotation: Vec3 = new Vec3();
     index: number = 0;
     indexGoToStore: number = 0;
 
@@ -45,7 +45,7 @@ export class CheckPointManager extends Component {
        
         if (this.index >= this.roadLaterals.length || this.roadLaterals[this.index] != currentIndex) return;
         this.current = this.roadLaterals[this.index];
-        this.currentRotation = rotation;
+        this.currentRotation.set(rotation);
         this.index++;
     }
 

@@ -3,6 +3,7 @@ import { CheckPointManager } from './CheckPointManager';
 import MapSplineManager from './MapSplineManager';
 import { BaseGraphicCarRotationModule } from './BaseGraphicCarRotationModule';
 import { BaseGraphicCarPositionModule } from './BaseGraphicCarPositionModule';
+import { ScriptExtensions } from '../ScriptExtensions';
 const { ccclass, property } = _decorator;
 
 @ccclass('BaseMovement')
@@ -13,9 +14,11 @@ export abstract class BaseMovement extends Component {
     public maxSpeed: number = 100;
     public isStartGame: boolean = false;
 
-    protected isFallOutOfRoad: boolean = false;
-    protected isCheckGround: boolean = false;
+    public isFallOutOfRoad: boolean = false;
+    public isCheckGround: boolean = false;
     protected onDie: boolean = false;
+    lastHorizontal: number = 0.0;
+    deltaInputHorizontal: number = 0.0;
 
     private currentPosition: Vec3 = new Vec3();
     private currentRotation: Quat = new Quat();
@@ -123,7 +126,32 @@ export abstract class BaseMovement extends Component {
     protected updateCarGraphic(dt: number): void
     {
         this.positionModule.updateCarGraphic(dt);
+        this.positionModule.handleFallout(dt);
         this.rotationModule.updateCarGraphic(dt);
+    }
+
+    isFly(dt: number){
+        this.isCheckGround = true;
+        var ratio = clamp01(ScriptExtensions.inverseLerp(5, 55, this.currentSpeed) + 0.1);
+        this.lastHorizontal = this.positionModule.graphicLocalPosition.x;
+        this.positionModule.graphicLocalPosition.x = this.positionModule.graphicLocalPosition.x + this.deltaInputHorizontal * ratio;
+    
+        this.lastHorizontal = this.positionModule.graphicLocalPosition.x - this.lastHorizontal;
+    
+        if (this.lastHorizontal != 0)
+        {
+            this.lastHorizontal = (ScriptExtensions.inverseLerp(-0.05, 0.05, this.lastHorizontal) - 0.5) * 2;
+        }
+    }
+
+    isGround() : void
+    {
+        if(!this.isCheckGround) return;
+        this.isCheckGround = false;
+        var roadLateral = MapSplineManager.current.roadLaterals[MapSplineManager.current.roadPoints[this.currentIndex].lateralIndex];
+        var offset = roadLateral.maxOffset;
+        if(Math.abs(this.positionModule.graphicLocalPosition.x) <= offset) return;
+        this.isFallOutOfRoad = true;
     }
 
     //#region Physic Handle
@@ -213,6 +241,7 @@ export abstract class BaseMovement extends Component {
     }
 
     abstract revivePosition(index: number) : void;
+    abstract fallout() : void;
 
     //#endregion
 }

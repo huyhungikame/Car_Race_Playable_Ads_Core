@@ -82,9 +82,6 @@ export class PlayerMovement extends BaseMovement {
     @property(ReviveView)
     uiReviveView : ReviveView;
 
-    @property({ group: { name: 'Settings' , displayOrder: 1}, type: CCBoolean }) 
-    useFallOut: false;
-
     @property({ group: { name: 'Settings' , displayOrder: 1}, type: CCInteger }) 
     startIndex: number = 4;
 
@@ -101,6 +98,13 @@ export class PlayerMovement extends BaseMovement {
     private setRotation_lookDirection: Vec3 = new Vec3();
     private setRotation_lockAt: Vec3 = new Vec3();
     private setRotation_Rotation: Quat = new Quat();
+    public endGame: boolean = false;
+    speedChange: number = 35;
+    cameraOffsetRotation: Quat;
+    isMouseDown: boolean = false;
+    isTouchDrag: boolean = false;
+    previousTouchPosition: Vec2;
+    private onMouseMove_currentTouchPosition: Vec2 = new Vec2();
 
     start() {
         PlayerMovement.current = this;
@@ -117,11 +121,99 @@ export class PlayerMovement extends BaseMovement {
         this.smokeEffect2.active = true;
     }
 
+    startGame(position: Vec2) {
+        this.isStartGame = true
+        this.isMouseDown = true;
+        if (!this.isTouchDrag)
+        {
+            this.previousTouchPosition = position;
+            this.isTouchDrag = true;
+        }
+        
+        this.windEffect.node.active = true;
+    }
+
     onDestroy() {
         input.off(Input.EventType.TOUCH_END, this.onMouseUp, this);
         input.off(Input.EventType.TOUCH_START, this.onMouseDown, this);
         input.off(Input.EventType.TOUCH_MOVE, this.onMouseMove, this);
     }
+
+    protected update(dt: number): void {
+        this.input(dt);
+        this.setPosition(dt);
+        this.setCameraPosition(dt);
+        this.setRotation();
+        this.updateCarGraphic(dt);
+        CheckPointManager.current.onPlayerChangeCheckPoint(this.currentIndex, this.node.eulerAngles);
+    }
+
+    //#region Input
+
+    onMouseUp(_event: EventTouch) {
+        if(this.onDie) return;
+        if(!this.isStartGame) return;
+        this.isMouseDown = false;
+        this.isTouchDrag = false;
+    }
+
+    onMouseDown(event: EventTouch) {
+        if(this.onDie) return;
+        if(GameManager.instance.openningTutorial) GameManager.instance.closeTutorial();
+        if(!this.isStartGame) return;
+        this.isMouseDown = true;
+        this.rotationModule.resetState();
+        if (!this.isTouchDrag)
+        {
+            this.previousTouchPosition.set(event.getLocation());
+            this.isTouchDrag = true;
+        }
+    }
+
+    onMouseMove(event: EventTouch) {
+        if(this.onDie) return;
+        if(this.endGame) return;
+        if(this.isFallOutOfRoad) return;
+        this.lastHorizontal = 0;
+        if (this.isMouseDown)
+        {
+            if (this.isTouchDrag)
+            {
+                this.onMouseMove_currentTouchPosition.set(event.getLocation());
+                
+                if (!MapSplineManager.current.roadPoints[this.currentIndex].ignoreControl && !this.isCheckGround)
+                {
+                     this.normalControl(this.onMouseMove_currentTouchPosition);
+                }
+
+                this.previousTouchPosition.set(this.onMouseMove_currentTouchPosition);
+            }
+        }
+    }
+
+    input(dt: number): void {
+        this.lastHorizontal = 0;
+        var ignoreControl = MapSplineManager.current.roadPoints[this.currentIndex].ignoreControl;
+        if (this.isMouseDown && this.lockDirection.y == 0)
+        {
+            this.currentSpeed += this.speedChange * 2 * dt;
+        }
+        else
+        {
+            if (!ignoreControl && this.lockDirection.x == 0) this.currentSpeed -= this.speedChange * 4.5 * dt;
+        }
+
+        this.currentSpeed = clamp(this.currentSpeed, 0, this.maxSpeed);
+
+        if(this.isMouseDown && this.lastHorizontal == 0){
+            this.rotationModule.currentGraphicRotate.x = lerp(this.rotationModule.currentGraphicRotate.x, 0 , 0.1);
+            this.rotationModule.currentGraphicRotate.y = lerp(this.rotationModule.currentGraphicRotate.y, 0 , 0.1);
+        }else{
+            this.rotationModule.currentGraphicRotate.y = lerp(this.rotationModule.currentGraphicRotate.y, 0 , 0.3);
+        }
+    }
+
+    //#endregion
 
     setRotation(): void {
         Vec3.transformQuat(this.setRotation_targetUp, Vec3.UP, this.node.rotation);
@@ -132,6 +224,7 @@ export class PlayerMovement extends BaseMovement {
         this.convertVector(this.setRotation_lockAt, this.node.eulerAngles, this.setRotation_lockAt);
         this.node.eulerAngles.set(this.setRotation_lockAt);
     }
+
 
     //#region Camera
 
@@ -216,117 +309,6 @@ export class PlayerMovement extends BaseMovement {
     //#endregion
 
 
-    public endGame: boolean = false;
- 
-    
-    speedChange: number = 35;
-    cameraOffsetRotation: Quat;
-    isMouseDown: boolean = false;
-    isTouchDrag: boolean = false;
-    previousTouchPosition: Vec2;
-    lastHorizontal: number = 0.0;
-    deltaInputHorizontal: number = 0.0;
-    timeFallOut: number = 0.0;
-
-
-
-
-
-    onMouseUp(_event: EventTouch) {
-        if(this.onDie) return;
-        if(!this.isStartGame) return;
-        this.isMouseDown = false;
-        this.isTouchDrag = false;
-    }
-
-    onMouseDown(event: EventTouch) {
-        if(this.onDie) return;
-        if(GameManager.instance.openningTutorial) GameManager.instance.closeTutorial();
-        if(!this.isStartGame) return;
-        this.isMouseDown = true;
-        this.rotationModule.currentGraphicRotate = new Vec2(0,0);
-        if (!this.isTouchDrag)
-        {
-            this.previousTouchPosition = new Vec2(event.getLocation());
-            this.isTouchDrag = true;
-        }
-    }
-
-    startGame(position: Vec2) {
-        this.isStartGame = true
-        this.isMouseDown = true;
-        if (!this.isTouchDrag)
-        {
-            this.previousTouchPosition = new Vec2(position);
-            this.isTouchDrag = true;
-        }
-        
-        this.windEffect.node.active = true;
-    }
-
-    protected update(dt: number): void {
-        this.input(dt);
-        this.setPosition(dt);
-        this.setCameraPosition(dt);
-        this.setRotation();
-        CheckPointManager.current.onPlayerChangeCheckPoint(this.currentIndex, this.node.eulerAngles.clone());
-        this.updateCarGraphic(dt);
-        if (!this.useFallOut) return;
-        if (this.isFallOutOfRoad) this.fallOutOfRoad(dt);
-        if (MapSplineManager.current.roadPoints[this.currentIndex].ignoreControl || this.isFallOutOfRoad)
-        {
-            this.isFly(dt);
-            return
-        }
-
-        if (!this.isFallOutOfRoad) this.isGround();
-    }
-
-
-
-    input(dt: number): void {
-        this.lastHorizontal = 0;
-        var ignoreControl = MapSplineManager.current.roadPoints[this.currentIndex].ignoreControl;
-        if (this.isMouseDown && this.lockDirection.y == 0)
-        {
-            this.currentSpeed += this.speedChange * 2 * dt;
-        }
-        else
-        {
-            if (!ignoreControl && this.lockDirection.x == 0) this.currentSpeed -= this.speedChange * 4.5 * dt;
-        }
-
-        this.currentSpeed = clamp(this.currentSpeed, 0, this.maxSpeed);
-
-        if(this.isMouseDown && this.lastHorizontal == 0){
-            this.rotationModule.currentGraphicRotate.x = lerp(this.rotationModule.currentGraphicRotate.x, 0 , 0.1);
-            this.rotationModule.currentGraphicRotate.y = lerp(this.rotationModule.currentGraphicRotate.y, 0 , 0.1);
-        }else{
-            this.rotationModule.currentGraphicRotate.y = lerp(this.rotationModule.currentGraphicRotate.y, 0 , 0.3);
-        }
-    }
-
-    onMouseMove(event: EventTouch) {
-        if(this.onDie) return;
-        if(this.endGame) return;
-        if(this.isFallOutOfRoad) return;
-        this.lastHorizontal = 0;
-        if (this.isMouseDown)
-        {
-            if (this.isTouchDrag)
-            {
-                var currentTouchPosition = new Vec2(event.getLocation());
-                
-                if(!MapSplineManager.current.roadPoints[this.currentIndex].ignoreControl && !this.isCheckGround)
-                {
-                     this.normalControl(currentTouchPosition);
-                }
-
-                this.previousTouchPosition = currentTouchPosition;
-            }
-        }
-    }
-
     minMaxDelta: number = 0.035;
     lastDeltalInput: number = 0;
     normalControl(currentTouchPosition: Vec2): void
@@ -362,42 +344,7 @@ export class PlayerMovement extends BaseMovement {
         // this.currentGraphicRotate.y = lerp(this.currentGraphicRotate.y, 0 , 0.05)
     }
 
-
-    isFly(dt: number){
-        this.isCheckGround = true;
-        var ratio = clamp01(ScriptExtensions.inverseLerp(5, 55, this.currentSpeed) + 0.1);
-        this.lastHorizontal = this.positionModule.graphicLocalPosition.x;
-        this.positionModule.graphicLocalPosition.x = this.positionModule.graphicLocalPosition.x + this.deltaInputHorizontal * ratio;
-    
-        this.lastHorizontal = this.positionModule.graphicLocalPosition.x - this.lastHorizontal;
-    
-        if (this.lastHorizontal != 0)
-        {
-            this.lastHorizontal = (ScriptExtensions.inverseLerp(-0.05, 0.05, this.lastHorizontal) - 0.5) * 2;
-            // this.currentGraphicRotate = clamp(this.currentGraphicRotate + this.lastHorizontal * 1.5, -25, 25);
-        }
-    }
-
-    isGround() : void
-    {
-        if(!this.isCheckGround) return;
-        this.isCheckGround = false;
-        var roadLateral = MapSplineManager.current.roadLaterals[MapSplineManager.current.roadPoints[this.currentIndex].lateralIndex];
-        var offset = roadLateral.maxOffset;
-        if(Math.abs(this.positionModule.graphicLocalPosition.x) <= offset) return;
-        this.isFallOutOfRoad = true;
-    }
-
-    fallOutOfRoad(dt: number)
-    {
-        this.positionModule.graphicLocalPosition.y -= dt * 30;
-        this.timeFallOut += dt;
-        if(this.timeFallOut > 0.75)
-        {
-            this.ActionReviveView();
-        }
-    }
-    ActionReviveView(){
+    fallout(): void {
         if(this.onDie) return;
         this.die();
         this.isMouseDown = false;
@@ -405,7 +352,6 @@ export class PlayerMovement extends BaseMovement {
         this.lastHorizontal = 0;
         this.lastHorizontal = 0.0;
         this.deltaInputHorizontal = 0.0;
-        this.timeFallOut = 0;
         setTimeout(() => {
             this.uiReviveView.TweenPopup();   
         }, 350)    
@@ -426,9 +372,9 @@ export class PlayerMovement extends BaseMovement {
     }
 
     revivePosition(index: number): void {
-        this.node.position = MapSplineManager.current.roadPoints[index].position.clone();
+        this.node.setPosition(MapSplineManager.current.roadPoints[index].position);
         this.cameraCurrentIndex = this.currentIndex + this.cameraOffsetIndex;
-        this.cameraForwardPosSmooth.setPosition(MapSplineManager.current.roadPoints[this.cameraCurrentIndex].position.clone())
+        this.cameraForwardPosSmooth.setPosition(MapSplineManager.current.roadPoints[this.cameraCurrentIndex].position);
         this.smokeEffect1.active = true;
         this.smokeEffect2.active = true;
     }
