@@ -1,10 +1,17 @@
 import { _decorator, Component, Node } from 'cc';
 import { BaseGraphicCarRotationModule } from './BaseGraphicCarRotationModule';
+import MapSplineManager from './MapSplineManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('TurnCar')
 export class TurnCar extends BaseGraphicCarRotationModule {
 
+    updateCameraValue(cameraValue: number): void {
+      
+    }
+    public startGame(startIndex: number): void {
+        this.movement.node.setRotation(MapSplineManager.current.roadPoints[startIndex].rotation);
+    }
         // graphicOffset : Vec3 = new Vec3(0,0,0);
         // localGraphicAngle: Vec3;
     updateCarGraphic(dt: number): void {

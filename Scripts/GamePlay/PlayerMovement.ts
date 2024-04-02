@@ -50,12 +50,6 @@ export class PlayerMovement extends BaseMovement {
     cameraTargetXOffset: number = 0.3;
 
     @property({ group: { name: 'Camera' , displayOrder: 1}, type: CCFloat }) 
-    startXRotate: number = -7.5;
-
-    @property({ group: { name: 'Camera' , displayOrder: 1}, type: CCFloat }) 
-    xRotate: number = -7.5;
-
-    @property({ group: { name: 'Camera' , displayOrder: 1}, type: CCFloat }) 
     startXRotateCamera: number = -1.6;
 
     @property({ group: { name: 'Camera' , displayOrder: 1}, type: CCFloat }) 
@@ -80,7 +74,6 @@ export class PlayerMovement extends BaseMovement {
     private setCameraPositionAndRotation_offsetDirection: Vec3 = new Vec3();
     private setCameraPositionAndRotation_targetUp: Vec3 = new Vec3();
     private setCameraPositionAndRotation_outRotation: Quat = new Quat();
-    private currentXRotate: number = -7.5;
     private cameraValue: number = 0.0;
     private lastCameraTarget: Vec3 = new Vec3();
 
@@ -95,7 +88,19 @@ export class PlayerMovement extends BaseMovement {
     @property({ group: { name: 'Settings' , displayOrder: 1}, type: CCInteger }) 
     startIndex: number = 4;
 
+    @property({ group: { name: 'Effect' , displayOrder: 3}, type: ParticleSystem }) 
+    windEffect: ParticleSystem;
+
+    @property({ group: { name: 'Effect' , displayOrder: 3}, type: Node }) 
+    smokeEffect1: Node;
+
+    @property({ group: { name: 'Effect' , displayOrder: 3}, type: Node }) 
+    smokeEffect2: Node;
+
     private setRotation_targetUp: Vec3 = new Vec3();
+    private setRotation_lookDirection: Vec3 = new Vec3();
+    private setRotation_lockAt: Vec3 = new Vec3();
+    private setRotation_Rotation: Quat = new Quat();
 
     start() {
         PlayerMovement.current = this;
@@ -108,13 +113,6 @@ export class PlayerMovement extends BaseMovement {
         this.rotationModule.startGame(this.startIndex);
         this.setRotation();
         this.setCameraPositionAndRotation();
-        this.rotationModule.teleport();
-
-        
-        this.carMaterial.setProperty("offset", this.offsetMaterial);
-        this.carMaterial.setProperty("strength", this.strength);
-        this.currentXRotate = this.startXRotate;
-
         this.smokeEffect1.active = true;
         this.smokeEffect2.active = true;
     }
@@ -127,13 +125,12 @@ export class PlayerMovement extends BaseMovement {
 
     setRotation(): void {
         Vec3.transformQuat(this.setRotation_targetUp, Vec3.UP, this.node.rotation);
-
-        var lookDirection = (this.cameraForwardPosSmooth.position.clone().subtract(this.node.position)).normalize();
-        var playerEuler = this.node.eulerAngles.clone();
-        var lockAt = new Vec3();
-        Quat.fromViewUp(new Quat(),lookDirection,this.setRotation_targetUp).getEulerAngles(lockAt);
-        this.convertVector(lockAt,playerEuler,lockAt);
-        this.node.eulerAngles = lockAt;
+        this.cameraForwardPosSmooth.getPosition(this.setRotation_lookDirection);
+        this.setRotation_lookDirection = (this.setRotation_lookDirection.subtract(this.node.position)).normalize();
+        Quat.fromViewUp(this.setRotation_Rotation, this.setRotation_lookDirection, this.setRotation_targetUp);
+        this.setRotation_Rotation.getEulerAngles(this.setRotation_lockAt);
+        this.convertVector(this.setRotation_lockAt, this.node.eulerAngles, this.setRotation_lockAt);
+        this.node.eulerAngles.set(this.setRotation_lockAt);
     }
 
     //#region Camera
@@ -196,9 +193,7 @@ export class PlayerMovement extends BaseMovement {
 
         this.camera.node.parent.position = this.cameraGraphicPos;
         this.camera.node.parent.eulerAngles = this.cameraGraphicEulerAngles;
-        
-        this.currentXRotate = this.startXRotate + this.cameraValue * this.xRotate;
-
+        this.rotationModule.updateCameraValue(this.cameraValue);
         this.setCameraPositionAndRotation();
     }
 
@@ -234,32 +229,7 @@ export class PlayerMovement extends BaseMovement {
     timeFallOut: number = 0.0;
 
 
-    @property({ group: { name: 'Effect' , displayOrder: 3}, type: ParticleSystem }) 
-    windEffect: ParticleSystem;
 
-    @property({ group: { name: 'Effect' , displayOrder: 3}, type: Node }) 
-    smokeEffect1: Node;
-
-    @property({ group: { name: 'Effect' , displayOrder: 3}, type: Node }) 
-    smokeEffect2: Node;
-
-
-
-    @property(CCFloat)
-    yRatio: number = -17.5;
-
-    @property(CCFloat)
-    zRatio: number = 5;
-
-
-    @property(Vec4)
-    offsetMaterial: Vec4 = new Vec4(0,0,0,1);
-
-    @property(CCFloat)
-    strength: number = 0;
-
-    @property(CCFloat)
-    yOffsetRatio : number = 0;
 
 
     onMouseUp(_event: EventTouch) {
@@ -301,7 +271,6 @@ export class PlayerMovement extends BaseMovement {
         this.setRotation();
         CheckPointManager.current.onPlayerChangeCheckPoint(this.currentIndex, this.node.eulerAngles.clone());
         this.updateCarGraphic(dt);
-        this.updateMaterial(dt);
         if (!this.useFallOut) return;
         if (this.isFallOutOfRoad) this.fallOutOfRoad(dt);
         if (MapSplineManager.current.roadPoints[this.currentIndex].ignoreControl || this.isFallOutOfRoad)
@@ -314,15 +283,6 @@ export class PlayerMovement extends BaseMovement {
     }
 
 
-    updateMaterial(dt: number): void {
-        var value = this.rotationModule.currentGraphicRotate.y * this.yOffsetRatio;
-        value = math.clamp(value,-1,1);
-        this.offsetMaterial.z = value;
-        this.offsetMaterial.w = value;
-        this.carMaterial.setProperty("offset", this.offsetMaterial);
-        // this.carMaterial.setProperty("strength", this.strength);
-        this.rotationModule.rotateGraphicNode.eulerAngles = new Vec3(this.currentXRotate, this.yRatio * this.rotationModule.currentGraphicRotate.x, this.zRatio * this.rotationModule.currentGraphicRotate.y) 
-    }
 
     input(dt: number): void {
         this.lastHorizontal = 0;
