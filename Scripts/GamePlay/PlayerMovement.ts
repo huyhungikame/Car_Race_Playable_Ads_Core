@@ -356,6 +356,7 @@ export class PlayerMovement extends BaseMovement {
 
     revivePosition(index: number): void {
         this.node.setPosition(MapSplineManager.current.roadPoints[index].position);
+        this.node.setRotation(MapSplineManager.current.roadPoints[index].rotation);
         this.cameraCurrentIndex = this.currentIndex + this.cameraOffsetIndex;
         this.cameraForwardPosSmooth.setPosition(MapSplineManager.current.roadPoints[this.cameraCurrentIndex].position);
         this.smokeEffect1.active = true;
