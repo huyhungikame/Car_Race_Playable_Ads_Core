@@ -5357,7 +5357,9 @@
     "controller": {
       "__id__": 388
     },
-    "cameraShake": null,
+    "cameraShake": {
+      "__id__": 35
+    },
     "spankParticle": [
       {
         "__id__": 260
@@ -5416,9 +5418,6 @@
     "rotationModule": {
       "__id__": 392
     },
-    "carGraphic": {
-      "__id__": 43
-    },
     "physicBody": {
       "__id__": 384
     },
@@ -5430,54 +5429,37 @@
       "__uuid__": "5acb3f9c-9270-4aa5-9aee-a73feda6bb64",
       "__expectedType__": "cc.Material"
     },
-    "rotateGraphicNode": {
-      "__id__": 45
-    },
-    "reviveViews": [
-      null,
-      null,
-      null,
-      null
-    ],
+    "controlCamera": true,
     "cameraTransform": {
       "__id__": 4
     },
-    "useFallOut": false,
     "camera": {
       "__id__": 33
     },
-    "controlCamera": true,
-    "windEffect": null,
     "cameraPosSmooth": {
       "__id__": 41
     },
     "cameraForwardPosSmooth": {
       "__id__": 2
     },
-    "yRatio": -15,
-    "zRatio": 2.5,
     "startCameraFOV": 45,
     "cameraFOV": 8,
     "startYCamera": -4.15,
     "yCamera": 1.05375,
     "startZCamera": -6,
     "zCamera": 1.8,
-    "test": 0,
     "cameraTargetXOffset": 0.175,
-    "startXRotate": -11.5,
-    "xRotate": -2.2,
     "startXRotateCamera": 29.6,
     "xRotateCamera": 0.8,
     "cameraOffsetIndex": 4,
-    "offsetMaterial": {
-      "__type__": "cc.Vec4",
+    "cameraOffset": {
+      "__type__": "cc.Vec3",
       "x": 0,
-      "y": 0,
-      "z": 0,
-      "w": 0
+      "y": 2.91,
+      "z": -3.62
     },
-    "strength": 6.25,
-    "yOffsetRatio": 1.5,
+    "startIndex": 4,
+    "windEffect": null,
     "smokeEffect1": {
       "__id__": 50
     },
@@ -5524,6 +5506,19 @@
     "rotateGraphicNode": {
       "__id__": 45
     },
+    "yRatio": -15,
+    "zRatio": 2.5,
+    "startXRotate": -11.5,
+    "xRotate": -2.2,
+    "offsetMaterial": {
+      "__type__": "cc.Vec4",
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "w": 0
+    },
+    "strength": 6.25,
+    "yOffsetRatio": 1.5,
     "_id": ""
   },
   {
