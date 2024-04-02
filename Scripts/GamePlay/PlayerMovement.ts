@@ -237,7 +237,7 @@ export class PlayerMovement extends BaseMovement {
         Quat.fromViewUp(this.setRotation_Rotation, this.setRotation_lookDirection, this.setRotation_targetUp);
         this.setRotation_Rotation.getEulerAngles(this.setRotation_lockAt);
         this.convertVector(this.setRotation_lockAt, this.node.eulerAngles, this.setRotation_lockAt);
-        this.node.eulerAngles.set(this.setRotation_lockAt);
+        this.node.eulerAngles = this.setRotation_lockAt;
     }
 
 

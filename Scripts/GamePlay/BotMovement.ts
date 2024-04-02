@@ -1,29 +1,19 @@
 import { _decorator, CCFloat, CCInteger, clamp, clamp01, game, lerp, math, Vec3 } from 'cc';
 import { BaseMovement } from './BaseMovement';
-import { PlayerMovement } from './PlayerMovement';
 import MapSplineManager from './MapSplineManager';
 const { ccclass, property } = _decorator;
 const { randomRange } = math;
 
 @ccclass('BotMovement')
 export class BotMovement extends BaseMovement {
-    @property(CCInteger)
+    @property({ group: { name: 'Settings' , displayOrder: 1}, type: CCInteger }) 
     startIndex: number = 4;
 
-    @property(CCFloat)
-    offsetIndex: number = 0.0;
-
-    @property(CCFloat)
-    initHorizontal: number = 0.0;
-
-    @property(CCFloat)
+    @property({ group: { name: 'Settings' , displayOrder: 1}, type: CCFloat }) 
     minSpeed: number = 40;
 
-    @property(CCInteger)
+    @property({ group: { name: 'Settings' , displayOrder: 1}, type: CCInteger }) 
     offsetRevive: number = 0;
-
-    @property(PlayerMovement)
-    playerMovement: PlayerMovement;
 
     lastHorizontal: number = 0.0;
     startHorizontal: number = 0.0;
@@ -34,20 +24,8 @@ export class BotMovement extends BaseMovement {
     timeActive: number = 0.0;
 
     start() {
-        this.length = MapSplineManager.current.roadPoints.length;
-        this.currentIndex = this.startIndex;
-        var startPoint = MapSplineManager.current.roadPoints[this.startIndex];
-
-        this.node.position = startPoint.position.clone().add(startPoint.directionToNext.clone().multiplyScalar(this.offsetIndex * startPoint.distanceToNext));
-        this.progress = this.startIndex + this.offsetIndex;
-        var rotation = startPoint.rotation.clone();
-        this.node.rotation = rotation;
-        this.rotationModule.localGraphicAngle = this.carGraphic.eulerAngles;
-        this.positionModule.graphicLocalPosition.x = this.initHorizontal;
-        this.carGraphic.setPosition(new Vec3(this.positionModule.graphicLocalPosition.x,0,0));
-        var offsetGraphic = Math.abs(this.playerMovement.progress - this.progress);
-        var offset = 1 - clamp01(offsetGraphic / 5);
-        this.rotateGraphicNode.eulerAngles = this.playerMovement.rotateGraphicNode.eulerAngles.clone().multiply3f(offset,1,1);
+        this.positionModule.startGame(this.startIndex);
+        this.rotationModule.startGame(this.startIndex);
     }
 
     protected update(dt: number): void {
@@ -56,10 +34,6 @@ export class BotMovement extends BaseMovement {
         this.rotate(dt);
         this.setPosition(dt);
         this.updateCarGraphic(dt);
-
-        var offsetGraphic = Math.abs(this.playerMovement.progress - this.progress);
-        var offset = 1 - clamp01(offsetGraphic / 5);
-        this.rotateGraphicNode.eulerAngles = this.playerMovement.rotateGraphicNode.eulerAngles.clone().multiply3f(offset,1,1);
     }
 
     speedConvert(speed: number): void {
@@ -85,7 +59,7 @@ export class BotMovement extends BaseMovement {
         }
     }
 
-    currentRotateChange: number = 0;
+
     rotate(dt: number): void {
         if (MapSplineManager.current.roadPoints[this.currentIndex].ignoreControl) return;
         this.CheckGoStraight();
@@ -101,17 +75,7 @@ export class BotMovement extends BaseMovement {
             return;
         }
 
-
-        if (Math.abs(this.lastHorizontal) > 0.07)
-        {
-            var newRotate = clamp(this.rotationModule.currentGraphicRotate.x - this.lastHorizontal * 30 *dt, -1, 1);
-            this.currentRotateChange = newRotate - this.rotationModule.currentGraphicRotate.x;
-            this.rotationModule.currentGraphicRotate.x = newRotate;
-        }
-
-        var detal = Math.abs(this.currentRotateChange);
-        detal = clamp(detal,0.1,0.2);
-        this.rotationModule.currentGraphicRotate.x = lerp(this.rotationModule.currentGraphicRotate.x, 0 , detal);
+        this.rotationModule.removeRotate(false);
     }
 
     
@@ -144,10 +108,11 @@ export class BotMovement extends BaseMovement {
         if(index < 4) index = 4;
         var startPoint = MapSplineManager.current.roadPoints[index];
         this.node.position = startPoint.position.clone();
-        this.positionModule.graphicLocalPosition.x = this.initHorizontal;
-        this.carGraphic.setPosition(new Vec3(this.positionModule.graphicLocalPosition.x,0,0));
+        this.positionModule.graphicLocalPosition.x = this.positionModule.initHorizontal;
+        this.positionModule.positionGraphic.setPosition(new Vec3(this.positionModule.graphicLocalPosition.x,0,0));
     }
-        fallout(): void {
+
+    fallout(): void {
         
     }
 }

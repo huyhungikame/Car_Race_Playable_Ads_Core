@@ -1,4 +1,4 @@
-import { _decorator, CCBoolean, Component, Node, Vec3 } from 'cc';
+import { _decorator, CCBoolean, CCFloat, Component, Node, Vec3 } from 'cc';
 import { BaseMovement } from './BaseMovement';
 import MapSplineManager from './MapSplineManager';
 const { ccclass, property } = _decorator;
@@ -11,6 +11,9 @@ export abstract class BaseGraphicCarPositionModule extends Component {
     @property(Node)
     positionGraphic: Node;
 
+    @property(CCFloat)
+    initHorizontal: number = 0.0;
+
     public graphicLocalPosition: Vec3 = new Vec3();
     private timeFallOut: number = 0.0;
     protected movement: BaseMovement;
@@ -18,6 +21,7 @@ export abstract class BaseGraphicCarPositionModule extends Component {
     abstract updateCarGraphic(dt: number): void;
     abstract teleport(): void;
     abstract moveGraphic(): void;
+    public abstract startGame(startIndex: number): void;
 
     public setUpMovement(base: BaseMovement): void {
         this.movement = base;
@@ -25,13 +29,6 @@ export abstract class BaseGraphicCarPositionModule extends Component {
     
     public resetState(): void {
         this.graphicLocalPosition.set(Vec3.ZERO);
-    }
-
-    public startGame(startIndex: number): void {
-        this.movement.length = MapSplineManager.current.roadPoints.length;
-        this.movement.currentIndex = startIndex;
-        this.movement.node.setPosition(MapSplineManager.current.roadPoints[startIndex].position);
-        this.movement.progress = startIndex;
     }
 
     public handleFallout(dt: number): void {

@@ -37,10 +37,10 @@ export abstract class BaseMovement extends Component {
     protected speedFactor: number = 0.25;
 
     @property({ group: { name: 'Module' , displayOrder: 4}, type: BaseGraphicCarPositionModule }) 
-    protected positionModule: BaseGraphicCarPositionModule;
+    public positionModule: BaseGraphicCarPositionModule;
 
     @property({ group: { name: 'Module' , displayOrder: 4}, type: BaseGraphicCarRotationModule }) 
-    protected rotationModule: BaseGraphicCarRotationModule;
+    public rotationModule: BaseGraphicCarRotationModule;
 
     //#region Physic Propeties
 

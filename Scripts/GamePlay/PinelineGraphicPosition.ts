@@ -5,6 +5,12 @@ const { ccclass, property } = _decorator;
 
 @ccclass('PinelineGraphicPosition')
 export class PinelineGraphicPosition extends BaseGraphicCarPositionModule {
+    public startGame(startIndex: number): void {
+        this.movement.length = MapSplineManager.current.roadPoints.length;
+        this.movement.currentIndex = startIndex;
+        this.movement.node.setPosition(MapSplineManager.current.roadPoints[startIndex].position);
+        this.movement.progress = startIndex;
+    }
     updateCarGraphic(dt: number): void {
         // var roadPoint = MapSplineManager.current.roadPoints[this.currentIndex];
         // var roadLateral = MapSplineManager.current.roadLaterals[roadPoint.lateralIndex];
