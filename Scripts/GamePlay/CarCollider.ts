@@ -40,11 +40,11 @@ export class CarCollider extends Component {
         this.controller.applyPhysic(normal.normalize());
     }
 
-    OnHitFan(): void
+    onHitObstacles(): void
     {
         if (this.controller instanceof PlayerMovement) {
             let movement: PlayerMovement = this.controller;
-            movement.ActionReviveView();
+            movement.actionReviveView();
             return;
         }
         

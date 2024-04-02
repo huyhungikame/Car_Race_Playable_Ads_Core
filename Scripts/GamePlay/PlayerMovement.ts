@@ -323,6 +323,10 @@ export class PlayerMovement extends BaseMovement {
 
     //#endregion
 
+    actionReviveView(): void {
+        this.fallout();
+    }
+
     fallout(): void {
         if(this.onDie) return;
         this.die();

@@ -20,7 +20,7 @@ export class FanBehaviour extends Component {
 
     private onCollision (event: ICollisionEvent) {
         var player = event.otherCollider.node.getComponent(CarCollider);
-        player.OnHitFan();
+        player.onHitObstacles();
     }
 
     rotateZ : number = 0;
