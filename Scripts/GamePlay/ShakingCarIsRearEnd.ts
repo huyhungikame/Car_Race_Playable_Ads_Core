@@ -1,4 +1,4 @@
-import { _decorator, CCFloat, Component, math, Node, Vec3, Vec4 } from 'cc';
+import { _decorator, CCFloat, clamp, Component, game, lerp, math, Node, Vec3, Vec4 } from 'cc';
 import { BaseGraphicCarRotationModule } from './BaseGraphicCarRotationModule';
 import MapSplineManager from './MapSplineManager';
 const { ccclass, property } = _decorator;
@@ -56,5 +56,20 @@ export class ShakingCarIsRearEnd extends BaseGraphicCarRotationModule {
         this.currentRotate.y = this.yRatio * this.currentGraphicRotate.x;
         this.currentRotate.z = this.zRatio * this.currentGraphicRotate.y;
         this.rotateGraphicNode.eulerAngles = this.currentRotate;
+    }
+
+    addRotate(): void {
+        var dt = game.deltaTime;
+        this.currentGraphicRotate.x = clamp(this.currentGraphicRotate.x - this.movement.lastHorizontal * 25 *dt, -1, 1);
+        this.currentGraphicRotate.y = this.currentGraphicRotate.x;
+    }
+
+    removeRotate(isMouseDown: boolean): void {
+        if(isMouseDown && this.movement.lastHorizontal == 0){
+            this.currentGraphicRotate.x = lerp(this.currentGraphicRotate.x, 0 , 0.1);
+            this.currentGraphicRotate.y = lerp(this.currentGraphicRotate.y, 0 , 0.1);
+        }else{
+            this.currentGraphicRotate.y = lerp(this.currentGraphicRotate.y, 0 , 0.3);
+        }
     }
 }

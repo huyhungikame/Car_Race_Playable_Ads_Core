@@ -18,4 +18,11 @@ export class NormalGraphicPositionModule extends BaseGraphicCarPositionModule {
     teleport(): void {
        
     }
+
+    moveGraphic(): void {
+        this.movement.lastHorizontal = this.graphicLocalPosition.x;
+        var offset = MapSplineManager.current.roadLaterals[MapSplineManager.current.roadPoints[this.movement.currentIndex].lateralIndex].maxOffset;
+        this.graphicLocalPosition.x = clamp(this.graphicLocalPosition.x + this.movement.deltaInputHorizontal, -offset, offset);
+        this.movement.lastHorizontal = this.graphicLocalPosition.x - this.movement.lastHorizontal;
+    }
 }

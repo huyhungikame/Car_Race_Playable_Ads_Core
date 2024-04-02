@@ -105,6 +105,8 @@ export class PlayerMovement extends BaseMovement {
     isTouchDrag: boolean = false;
     previousTouchPosition: Vec2;
     private onMouseMove_currentTouchPosition: Vec2 = new Vec2();
+    minMaxDelta: number = 0.035;
+    lastDeltalInput: number = 0;
 
     start() {
         PlayerMovement.current = this;
@@ -183,12 +185,30 @@ export class PlayerMovement extends BaseMovement {
                 
                 if (!MapSplineManager.current.roadPoints[this.currentIndex].ignoreControl && !this.isCheckGround)
                 {
-                     this.normalControl(this.onMouseMove_currentTouchPosition);
+                     this.moveGraphic(this.onMouseMove_currentTouchPosition);
                 }
 
                 this.previousTouchPosition.set(this.onMouseMove_currentTouchPosition);
             }
         }
+    }
+
+    
+    moveGraphic(currentTouchPosition: Vec2): void
+    {
+        this.deltaInputHorizontal = (currentTouchPosition.x - this.previousTouchPosition.x) * 2 * game.deltaTime;
+        if(this.lockDirection.w > 0 && this.deltaInputHorizontal > 0) this.deltaInputHorizontal = 0;
+        if(this.lockDirection.z > 0 && this.deltaInputHorizontal < 0) this.deltaInputHorizontal = 0;
+
+        if((this.deltaInputHorizontal < 0 && this.lastDeltalInput < 0) || (this.deltaInputHorizontal > 0 && this.lastDeltalInput > 0)){
+            this.minMaxDelta = math.clamp(this.minMaxDelta + 0.65 * game.deltaTime,0.075,0.3) 
+        }else{
+            this.minMaxDelta = 0.075;
+        }
+        this.lastDeltalInput = this.deltaInputHorizontal;
+        this.deltaInputHorizontal = clamp(this.deltaInputHorizontal, -this.minMaxDelta, this.minMaxDelta);
+        this.positionModule.moveGraphic();
+        this.rotationModule.addRotate();
     }
 
     input(dt: number): void {
@@ -205,12 +225,7 @@ export class PlayerMovement extends BaseMovement {
 
         this.currentSpeed = clamp(this.currentSpeed, 0, this.maxSpeed);
 
-        if(this.isMouseDown && this.lastHorizontal == 0){
-            this.rotationModule.currentGraphicRotate.x = lerp(this.rotationModule.currentGraphicRotate.x, 0 , 0.1);
-            this.rotationModule.currentGraphicRotate.y = lerp(this.rotationModule.currentGraphicRotate.y, 0 , 0.1);
-        }else{
-            this.rotationModule.currentGraphicRotate.y = lerp(this.rotationModule.currentGraphicRotate.y, 0 , 0.3);
-        }
+        this.rotationModule.removeRotate(this.isMouseDown);
     }
 
     //#endregion
@@ -307,42 +322,6 @@ export class PlayerMovement extends BaseMovement {
     }
 
     //#endregion
-
-
-    minMaxDelta: number = 0.035;
-    lastDeltalInput: number = 0;
-    normalControl(currentTouchPosition: Vec2): void
-    {
-        this.deltaInputHorizontal = (currentTouchPosition.x - this.previousTouchPosition.x) * 2 * game.deltaTime;
-        if(this.lockDirection.w > 0 && this.deltaInputHorizontal > 0) this.deltaInputHorizontal = 0;
-        if(this.lockDirection.z > 0 && this.deltaInputHorizontal < 0) this.deltaInputHorizontal = 0;
-
-        if((this.deltaInputHorizontal < 0 && this.lastDeltalInput < 0) || (this.deltaInputHorizontal > 0 && this.lastDeltalInput > 0)){
-            this.minMaxDelta = math.clamp(this.minMaxDelta + 0.65 * game.deltaTime,0.075,0.3) 
-        }else{
-            this.minMaxDelta = 0.075;
-        }
-        this.lastDeltalInput = this.deltaInputHorizontal;
-        
-        this.deltaInputHorizontal = clamp(this.deltaInputHorizontal, -this.minMaxDelta, this.minMaxDelta);
-
-        this.lastHorizontal = this.positionModule.graphicLocalPosition.x;
-        var offset = MapSplineManager.current.roadLaterals[MapSplineManager.current.roadPoints[this.currentIndex].lateralIndex].maxOffset;
-        this.positionModule.graphicLocalPosition.x = clamp(this.positionModule.graphicLocalPosition.x + this.deltaInputHorizontal, -offset, offset);
-
-        this.lastHorizontal = this.positionModule.graphicLocalPosition.x - this.lastHorizontal;
-        this.addRotateHorizontal();
-    }
-
-
-    addRotateHorizontal() : void
-    {
-        var dt = game.deltaTime;
-        this.rotationModule.currentGraphicRotate.x = clamp(this.rotationModule.currentGraphicRotate.x - this.lastHorizontal * 25 *dt, -1, 1);
-        this.rotationModule.currentGraphicRotate.y = this.rotationModule.currentGraphicRotate.x;
-        // this.currentGraphicRotate.x = lerp(this.currentGraphicRotate.x, 0 , 0.05);
-        // this.currentGraphicRotate.y = lerp(this.currentGraphicRotate.y, 0 , 0.05)
-    }
 
     fallout(): void {
         if(this.onDie) return;

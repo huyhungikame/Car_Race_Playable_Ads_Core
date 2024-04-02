@@ -14,6 +14,8 @@ export abstract class BaseGraphicCarRotationModule extends Component {
     abstract teleport(): void;
     abstract startGame(startIndex: number): void;
     abstract updateCameraValue(cameraValue: number) : void;
+    abstract addRotate(): void;
+    abstract removeRotate(isMouseDown: boolean): void;
 
     public setUpMovement(base: BaseMovement): void {
         this.movement = base;

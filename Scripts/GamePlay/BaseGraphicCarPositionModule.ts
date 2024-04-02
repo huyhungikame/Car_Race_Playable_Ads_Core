@@ -17,6 +17,7 @@ export abstract class BaseGraphicCarPositionModule extends Component {
 
     abstract updateCarGraphic(dt: number): void;
     abstract teleport(): void;
+    abstract moveGraphic(): void;
 
     public setUpMovement(base: BaseMovement): void {
         this.movement = base;

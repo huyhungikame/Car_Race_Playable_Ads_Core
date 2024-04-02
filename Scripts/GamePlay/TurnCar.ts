@@ -5,6 +5,12 @@ const { ccclass, property } = _decorator;
 
 @ccclass('TurnCar')
 export class TurnCar extends BaseGraphicCarRotationModule {
+    addRotate(): void {
+       
+    }
+    removeRotate(isMouseDown: boolean): void {
+        
+    }
 
     updateCameraValue(cameraValue: number): void {
       
