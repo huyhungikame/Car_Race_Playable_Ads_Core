@@ -79,28 +79,31 @@ export abstract class BaseMovement extends Component {
 
     protected setPosition(dt: number): void{
         var speedLength = this.currentSpeed * this.speedFactor * dt;
+        var isForward = speedLength >= 0;
+        if (!isForward) speedLength *= -1;
         this.node.getPosition(this.currentPosition);
         this.node.getRotation(this.currentRotation)
         this.currentRotation.getEulerAngles(this.currentEulerAngles);
         var roadPoints = MapSplineManager.current.roadPoints;
-
+        var nextIndex = isForward ? 1 : -1;
         while (speedLength > 0)
         {
-            if (this.currentIndex == this.length - 2) return;
+            if (this.currentIndex == this.length - 2 || this.currentIndex <= 1) return;
             var roadPoint1 = roadPoints[this.currentIndex];
-            var roadPoint2 = roadPoints[this.currentIndex + 1];
+            var roadPoint2 = roadPoints[this.currentIndex + nextIndex];
             this.currentCaculatorPosition.set(roadPoint2.position);
             var distanceCompletedPath = (this.currentCaculatorPosition.subtract(this.currentPosition)).length();
             if (speedLength > distanceCompletedPath)
             {
                 this.currentPosition.set(roadPoint2.position);
                 speedLength -= distanceCompletedPath;
-                this.currentIndex++;
+                this.currentIndex += nextIndex;
                 this.progress = this.currentIndex;
                 continue;
             }
 
-            var ratio = (roadPoint1.distanceToNext - distanceCompletedPath + speedLength) / roadPoint1.distanceToNext;
+            var distanceToNext = isForward ? roadPoint1.distanceToNext : roadPoint2.distanceToNext;
+            var ratio = (distanceToNext - distanceCompletedPath + speedLength) / distanceToNext;
             Vec3.lerp(this.currentPosition,roadPoint1.position, roadPoint2.position, ratio);
 
             this.convertVector(this.currentPoint1Rotation,this.currentEulerAngles,roadPoint1.eulerAngles);

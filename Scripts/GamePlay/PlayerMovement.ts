@@ -200,25 +200,28 @@ export class PlayerMovement extends BaseMovement {
  
     setCameraPosition(dt: number): void{
         var speedLength = this.currentSpeed * this.speedFactor * dt;
+        var isForward = speedLength >= 0;
+        if (!isForward) speedLength *= -1;
         this.cameraForwardPosSmooth.getPosition(this.cameraCurrentTargetPosition);
         var roadPoints = MapSplineManager.current.roadPoints;
- 
+        var nextIndex = isForward ? 1 : -1;
         while (speedLength > 0)
         {
             if (this.cameraCurrentIndex == this.length - 2) return;
             var roadPoint1 = roadPoints[this.cameraCurrentIndex];
-            var roadPoint2 = roadPoints[this.cameraCurrentIndex + 1];
+            var roadPoint2 = roadPoints[this.cameraCurrentIndex + nextIndex];
             this.cameraCaculatorPosition.set(roadPoint2.position);
             var distanceCompletedPath = (this.cameraCaculatorPosition.subtract(this.cameraCurrentTargetPosition)).length();
             if (speedLength > distanceCompletedPath)
             {
                 this.cameraCurrentTargetPosition.set(roadPoint2.position);
                 speedLength -= distanceCompletedPath;
-                this.cameraCurrentIndex++;
+                this.cameraCurrentIndex += nextIndex;
                 continue;
             }
 
-            var ratio = (roadPoint1.distanceToNext - distanceCompletedPath + speedLength) / roadPoint1.distanceToNext;
+            var distanceToNext = isForward ? roadPoint1.distanceToNext : roadPoint2.distanceToNext;
+            var ratio = (distanceToNext - distanceCompletedPath + speedLength) / distanceToNext;
             Vec3.lerp(this.cameraCurrentTargetPosition, roadPoint1.position, roadPoint2.position, ratio);
             speedLength = 0;
         }
