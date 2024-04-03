@@ -37,10 +37,10 @@ export class PlayerMovement extends BaseMovement {
     @property({ group: { name: 'Settings' , displayOrder: 1}, type: CCInteger }) 
     startIndex: number = 4;
 
-    @property({ group: { name: 'Settings' , displayOrder: 1}, type: CCBoolean }) 
+    @property({ group: { name: 'Settings' , displayOrder: 1} }) 
     forwardContent: boolean = true;
 
-    @property({ group: { name: 'Settings' , displayOrder: 1}, type: CCBoolean }) 
+    @property({ group: { name: 'Settings' , displayOrder: 1} }) 
     resetRotationOnMouseDown: boolean = true;
 
     @property({ group: { name: 'Effect' , displayOrder: 3}, type: ParticleSystem }) 

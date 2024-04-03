@@ -696,13 +696,13 @@
         "__id__": 335
       },
       {
-        "__id__": 337
-      },
-      {
         "__id__": 341
       },
       {
         "__id__": 339
+      },
+      {
+        "__id__": 337
       }
     ],
     "_prefab": {
@@ -4643,7 +4643,7 @@
     "fileId": "a5KqUbvbpD9qtzkMwzCEIM"
   },
   {
-    "__type__": "96a88UUNElF0LQac2aWRa7y",
+    "__type__": "6d32eLBlXBJKqvc1N1pMmoO",
     "_name": "",
     "_objFlags": 0,
     "node": {
@@ -4662,7 +4662,7 @@
   },
   {
     "__type__": "cc.CompPrefabInfo",
-    "fileId": "d9NRFwH7REHJ8MZ6KoKnod"
+    "fileId": "f5U84r9WxFoqa14rOhyEOO"
   },
   {
     "__type__": "33a397HrL1B0JDnZ2cQ6iNl",

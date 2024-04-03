@@ -7,7 +7,7 @@ const { ccclass, property } = _decorator;
 
 @ccclass('ForwardCameraFollow')
 export class ForwardCameraFollow extends BaseCameraFollow {
-    @property({ group: { name: 'Camera' , displayOrder: 1}, type: CCBoolean }) 
+    @property({ group: { name: 'Camera' , displayOrder: 1} }) 
     controlCamera: boolean = true;
 
     @property({ group: { name: 'Camera' , displayOrder: 1}, type: Node }) 
