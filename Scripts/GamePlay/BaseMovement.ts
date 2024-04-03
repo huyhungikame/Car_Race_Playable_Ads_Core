@@ -51,6 +51,7 @@ export abstract class BaseMovement extends Component {
     //  down,up, left , right
     public lockDirection: Vec4 = new Vec4(0,0,0,0);
     private currentPhysicBodyPosition = new Vec3();
+    private revertCurrentPhysicBodyPosition = new Vec3();
 
     //#endregion
 
@@ -186,7 +187,8 @@ export abstract class BaseMovement extends Component {
         this.currentPhysicBodyPosition.y = 0;
         Vec3.lerp(this.currentPhysicBodyPosition,this.currentPhysicBodyPosition, Vec3.ZERO, this.graphicLocalPostLerpTime);
         this.physicBody.node.setPosition(this.currentPhysicBodyPosition);
-        this.physicBody.setLinearVelocity(this.currentPhysicBodyPosition);
+        this.revertCurrentPhysicBodyPosition.set(this.currentPhysicBodyPosition).multiplyScalar(-1);
+        this.physicBody.setLinearVelocity(this.revertCurrentPhysicBodyPosition);
         if(this.currentSpeed < 2) this.graphicLocalPostLerpTime += 0.8;
         this.graphicLocalPostLerpTime = clamp01(this.graphicLocalPostLerpTime + game.deltaTime * 0.05);
     }

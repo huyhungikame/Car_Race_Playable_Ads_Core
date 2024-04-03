@@ -1,4 +1,4 @@
-import { _decorator, ICollisionEvent, Node, ParticleSystem, randomRange, Vec3 } from 'cc';
+import { _decorator, CCInteger, ICollisionEvent, Node, ParticleSystem, randomRange, Vec3 } from 'cc';
 import { CarCollider } from './CarCollider';
 import { CameraShake } from './Feels/CameraShake';
 
@@ -14,17 +14,20 @@ export class PlayerCarCollider extends CarCollider {
 
     spankParticle : ParticleSystem[] = [];
     spankLength: number;
+
+    @property(CCInteger)
     spankCurrentIndex: number = 0;
     hasSpank: boolean = false;
+    worldPosition: Vec3 = new Vec3();
 
     protected start(): void {
         this.spankCurrentIndex = 0;
-        this.spankLength = this.spankParticle.length;
         this.collider.on('onCollisionStay', this.onCollisionStay, this);
         this.collider.on('onCollisionEnter', this.onCollisionEnter, this);
         this.hasSpank = this.effectPool != null;
         if(!this.hasSpank) return;
         this.spankParticle = this.effectPool.getComponentsInChildren(ParticleSystem);
+        this.spankLength = this.spankParticle.length;
     }
 
     private onCollisionEnter (_event: ICollisionEvent) {
@@ -39,7 +42,8 @@ export class PlayerCarCollider extends CarCollider {
         var effect2 = this.spankParticle[this.spankCurrentIndex * 2 + 1];
         this.spankCurrentIndex++;
         if(this.spankCurrentIndex >= (this.spankLength / 2)) this.spankCurrentIndex = 0;
-        event.contacts[0].getWorldPointOnA(effect.node.worldPosition);
+        event.contacts[0].getWorldPointOnA(this.worldPosition);
+        effect.node.setWorldPosition(this.worldPosition);
         effect.node.active = true;
         var eulerAngles = effect.node.eulerAngles.clone();
         eulerAngles.y = randomRange(-160,-195);
