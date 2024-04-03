@@ -4653,7 +4653,7 @@
     "__prefab": {
       "__id__": 338
     },
-    "useFallOut": true,
+    "useFallOut": false,
     "positionGraphic": {
       "__id__": 43
     },

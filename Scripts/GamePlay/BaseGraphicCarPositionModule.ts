@@ -17,6 +17,8 @@ export abstract class BaseGraphicCarPositionModule extends Component {
     public graphicLocalPosition: Vec3 = new Vec3();
     private timeFallOut: number = 0.0;
     protected movement: BaseMovement;
+    public centerRadius: Vec3 = new Vec3();
+    public angleRadius: number = 0;
 
     abstract updateCarGraphic(dt: number): void;
     abstract teleport(): void;
