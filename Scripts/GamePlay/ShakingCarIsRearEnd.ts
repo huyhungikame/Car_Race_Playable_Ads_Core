@@ -1,6 +1,7 @@
-import { _decorator, CCFloat, clamp, Component, game, lerp, math, Node, Vec3, Vec4 } from 'cc';
+import { _decorator, CCFloat, clamp, Component, game, lerp, math, Node, Vec2, Vec3, Vec4 } from 'cc';
 import { BaseGraphicCarRotationModule } from './BaseGraphicCarRotationModule';
 import MapSplineManager from './MapSplineManager';
+import { PlayerMovement } from './PlayerMovement';
 const { ccclass, property } = _decorator;
 
 @ccclass('ShakingCarIsRearEnd')
@@ -56,6 +57,23 @@ export class ShakingCarIsRearEnd extends BaseGraphicCarRotationModule {
         this.currentRotate.y = this.yRatio * this.currentGraphicRotate.x;
         this.currentRotate.z = this.zRatio * this.currentGraphicRotate.y;
         this.rotateGraphicNode.eulerAngles = this.currentRotate;
+    }
+
+    public handleInput(currentTouchPosition: Vec2, playerMovement: PlayerMovement): number {
+        playerMovement.deltaInputHorizontal = (currentTouchPosition.x - playerMovement.previousTouchPosition.x) * 2 * game.deltaTime;
+        if(playerMovement.lockDirection.w > 0 && playerMovement.deltaInputHorizontal > 0) playerMovement.deltaInputHorizontal = 0;
+        if(playerMovement.lockDirection.z > 0 && playerMovement.deltaInputHorizontal < 0) playerMovement.deltaInputHorizontal = 0;
+
+        if((playerMovement.deltaInputHorizontal < 0 && playerMovement.lastDeltalInput < 0) || (playerMovement.deltaInputHorizontal > 0 && playerMovement.lastDeltalInput > 0)){
+            playerMovement.minMaxDelta = math.clamp(playerMovement.minMaxDelta + 0.65 * game.deltaTime,0.075,0.3) 
+        }
+        else{
+            playerMovement.minMaxDelta = 0.075;
+        }
+        playerMovement.lastDeltalInput = playerMovement.deltaInputHorizontal;
+
+        playerMovement.deltaInputHorizontal = clamp(playerMovement.deltaInputHorizontal, -playerMovement.minMaxDelta, playerMovement.minMaxDelta);
+        return 1;
     }
 
     addRotate(): void {

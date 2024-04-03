@@ -32,7 +32,7 @@ export class BotPositionModule extends BaseGraphicCarPositionModule {
        
     }
 
-    moveGraphic(): void {
+    moveGraphic(ratio: number): void {
         this.movement.lastHorizontal = this.graphicLocalPosition.x;
         var offset = MapSplineManager.current.roadLaterals[MapSplineManager.current.roadPoints[this.movement.currentIndex].lateralIndex].maxOffset;
         this.graphicLocalPosition.x = clamp(this.graphicLocalPosition.x + this.movement.deltaInputHorizontal, -offset, offset);

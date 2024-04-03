@@ -1,4 +1,4 @@
-import { _decorator, BoxCollider, CCFloat, CCInteger, clamp01, Component, game, Material, Node, ParticleSystem, Quat, RigidBody, Vec3, Vec4 } from 'cc';
+import { _decorator, BoxCollider, CCFloat, CCInteger, clamp, clamp01, Component, game, Material, Node, ParticleSystem, Quat, RigidBody, Vec3, Vec4 } from 'cc';
 import { CheckPointManager } from './CheckPointManager';
 import MapSplineManager from './MapSplineManager';
 import { BaseGraphicCarRotationModule } from './BaseGraphicCarRotationModule';
@@ -49,7 +49,7 @@ export abstract class BaseMovement extends Component {
 
     private graphicLocalPostLerpTime: number = 0.0;
     //  down,up, left , right
-    protected lockDirection: Vec4 = new Vec4(0,0,0,0);
+    public lockDirection: Vec4 = new Vec4(0,0,0,0);
     private currentPhysicBodyPosition = new Vec3();
 
     //#endregion
@@ -66,10 +66,12 @@ export abstract class BaseMovement extends Component {
     carMaterial: Material;
 
     private currentWheelRotate: number = 0.0;
+    handleMaterials: boolean = false;
 
     //#endregion
 
     protected onLoad(): void {
+        this.handleMaterials = this.carMaterial != null;
         this.positionModule.setUpMovement(this);
         this.rotationModule.setUpMovement(this);
     }
@@ -141,7 +143,7 @@ export abstract class BaseMovement extends Component {
         if (this.lastHorizontal != 0)
         {
             this.lastHorizontal = (ScriptExtensions.inverseLerp(-0.05, 0.05, this.lastHorizontal) - 0.5) * 2;
-            // this.currentGraphicRotate = clamp(this.currentGraphicRotate + this.lastHorizontal * 1.5, -25, 25);
+            this.rotationModule.currentGraphicRotate.y = clamp(this.rotationModule.currentGraphicRotate.y + this.lastHorizontal * 1.5, -25, 25);
         }
     }
 
@@ -195,6 +197,7 @@ export abstract class BaseMovement extends Component {
 
     materialWheel(dt: number) : void
     {
+        if(!this.handleMaterials) return;
         this.currentWheelRotate += dt * this.currentSpeed * 3.6;
         if(this.currentWheelRotate > 360) this.currentWheelRotate -= 360;
         this.carMaterial.setProperty("wheelRotate", this.currentWheelRotate);

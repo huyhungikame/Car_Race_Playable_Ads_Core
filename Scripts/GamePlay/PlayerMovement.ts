@@ -40,6 +40,9 @@ export class PlayerMovement extends BaseMovement {
     @property({ group: { name: 'Settings' , displayOrder: 1}, type: CCBoolean }) 
     forwardContent: boolean = true;
 
+    @property({ group: { name: 'Settings' , displayOrder: 1}, type: CCBoolean }) 
+    resetRotationOnMouseDown: boolean = true;
+
     @property({ group: { name: 'Effect' , displayOrder: 3}, type: ParticleSystem }) 
     windEffect: ParticleSystem;
 
@@ -126,7 +129,7 @@ export class PlayerMovement extends BaseMovement {
         if(GameManager.instance.openningTutorial) GameManager.instance.closeTutorial();
         if(!this.isStartGame) return;
         this.isMouseDown = true;
-        this.rotationModule.resetState();
+        if(this.resetRotationOnMouseDown) this.rotationModule.resetState();
         if (!this.isTouchDrag)
         {
             this.previousTouchPosition.set(event.getLocation());
@@ -158,36 +161,10 @@ export class PlayerMovement extends BaseMovement {
     
     moveGraphic(currentTouchPosition: Vec2): void
     {
-        this.deltaInputHorizontal = (currentTouchPosition.x - this.previousTouchPosition.x) * 2 * game.deltaTime;
-        if(this.lockDirection.w > 0 && this.deltaInputHorizontal > 0) this.deltaInputHorizontal = 0;
-        if(this.lockDirection.z > 0 && this.deltaInputHorizontal < 0) this.deltaInputHorizontal = 0;
-
-        if((this.deltaInputHorizontal < 0 && this.lastDeltalInput < 0) || (this.deltaInputHorizontal > 0 && this.lastDeltalInput > 0)){
-            this.minMaxDelta = math.clamp(this.minMaxDelta + 0.65 * game.deltaTime,0.075,0.3) 
-        }else{
-            this.minMaxDelta = 0.075;
-        }
-        this.lastDeltalInput = this.deltaInputHorizontal;
-        this.deltaInputHorizontal = clamp(this.deltaInputHorizontal, -this.minMaxDelta, this.minMaxDelta);
-        this.positionModule.moveGraphic();
+        var ratio = this.rotationModule.handleInput(currentTouchPosition, this);
+        this.positionModule.moveGraphic(ratio);
         this.rotationModule.addRotate();
     }
-
-    // this.deltaInputHorizontal = (currentTouchPosition.x - this.previousTouchPosition.x) * 2.25 * game.deltaTime;
-    // var ratio = clamp01(this.inverseLerp(5, 55, this.currentSpeed) + 0.1);
-    // this.deltaInputHorizontal = clamp(this.deltaInputHorizontal, -0.55, 0.55);
-
-    // this.lastHorizontal = this.xOffset;
-    // var offset = this.splineManager.roadLaterals[this.splineManager.roadPoints[this.currentIndex].lateralIndex].maxOffset;
-    // this.xOffset = clamp(this.xOffset + this.deltaInputHorizontal * ratio, -offset, offset);
-
-    // this.lastHorizontal = this.xOffset - this.lastHorizontal;
-
-    // if (this.lastHorizontal != 0)
-    // {
-    //     this.lastHorizontal = (this.inverseLerp(-0.05, 0.05, this.lastHorizontal) - 0.5) * 2;
-    //     this.currentGraphicRotate = clamp(this.currentGraphicRotate + this.lastHorizontal * 1.5, -25, 25);
-    // }
 
     input(dt: number): void {
         this.lastHorizontal = 0;

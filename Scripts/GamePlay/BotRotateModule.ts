@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, clamp01, Quat, Vec3, clamp, lerp, game} from 'cc';
+import { _decorator, Component, Node, clamp01, Quat, Vec3, clamp, lerp, game, math, Vec2} from 'cc';
 import { BaseGraphicCarRotationModule } from './BaseGraphicCarRotationModule';
 import MapSplineManager from './MapSplineManager';
 import { PlayerMovement } from './PlayerMovement';
@@ -10,10 +10,14 @@ export class BotRotateModule extends BaseGraphicCarRotationModule {
     private currentEulerAngles: Vec3 = new Vec3();
     private currentRotateChange: number = 0;
 
+    public handleInput(_currentTouchPosition: Vec2, _playerMovement: PlayerMovement): number {
+        return 1;
+    }
+
     addRotate(): void {
        
     }
-    removeRotate(isMouseDown: boolean): void {
+    removeRotate(_isMouseDown: boolean): void {
         if (Math.abs(this.movement.lastHorizontal) > 0.07)
         {
             var newRotate = clamp(this.currentGraphicRotate.x - this.movement.lastHorizontal * 30 * game.deltaTime, -1, 1);
@@ -26,7 +30,7 @@ export class BotRotateModule extends BaseGraphicCarRotationModule {
         this.currentGraphicRotate.x = lerp(this.currentGraphicRotate.x, 0 , detal);
     }
 
-    updateCameraValue(cameraValue: number): void {
+    updateCameraValue(_cameraValue: number): void {
       
     }
     public startGame(startIndex: number): void {
@@ -34,7 +38,7 @@ export class BotRotateModule extends BaseGraphicCarRotationModule {
         this.updateCarGraphic(0);
     }
 
-    updateCarGraphic(dt: number): void {
+    updateCarGraphic(_dt: number): void {
         var offsetGraphic = Math.abs(PlayerMovement.current.progress - this.movement.progress);
         var offset = 1 - clamp01(offsetGraphic / 6);
         PlayerMovement.current.rotationModule.rotateGraphicNode.getRotation(this.currentRotate);
