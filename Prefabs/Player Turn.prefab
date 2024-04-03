@@ -30,7 +30,7 @@
     "_active": true,
     "_components": [],
     "_prefab": {
-      "__id__": 344
+      "__id__": 346
     },
     "_lpos": {
       "__type__": "cc.Vec3",
@@ -184,15 +184,15 @@
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": 0.9100000000000001,
-      "z": -11.620000000000001
+      "y": -1,
+      "z": 0
     },
     "_lrot": {
       "__type__": "cc.Quat",
-      "x": 7.462345065765172e-18,
-      "y": 0.992546151641322,
-      "z": -0.12186934340514748,
-      "w": 6.077592338067843e-17
+      "x": 8.521894630907777e-18,
+      "y": 0.9902680687415704,
+      "z": -0.13917310096006544,
+      "w": 6.063643103410976e-17
     },
     "_lscale": {
       "__type__": "cc.Vec3",
@@ -204,7 +204,7 @@
     "_layer": 1073741824,
     "_euler": {
       "__type__": "cc.Vec3",
-      "x": 13.999999999999998,
+      "x": 16,
       "y": 180,
       "z": -1.7655625192200634e-31
     },
@@ -582,7 +582,7 @@
     },
     "_projection": 1,
     "_priority": 0,
-    "_fov": 50,
+    "_fov": 85,
     "_fovAxis": 0,
     "_orthoHeight": 10,
     "_near": 1,
@@ -700,10 +700,13 @@
       },
       {
         "__id__": 339
+      },
+      {
+        "__id__": 341
       }
     ],
     "_prefab": {
-      "__id__": 343
+      "__id__": 345
     },
     "_lpos": {
       "__type__": "cc.Vec3",
@@ -804,7 +807,7 @@
     "_active": true,
     "_components": [],
     "_prefab": {
-      "__id__": 342
+      "__id__": 344
     },
     "_lpos": {
       "__type__": "cc.Vec3",
@@ -864,7 +867,7 @@
       }
     ],
     "_prefab": {
-      "__id__": 341
+      "__id__": 343
     },
     "_lpos": {
       "__type__": "cc.Vec3",
@@ -4615,37 +4618,19 @@
       "__uuid__": "e289dda0-4a4a-41af-947d-54fb4ebda033",
       "__expectedType__": "cc.Material"
     },
-    "controlCamera": true,
+    "cameraFollow": {
+      "__id__": 341
+    },
     "cameraTransform": {
       "__id__": 4
-    },
-    "camera": {
-      "__id__": 33
-    },
-    "cameraPosSmooth": {
-      "__id__": 41
     },
     "cameraForwardPosSmooth": {
       "__id__": 2
     },
-    "startCameraFOV": 45,
-    "cameraFOV": 8,
-    "startYCamera": -4.15,
-    "yCamera": 1.05375,
-    "startZCamera": -6,
-    "zCamera": 1.8,
-    "cameraTargetXOffset": 0.175,
-    "startXRotateCamera": 29.6,
-    "xRotateCamera": 0.8,
-    "cameraOffsetIndex": 3,
-    "cameraOffset": {
-      "__type__": "cc.Vec3",
-      "x": 0,
-      "y": 2.91,
-      "z": -3.62
-    },
+    "cameraOffsetIndex": 0,
     "uiReviveView": null,
     "startIndex": 4,
+    "forwardContent": false,
     "windEffect": null,
     "smokeEffect1": {
       "__id__": 50
@@ -4714,6 +4699,26 @@
     "fileId": "f7SKnDZtJH57ZCg8hFPAoA"
   },
   {
+    "__type__": "45e54Jca3dIfY3Lz1lzk/5Y",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 40
+    },
+    "_enabled": true,
+    "__prefab": {
+      "__id__": 342
+    },
+    "camera": {
+      "__id__": 33
+    },
+    "_id": ""
+  },
+  {
+    "__type__": "cc.CompPrefabInfo",
+    "fileId": "60Bp80WdVFYoKZwxK1gB2j"
+  },
+  {
     "__type__": "cc.PrefabInfo",
     "root": {
       "__id__": 1
@@ -4764,10 +4769,10 @@
     "instance": null,
     "targetOverrides": [
       {
-        "__id__": 345
+        "__id__": 347
       },
       {
-        "__id__": 347
+        "__id__": 349
       }
     ],
     "nestedPrefabInstanceRoots": [
@@ -4795,7 +4800,7 @@
       "__id__": 310
     },
     "targetInfo": {
-      "__id__": 346
+      "__id__": 348
     }
   },
   {
@@ -4817,7 +4822,7 @@
       "__id__": 7
     },
     "targetInfo": {
-      "__id__": 348
+      "__id__": 350
     }
   },
   {

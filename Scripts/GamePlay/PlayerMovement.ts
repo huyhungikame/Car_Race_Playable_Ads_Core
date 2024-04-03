@@ -37,6 +37,9 @@ export class PlayerMovement extends BaseMovement {
     @property({ group: { name: 'Settings' , displayOrder: 1}, type: CCInteger }) 
     startIndex: number = 4;
 
+    @property({ group: { name: 'Settings' , displayOrder: 1}, type: CCBoolean }) 
+    forwardContent: boolean = true;
+
     @property({ group: { name: 'Effect' , displayOrder: 3}, type: ParticleSystem }) 
     windEffect: ParticleSystem;
 
@@ -68,10 +71,15 @@ export class PlayerMovement extends BaseMovement {
 
         this.positionModule.startGame(this.startIndex);
         this.rotationModule.startGame(this.startIndex);
-        this.setRotation();
+
+        if(this.forwardContent) this.setRotation();
         this.cameraFollow.onStart(this);
         this.smokeEffect1.active = true;
         this.smokeEffect2.active = true;
+    }
+
+    public getStartRotation(): Quat {
+        return MapSplineManager.current.roadPoints[this.startIndex].rotation;
     }
 
     startGame(position: Vec2) {
@@ -95,8 +103,11 @@ export class PlayerMovement extends BaseMovement {
     protected update(dt: number): void {
         this.input(dt);
         this.setPosition(dt);
-        this.setCameraPosition(dt);
-        this.setRotation();
+        if(this.forwardContent)
+        {
+            this.setCameraPosition(dt);
+            this.setRotation();
+        }
         this.updateCarGraphic(dt);
         CheckPointManager.current.onPlayerChangeCheckPoint(this.currentIndex, this.node.eulerAngles);
     }
@@ -241,31 +252,6 @@ export class PlayerMovement extends BaseMovement {
     protected lateUpdate(dt: number): void {
        this.cameraFollow.onLateUpdate(dt); 
     }
-
-    // protected lateUpdate(dt: number): void {
-    //     var rotation = new Quat(this.player.rotation);
-
-    //     var graphicPosition =  new Vec3(this.carGraphic.worldPosition);
-    //     graphicPosition.x *= -1;
-
-    //     var offset = new Vec3(this.cameraOffset);
-    //     offset.add(new Vec3(0, 0, -1.75 * this.inverseLerp(0, 100, this.currentSpeed)));
-    //     if(this.endGame) return;
-    //     this.cameraTransform.position = graphicPosition.add(Vec3.transformQuat(new Vec3(), offset, rotation));
-
-    //     this.cameraOffsetRotation = Quat.slerp(new Quat(),this.cameraOffsetRotation, rotation, 0.25);
-    
-    //     var cameraPosition =  new Vec3(this.carGraphic.worldPosition);
-    //     cameraPosition.x *= -1;
-    //     cameraPosition.add(Vec3.transformQuat(new Vec3(), new Vec3(0,0,3.5), rotation));
-        
-    //     var targetUp =  Vec3.transformQuat(new Vec3(), Vec3.UP, this.cameraOffsetRotation);
-    //     var lookDirection = (cameraPosition.subtract(this.cameraTransform.position)).normalize();
-      
-    //     this.cameraTransform.rotation = Quat.fromViewUp(new Quat(),lookDirection,targetUp);
-    // }
-
-
 
     //#endregion
 
