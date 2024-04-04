@@ -1,14 +1,12 @@
 import { _decorator, Camera, Component, EventTouch, Input, input, Vec2 } from 'cc';
 import { BotMovement } from './BotMovement';
 import { PlayerMovement } from './PlayerMovement';
-import { StartView } from '../UI/StartView';
 import { PlayableAdsManager } from '../../../../TemplatePA/PlayableAdsManager';
+import { StartView } from '../UI/StartView';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameManager')
 export class GameManager extends Component {
-    @property(StartView)
-    startView: StartView;
 
     @property({ type: [BotMovement] })
     botMovementInScene: BotMovement[] = [];
@@ -62,18 +60,18 @@ export class GameManager extends Component {
     openningTutorial : boolean = false;
     openTutorial(){
         this.openningTutorial = true;
-        this.startView.node.active = true;
-        this.startView.titleImage.active = false;
-        this.startView.openHoldToRide();
+        StartView.current.node.active = true;
+        StartView.current.titleImage.active = false;
+        StartView.current.openHoldToRide();
     }
     closeTutorial(){
         this.openningTutorial = false;
-        this.startView.node.active = false;
+        StartView.current.node.active = false;
     }
 
     uiStartGame(): void
     {
-        this.startView.startUi();
+        StartView.current.startUi();
     }
 
     static startGame(): void

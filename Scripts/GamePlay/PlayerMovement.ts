@@ -105,6 +105,7 @@ export class PlayerMovement extends BaseMovement {
 
     protected update(dt: number): void {
         this.input(dt);
+        this.updateRustSpeedValue();
         this.setPosition(dt);
         if(this.forwardContent)
         {
@@ -213,7 +214,7 @@ export class PlayerMovement extends BaseMovement {
     //#region Camera
  
     setCameraPosition(dt: number): void{
-        var speedLength = this.currentSpeed * this.speedFactor * dt;
+        var speedLength = this.currentSpeed * this.speedFactor * this.ratioRustSpeedValue * dt;
         var isForward = speedLength >= 0;
         if (!isForward) speedLength *= -1;
         this.cameraForwardPosSmooth.getPosition(this.cameraCurrentTargetPosition);
@@ -244,6 +245,10 @@ export class PlayerMovement extends BaseMovement {
     }
 
     beforeLateUpdate(dt: number): void {
+        if(this.lockDirection.x > 0){
+            if(this.currentSpeed < 0) this.currentSpeed *= -1;
+        }
+
         if(this.lockDirection.y > 0){
             if(this.currentSpeed > 0) this.currentSpeed *= -1;
         }

@@ -1,4 +1,4 @@
-import { _decorator, CCFloat, CCInteger, clamp, clamp01, game, lerp, math, Vec3 } from 'cc';
+import { _decorator, CCFloat, CCInteger, clamp, clamp01, game, lerp, math, Vec2, Vec3 } from 'cc';
 import { BaseMovement } from './BaseMovement';
 import MapSplineManager from './MapSplineManager';
 const { ccclass, property } = _decorator;
@@ -9,11 +9,26 @@ export class BotMovement extends BaseMovement {
     @property({ group: { name: 'Settings' , displayOrder: 1}, type: CCInteger }) 
     startIndex: number = 4;
 
-    @property({ group: { name: 'Settings' , displayOrder: 1}, type: CCFloat }) 
-    minSpeed: number = 40;
-
     @property({ group: { name: 'Settings' , displayOrder: 1}, type: CCInteger }) 
     offsetRevive: number = 0;
+
+    @property({ group: { name: 'Settings' , displayOrder: 1} })
+    firstSpeedValue: Vec2 = new Vec2();
+
+    @property({ group: { name: 'Settings' , displayOrder: 1} })
+    firstDurationChangeSpeed: Vec2 = new Vec2();
+
+    @property({ group: { name: 'Settings' , displayOrder: 1} })
+    firstDurationKeepSpeed: Vec2 = new Vec2();
+
+    @property({ group: { name: 'Settings' , displayOrder: 1} })
+    loopSpeedValue: Vec2 = new Vec2();
+
+    @property({ group: { name: 'Settings' , displayOrder: 1} })
+    loopDurationChangeSpeed: Vec2 = new Vec2();
+
+    @property({ group: { name: 'Settings' , displayOrder: 1} })
+    loopDurationKeepSpeed: Vec2 = new Vec2();
 
     lastHorizontal: number = 0.0;
     startHorizontal: number = 0.0;
@@ -23,6 +38,12 @@ export class BotMovement extends BaseMovement {
     randomValue: number = 0.0;
     timeActive: number = 0.0;
 
+    timeKeepSpeed: number = 0;
+    startSpeed: number = 0;
+    targetSpeed: number = 0;
+    isFirstLoop: boolean = true;
+    speedChangeSpeed: number = 0;
+
     start() {
         this.positionModule.startGame(this.startIndex);
         this.rotationModule.startGame(this.startIndex);
@@ -31,37 +52,60 @@ export class BotMovement extends BaseMovement {
     protected update(dt: number): void {
         if(!this.isStartGame) return;
         this.timeActive += dt;
+        this.speed(dt);
         this.rotate(dt);
         this.setPosition(dt);
         this.updateCarGraphic(dt);
     }
 
-    // speedConvert(speed: number): void {
-    //     if(this.onDie) return;
-    //     if(!this.isStartGame) return;
-    //     var lastSpeed = this.currentSpeed;
-    //     var lastRandomValue = this.randomValue;
-    //     this.randomValue = clamp(this.randomValue + randomRange(-1, 1) * 0.3, -1, 1);
-    //     this.randomValue = lerp(this.randomValue, lastRandomValue, 0.85);
-    //     this.currentSpeed = speed + this.randomValue * 25;
-    //     if(this.currentSpeed < this.minSpeed) this.currentSpeed = this.minSpeed;
-    //     this.currentSpeed = lerp(this.currentSpeed, lastSpeed, 0.85);
-    //     this.currentSpeed = clamp(this.currentSpeed, 0, this.maxSpeed);
-    //     if (lastSpeed > this.currentSpeed && this.lockDirection.x > 0) 
-    //     {
-    //         this.currentSpeed = lastSpeed + 15;
-    //     }
-        
-    //     if (lastSpeed < this.currentSpeed && this.lockDirection.y > 0) 
-    //     {
-    //         this.currentSpeed = -15;
-    //         this.StartChangeGoStraight();
-    //     }
-    // }
+    //#region Speed
+
+    speed(dt: number): void {
+        this.checkKeepSpeed();
+    }
+
+    checkKeepSpeed(): void{
+        if (this.timeKeepSpeed <= 0)
+        {
+            this.changeSpeed();
+            return;
+        }
+
+        this.onChangeSpeed();
+    }
+
+    changeSpeed() : void{
+        this.startSpeed = this.currentSpeed;
+        this.targetSpeed = this.isFirstLoop ? randomRange(- this.firstSpeedValue.x, this.firstSpeedValue.y) : randomRange(- this.loopSpeedValue.x, this.loopSpeedValue.y);
+        this.speedChangeSpeed = this.isFirstLoop ? randomRange(- this.firstDurationChangeSpeed.x, this.firstDurationChangeSpeed.y) : randomRange(- this.loopDurationChangeSpeed.x, this.loopDurationChangeSpeed.y);
+        this.timeKeepSpeed = this.isFirstLoop ? randomRange(- this.firstDurationKeepSpeed.x, this.firstDurationKeepSpeed.y) : randomRange(- this.loopDurationKeepSpeed.x, this.loopDurationKeepSpeed.y);
+        this.isFirstLoop = false;
+    }
+
+    onChangeSpeed() : void{
+        var dt = game.deltaTime;
+        this.currentSpeed += dt * this.speedChangeSpeed;
+        if (this.currentSpeed >= this.targetSpeed) {
+            this.currentSpeed = this.targetSpeed;    
+            this.timeKeepSpeed -= dt;
+        }
+    }
+
+    //#endregion
+
+    //#region Rotate
 
     beforeLateUpdate(dt: number): void {
+        if(this.lockDirection.x > 0){
+            if(this.currentSpeed < 0) this.currentSpeed *= -1;
+            this.targetSpeed += 20 * dt;
+            this.timeKeepSpeed = 0;
+        }
+
         if(this.lockDirection.y > 0){
             if(this.currentSpeed > 0) this.currentSpeed *= -1;
+            this.targetSpeed -= 20 * dt;
+            this.timeKeepSpeed = 0;
         }
         else
         {
@@ -71,10 +115,12 @@ export class BotMovement extends BaseMovement {
         if(this.lockDirection.z > 0) {
             this.positionModule.graphicLocalPosition.x += 5 * dt;
             this.targetHorizontal += 10 * dt;
+            this.timeGoStraight = 0;
         }
         if(this.lockDirection.w > 0) {
             this.positionModule.graphicLocalPosition.x -= 5 * dt;
             this.targetHorizontal -= 10 * dt;
+            this.timeGoStraight = 0;
         }
 
         this.resteLockDirection();
@@ -130,4 +176,6 @@ export class BotMovement extends BaseMovement {
     fallout(): void {
         
     }
+
+    //#endregion
 }

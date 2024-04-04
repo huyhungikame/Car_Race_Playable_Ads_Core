@@ -5,6 +5,8 @@ const { ccclass, property } = _decorator;
 
 @ccclass('StartView')
 export class StartView extends Component {
+    public static current: StartView;
+
     @property(Node)
     holdToRide: Node;
 
@@ -22,6 +24,10 @@ export class StartView extends Component {
 
     @property(Node)
     gamePlayView: Node;
+
+    protected onLoad(): void {
+        StartView.current = this;
+    }
 
     protected start(): void {
 

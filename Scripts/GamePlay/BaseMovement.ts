@@ -1,4 +1,4 @@
-import { _decorator, BoxCollider, CCFloat, CCInteger, clamp, clamp01, Component, game, lerp, Material, Node, ParticleSystem, Quat, RigidBody, Vec3, Vec4 } from 'cc';
+import { _decorator, BoxCollider, CCFloat, CCInteger, clamp, clamp01, Component, game, lerp, Material, Node, ParticleSystem, Quat, RigidBody, Vec2, Vec3, Vec4 } from 'cc';
 import { CheckPointManager } from './CheckPointManager';
 import MapSplineManager from './MapSplineManager';
 import { BaseGraphicCarRotationModule } from './BaseGraphicCarRotationModule';
@@ -36,6 +36,15 @@ export abstract class BaseMovement extends Component {
 
     @property({ group: { name: 'Settings' , displayOrder: 1}, type: CCFloat }) 
     protected speedFactor: number = 0.25;
+
+    @property({ group: { name: 'Settings' , displayOrder: 1} }) 
+    ratioRustSpeedValue: number = 1;
+
+     @property({ group: { name: 'Settings' , displayOrder: 1} }) 
+    ratioRustSpeedAmount: number = 0;
+
+    @property({ group: { name: 'Settings' , displayOrder: 1} }) 
+    ratioRustSpeedKeep: Vec2 = new Vec2();
 
     @property({ group: { name: 'Module' , displayOrder: 4}, type: BaseGraphicCarPositionModule }) 
     public positionModule: BaseGraphicCarPositionModule;
@@ -78,8 +87,13 @@ export abstract class BaseMovement extends Component {
         this.rotationModule.setUpMovement(this);
     }
 
+    updateRustSpeedValue(): void {
+        var progressValue = this.progress / this.length;
+        this.ratioRustSpeedValue =  1 + ScriptExtensions.inverseLerp(this.ratioRustSpeedKeep.x, this.ratioRustSpeedKeep.y , progressValue) * this.ratioRustSpeedAmount;
+    }
+
     protected setPosition(dt: number): void{
-        var speedLength = this.currentSpeed * this.speedFactor * dt;
+        var speedLength = this.currentSpeed * this.speedFactor * this.ratioRustSpeedValue * dt;
         var isForward = speedLength >= 0;
         if (!isForward) speedLength *= -1;
         this.node.getPosition(this.currentPosition);
