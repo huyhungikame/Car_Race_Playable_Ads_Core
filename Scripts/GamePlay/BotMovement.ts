@@ -45,6 +45,7 @@ export class BotMovement extends BaseMovement {
     speedChangeSpeed: number = 0;
 
     start() {
+        this.isFirstLoop = true;
         this.positionModule.startGame(this.startIndex);
         this.rotationModule.startGame(this.startIndex);
     }
@@ -76,9 +77,9 @@ export class BotMovement extends BaseMovement {
 
     changeSpeed() : void{
         this.startSpeed = this.currentSpeed;
-        this.targetSpeed = this.isFirstLoop ? randomRange(- this.firstSpeedValue.x, this.firstSpeedValue.y) : randomRange(- this.loopSpeedValue.x, this.loopSpeedValue.y);
-        this.speedChangeSpeed = this.isFirstLoop ? randomRange(- this.firstDurationChangeSpeed.x, this.firstDurationChangeSpeed.y) : randomRange(- this.loopDurationChangeSpeed.x, this.loopDurationChangeSpeed.y);
-        this.timeKeepSpeed = this.isFirstLoop ? randomRange(- this.firstDurationKeepSpeed.x, this.firstDurationKeepSpeed.y) : randomRange(- this.loopDurationKeepSpeed.x, this.loopDurationKeepSpeed.y);
+        this.targetSpeed = this.isFirstLoop ? randomRange(this.firstSpeedValue.x, this.firstSpeedValue.y) : randomRange(this.loopSpeedValue.x, this.loopSpeedValue.y);
+        this.speedChangeSpeed = this.isFirstLoop ? randomRange(this.firstDurationChangeSpeed.x, this.firstDurationChangeSpeed.y) : randomRange(this.loopDurationChangeSpeed.x, this.loopDurationChangeSpeed.y);
+        this.timeKeepSpeed = this.isFirstLoop ? randomRange(this.firstDurationKeepSpeed.x, this.firstDurationKeepSpeed.y) : randomRange(this.loopDurationKeepSpeed.x, this.loopDurationKeepSpeed.y);
         this.isFirstLoop = false;
     }
 
@@ -171,6 +172,8 @@ export class BotMovement extends BaseMovement {
         this.node.position = startPoint.position.clone();
         this.positionModule.graphicLocalPosition.x = this.positionModule.initHorizontal;
         this.positionModule.positionGraphic.setPosition(new Vec3(this.positionModule.graphicLocalPosition.x,0,0));
+        this.changeSpeed();
+        this.startChangeGoStraight();
     }
 
     fallout(): void {
