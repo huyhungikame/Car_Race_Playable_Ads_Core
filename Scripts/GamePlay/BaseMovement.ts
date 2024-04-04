@@ -50,6 +50,7 @@ export abstract class BaseMovement extends Component {
 
     private graphicLocalPostLerpTime: number = 0.0;
     //  down,up, left , right
+    @property(Vec4)
     public lockDirection: Vec4 = new Vec4(0,0,0,0);
     private currentPhysicBodyPosition = new Vec3();
     private revertCurrentPhysicBodyPosition = new Vec3();
@@ -164,21 +165,35 @@ export abstract class BaseMovement extends Component {
 
     //#region Physic Handle
 
+    
+    //  down,up, left , right
     public applyPhysic(normal: Vec3): void {
         this.graphicLocalPostLerpTime = 0;
-        this.resteLockDirection();
-        if(normal.x > 0.75) this.lockDirection.w = normal.x;
-        if(normal.x < 0.75) this.lockDirection.z = -normal.x;
-        if(normal.z > 0.75) this.lockDirection.x = normal.z;
-        if(normal.z < 0.75) {
-            this.lockDirection.y = -normal.z;
-            this.currentSpeed != -1;
-        }
+        if(normal.x > 0.25) this.lockDirection.w += normal.x;
+        if(normal.x < -0.25) this.lockDirection.z += -normal.x;
+        if(normal.z > 0.25) this.lockDirection.x += normal.z;
+        if(normal.z < -0.25) this.lockDirection.y += -normal.z;
     }
     
+    protected lateUpdate(dt: number): void {
+        if(this.lockDirection.y > 0){
+            if(this.currentSpeed > 0) this.currentSpeed *= -1;
+        }
+        else
+        {
+            if(this.currentSpeed < 0) this.currentSpeed = lerp(this.currentSpeed, 0,0.8);
+        }
+
+        this.resteLockDirection();
+        this.onLateUpdate(dt);
+    }
+
+    abstract onLateUpdate(dt: number): void;
+
     collisionExit(): void 
     {
         this.resteLockDirection();
+        if(this.currentSpeed < 0) this.currentSpeed = lerp(this.currentSpeed, 0,0.8);
     }
 
     resteLockDirection(): void
@@ -187,7 +202,6 @@ export abstract class BaseMovement extends Component {
         this.lockDirection.y = 0;
         this.lockDirection.z = 0;
         this.lockDirection.w = 0;
-        if(this.currentSpeed < 0) this.currentSpeed = lerp(this.currentSpeed, 0,0.8);
     }
 
     updateGraphicLocalPos(): void{

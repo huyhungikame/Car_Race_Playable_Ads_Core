@@ -243,7 +243,7 @@ export class PlayerMovement extends BaseMovement {
         this.cameraForwardPosSmooth.position = this.cameraCurrentTargetPosition;
     }
 
-    protected lateUpdate(dt: number): void {
+    onLateUpdate(dt: number): void {
        this.cameraFollow.onLateUpdate(dt); 
     }
 
