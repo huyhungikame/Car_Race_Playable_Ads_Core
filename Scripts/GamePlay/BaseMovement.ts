@@ -1,4 +1,4 @@
-import { _decorator, BoxCollider, CCFloat, CCInteger, clamp, clamp01, Component, game, Material, Node, ParticleSystem, Quat, RigidBody, Vec3, Vec4 } from 'cc';
+import { _decorator, BoxCollider, CCFloat, CCInteger, clamp, clamp01, Component, game, lerp, Material, Node, ParticleSystem, Quat, RigidBody, Vec3, Vec4 } from 'cc';
 import { CheckPointManager } from './CheckPointManager';
 import MapSplineManager from './MapSplineManager';
 import { BaseGraphicCarRotationModule } from './BaseGraphicCarRotationModule';
@@ -8,6 +8,7 @@ const { ccclass, property } = _decorator;
 
 @ccclass('BaseMovement')
 export abstract class BaseMovement extends Component {
+    @property({ group: { name: 'Settings' , displayOrder: 1}, type: CCFloat }) 
     public currentSpeed: number = 0;
     public length: number = 0;
     public currentIndex: number = 0;
@@ -138,7 +139,7 @@ export abstract class BaseMovement extends Component {
 
     isFly(dt: number){
         this.isCheckGround = true;
-        var ratio = clamp01(ScriptExtensions.inverseLerp(5, 55, this.currentSpeed) + 0.1);
+        var ratio = clamp01(ScriptExtensions.inverseLerp(5, 55, Math.abs(this.currentSpeed)) + 0.1);
         this.lastHorizontal = this.positionModule.graphicLocalPosition.x;
         this.positionModule.graphicLocalPosition.x = this.positionModule.graphicLocalPosition.x + this.deltaInputHorizontal * ratio;
     
@@ -169,7 +170,10 @@ export abstract class BaseMovement extends Component {
         if(normal.x > 0.75) this.lockDirection.w = normal.x;
         if(normal.x < 0.75) this.lockDirection.z = -normal.x;
         if(normal.z > 0.75) this.lockDirection.x = normal.z;
-        if(normal.z < 0.75) this.lockDirection.y = -normal.z;
+        if(normal.z < 0.75) {
+            this.lockDirection.y = -normal.z;
+            this.currentSpeed != -1;
+        }
     }
     
     collisionExit(): void 
@@ -183,6 +187,7 @@ export abstract class BaseMovement extends Component {
         this.lockDirection.y = 0;
         this.lockDirection.z = 0;
         this.lockDirection.w = 0;
+        if(this.currentSpeed < 0) this.currentSpeed = lerp(this.currentSpeed, 0,0.8);
     }
 
     updateGraphicLocalPos(): void{
@@ -190,9 +195,9 @@ export abstract class BaseMovement extends Component {
         this.currentPhysicBodyPosition.y = 0;
         Vec3.lerp(this.currentPhysicBodyPosition,this.currentPhysicBodyPosition, Vec3.ZERO, this.graphicLocalPostLerpTime);
         this.physicBody.node.setPosition(this.currentPhysicBodyPosition);
-        this.revertCurrentPhysicBodyPosition.set(this.currentPhysicBodyPosition).multiplyScalar(-1);
-        this.physicBody.setLinearVelocity(this.revertCurrentPhysicBodyPosition);
-        if(this.currentSpeed < 2) this.graphicLocalPostLerpTime += 0.8;
+        this.revertCurrentPhysicBodyPosition.set(this.currentPhysicBodyPosition);
+        this.physicBody.setLinearVelocity(this.revertCurrentPhysicBodyPosition.normalize());
+        if(Math.abs(this.currentSpeed) < 2) this.graphicLocalPostLerpTime += 0.8;
         this.graphicLocalPostLerpTime = clamp01(this.graphicLocalPostLerpTime + game.deltaTime * 0.05);
     }
 

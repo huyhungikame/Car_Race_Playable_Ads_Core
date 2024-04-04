@@ -169,16 +169,30 @@ export class PlayerMovement extends BaseMovement {
     input(dt: number): void {
         this.lastHorizontal = 0;
         var ignoreControl = MapSplineManager.current.roadPoints[this.currentIndex].ignoreControl;
-        if (this.isMouseDown && this.lockDirection.y == 0)
+        if (this.isMouseDown)
         {
-            this.currentSpeed += this.speedChange * 2 * dt;
+            if(this.lockDirection.y == 0){
+                this.currentSpeed += this.speedChange * 2 * dt;
+            } else{
+                this.currentSpeed -= this.speedChange * 20 * dt;
+            }
         }
         else
         {
-            if (!ignoreControl && this.lockDirection.x == 0) this.currentSpeed -= this.speedChange * 4.5 * dt;
+            if (!ignoreControl && this.lockDirection.x == 0) {
+                if(this.currentSpeed >= 0){
+
+                    this.currentSpeed -= this.speedChange * 4.5 * dt;
+                    if(this.currentSpeed < 0) this.currentSpeed = 0;
+                }else
+                {
+                    this.currentSpeed += this.speedChange * 4.5 * dt;
+                    if(this.currentSpeed > 0) this.currentSpeed = 0;
+                }
+            }
         }
 
-        this.currentSpeed = clamp(this.currentSpeed, 0, this.maxSpeed);
+        this.currentSpeed = clamp(this.currentSpeed, -this.maxSpeed, this.maxSpeed);
 
         this.rotationModule.removeRotate(this.isMouseDown);
     }
