@@ -51,10 +51,6 @@ export class GameManager extends Component {
 
     protected update(_dt: number): void {
         this.updateRank();
-        if(!this.hasAI) return;
-        for (let i = 0; i < this.botMovementInScene.length; i++) { 
-           this.botMovementInScene[i].speedConvert(PlayerMovement.current.currentSpeed);
-        }
     }
 
     RevivePlayer(){

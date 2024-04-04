@@ -43,7 +43,7 @@ export class BotRotateModule extends BaseGraphicCarRotationModule {
         var offset = 1 - clamp01(offsetGraphic / 6);
         PlayerMovement.current.rotationModule.rotateGraphicNode.getRotation(this.currentRotate);
         this.currentRotate.getEulerAngles(this.currentEulerAngles);
-        this.currentEulerAngles.multiply3f(offset,1,1);
+        this.currentEulerAngles.multiply3f(offset,0,0);
         this.rotateGraphicNode.eulerAngles = this.currentEulerAngles;
     }
 

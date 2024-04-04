@@ -50,7 +50,6 @@ export abstract class BaseMovement extends Component {
 
     private graphicLocalPostLerpTime: number = 0.0;
     //  down,up, left , right
-    @property(Vec4)
     public lockDirection: Vec4 = new Vec4(0,0,0,0);
     private currentPhysicBodyPosition = new Vec3();
     private revertCurrentPhysicBodyPosition = new Vec3();
@@ -176,24 +175,11 @@ export abstract class BaseMovement extends Component {
     }
     
     protected lateUpdate(dt: number): void {
-        if(this.lockDirection.y > 0){
-            if(this.currentSpeed > 0) this.currentSpeed *= -1;
-        }
-        else
-        {
-            if(this.currentSpeed < 0) this.currentSpeed = lerp(this.currentSpeed, 0,0.8);
-        }
-
-        if(this.lockDirection.z > 0) {
-            this.positionModule.graphicLocalPosition.x += 5 * dt;
-        }
-        if(this.lockDirection.w > 0) {
-            this.positionModule.graphicLocalPosition.x -= 5 * dt;
-        }
-
-        this.resteLockDirection();
+        this.beforeLateUpdate(dt);
         this.onLateUpdate(dt);
     }
+
+    abstract beforeLateUpdate(dt: number) : void;
 
     abstract onLateUpdate(dt: number): void;
 
