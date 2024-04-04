@@ -15,19 +15,20 @@ export class BotRotateModule extends BaseGraphicCarRotationModule {
     }
 
     addRotate(): void {
-       
-    }
-    removeRotate(_isMouseDown: boolean): void {
-        if (Math.abs(this.movement.lastHorizontal) > 0.07)
+        if (Math.abs(this.movement.lastHorizontal) > 0.001)
         {
-            var newRotate = clamp(this.currentGraphicRotate.x - this.movement.lastHorizontal * 30 * game.deltaTime, -1, 1);
-            this.currentRotateChange = newRotate - this.currentGraphicRotate.x;
-            this.currentGraphicRotate.x = newRotate;
+            var horizontalValue = (this.movement.lastHorizontal * 300 * game.deltaTime) * 15;
+            var newRotate = clamp(this.currentGraphicRotate.y + horizontalValue, -15, 15);
+            this.currentRotateChange = newRotate - this.currentGraphicRotate.y;
+            this.currentGraphicRotate.y = newRotate;
         }
 
         var detal = Math.abs(this.currentRotateChange);
         detal = clamp(detal,0.1,0.2);
-        this.currentGraphicRotate.x = lerp(this.currentGraphicRotate.x, 0 , detal);
+        this.currentGraphicRotate.y = lerp(this.currentGraphicRotate.y, 0 , detal);
+    }
+    removeRotate(_isMouseDown: boolean): void {
+        
     }
 
     updateCameraValue(_cameraValue: number): void {
@@ -44,6 +45,7 @@ export class BotRotateModule extends BaseGraphicCarRotationModule {
         PlayerMovement.current.rotationModule.rotateGraphicNode.getRotation(this.currentRotate);
         this.currentRotate.getEulerAngles(this.currentEulerAngles);
         this.currentEulerAngles.multiply3f(offset,0,0);
+        this.currentEulerAngles.y = this.currentGraphicRotate.y;
         this.rotateGraphicNode.eulerAngles = this.currentEulerAngles;
     }
 

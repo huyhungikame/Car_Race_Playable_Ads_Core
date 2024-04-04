@@ -90,6 +90,7 @@ export class BotMovement extends BaseMovement {
         this.lastHorizontal = this.positionModule.graphicLocalPosition.x;
         this.positionModule.graphicLocalPosition.x = lerp(this.startHorizontal, this.targetHorizontal, this.ratioHorizontalChange);
         this.lastHorizontal = this.positionModule.graphicLocalPosition.x - this.lastHorizontal;
+        this.rotationModule.addRotate();
     }
 
     
