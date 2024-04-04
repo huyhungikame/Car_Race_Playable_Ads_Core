@@ -184,6 +184,13 @@ export abstract class BaseMovement extends Component {
             if(this.currentSpeed < 0) this.currentSpeed = lerp(this.currentSpeed, 0,0.8);
         }
 
+        if(this.lockDirection.z > 0) {
+            this.positionModule.graphicLocalPosition.x += 5 * dt;
+        }
+        if(this.lockDirection.w > 0) {
+            this.positionModule.graphicLocalPosition.x -= 5 * dt;
+        }
+
         this.resteLockDirection();
         this.onLateUpdate(dt);
     }
