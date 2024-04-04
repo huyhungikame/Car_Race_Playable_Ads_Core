@@ -51,8 +51,9 @@ export class BotMovement extends BaseMovement {
     }
 
     protected update(dt: number): void {
-        if(!this.isStartGame) return;
+        if (!this.isStartGame) return;
         this.timeActive += dt;
+        if (this.onDie) return;
         this.speed(dt);
         this.rotate(dt);
         this.setPosition(dt);
