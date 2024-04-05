@@ -4,6 +4,7 @@ const { ccclass, property } = _decorator;
 
 @ccclass('CanvasScaler')
 export class CanvasScaler extends Component {
+    public scaleFactor: number = 1;
     @property(CCFloat)
     matchWidthOrHeight: number = 0.5;
     private designSize: Size;
@@ -26,12 +27,12 @@ export class CanvasScaler extends Component {
         this.node.setScale(Vec3.ONE.clone().multiplyScalar(this.handleScaleWithScreenSize()));
     }
     private handleScaleWithScreenSize(): number {
-        var scaleFactor = 1 / view.getScaleX();
+        this.scaleFactor = 1 / view.getScaleX();
         var kLogBase = 2;
         let logWidth = Math.log(this.currentSize.width / this.designSize.width) / Math.log(kLogBase);
         let logHeight = Math.log(this.currentSize.height / this.designSize.height) / Math.log(kLogBase);
         let logWeightedAverage = lerp(logWidth, logHeight, clamp01(this.matchWidthOrHeight));
-        scaleFactor *= Math.pow(kLogBase, logWeightedAverage);
-        return scaleFactor
+        this.scaleFactor *= Math.pow(kLogBase, logWeightedAverage);
+        return this.scaleFactor
     }
 }

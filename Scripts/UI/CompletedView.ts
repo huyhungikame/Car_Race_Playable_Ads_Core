@@ -1,6 +1,7 @@
-import { _decorator, Component, Label, Node, ParticleSystem, Quat, Sprite, SpriteFrame, tween, UIOpacity, UITransform, Vec3 } from 'cc';
+import { _decorator, Component, Label, Node, ParticleSystem, Quat, Sprite, SpriteFrame, tween, UIOpacity, UITransform, Vec3, view, Widget } from 'cc';
 import { PlayerMovement } from '../GamePlay/PlayerMovement';
-
+import { screen } from 'cc'
+import { CanvasScaler } from './CanvasScaler';
 const { ccclass, property } = _decorator;
 
 @ccclass('CompletedView')
@@ -38,7 +39,23 @@ export class CompletedView extends Component {
     @property(SpriteFrame)
     buttonSpriteFrame: SpriteFrame;
 
+    @property(Widget)
+    canvas: Widget;
+
+    @property(CanvasScaler)
+    canvasScale: CanvasScaler;
+
     playedEffect : boolean = false;
+
+    protected onLoad(): void {
+        var designSize = view.getDesignResolutionSize();
+        var windowSize = screen.windowSize;
+        var ratio = designSize.width / designSize.height;
+        var windowWidth = windowSize.height * ratio;
+        this.canvas.left = this.canvas.right = (windowSize.width - windowWidth) / 2;
+        var scale = this.node.scale.x / this.canvasScale.scaleFactor;
+        this.node.scale = new Vec3(scale,scale,scale);
+    }
 
     protected start(): void {
         PlayerMovement.current.endGame = true;
