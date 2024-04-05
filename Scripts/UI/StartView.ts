@@ -1,6 +1,6 @@
-import { _decorator, Component, Label, Node, Tween, tween, UIOpacity, Vec3, Widget } from 'cc';
+import { _decorator, CCFloat, Component, Label, Node, Size, Tween, tween, UIOpacity, Vec3, view, Widget } from 'cc';
 import { GameManager } from '../GamePlay/GameManager';
-
+import { screen } from 'cc'
 const { ccclass, property } = _decorator;
 
 @ccclass('StartView')
@@ -16,6 +16,9 @@ export class StartView extends Component {
     @property(Node)
     handGraphic: Node;
 
+    @property(Widget)
+    holdToRideWidget: Widget;
+
     @property(Node)
     titleImage: Node;
 
@@ -30,6 +33,9 @@ export class StartView extends Component {
 
     protected onLoad(): void {
         StartView.current = this;
+        view.resizeWithBrowserSize(true);
+        this.currentSize = view.getDesignResolutionSize();
+        this.updateCanvas();
     }
 
     protected start(): void {
@@ -127,4 +133,25 @@ export class StartView extends Component {
         this.node.active = false;
         GameManager.startGame();
     }
+
+    @property(CCFloat)
+    matchWidthOrHeight: number = 0.5;
+    private currentSize: Size;
+
+    protected lateUpdate(_dt: number): void {
+        this.updateCanvas();
+    }
+    updateCanvas() : void {
+        var windowSize = screen.windowSize;
+        var changeWidth = Math.abs(this.currentSize.width - windowSize.width) > 1;
+        var changeHeight = Math.abs(this.currentSize.height - windowSize.height) > 1;
+        if (!changeWidth && !changeHeight) return;
+        this.currentSize = windowSize.clone();
+        if(this.currentSize.width > this.currentSize.height) {
+            this.holdToRideWidget.bottom = this.currentSize.height - 185;
+        }else{
+            this.holdToRideWidget.bottom = 185;
+        }
+    }
+
 }
