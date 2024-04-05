@@ -148,9 +148,9 @@ export class StartView extends Component {
         if (!changeWidth && !changeHeight) return;
         this.currentSize = windowSize.clone();
         if(this.currentSize.width > this.currentSize.height) {
-            this.holdToRideWidget.bottom = this.currentSize.height - 185;
+            this.holdToRideWidget.bottom = this.currentSize.height - this.currentSize.height / 4.864864864864865;
         }else{
-            this.holdToRideWidget.bottom = 185;
+            this.holdToRideWidget.bottom = this.currentSize.height / 4.864864864864865;
         }
     }
 
