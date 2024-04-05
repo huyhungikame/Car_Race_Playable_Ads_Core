@@ -13,10 +13,10 @@ export class ShakingCarIsRearEnd extends BaseGraphicCarRotationModule {
     zRatio: number = 2.5;
 
     @property({type: CCFloat }) 
-    startXRotate: number = -11.5;
+    startScaleZ: number = 1;
 
     @property( {type: CCFloat }) 
-    xRotate: number = -2.2;
+    scaleZ: number = 0;
 
     @property(Vec4)
     offsetMaterial: Vec4 = new Vec4(0,0,0,0);
@@ -28,12 +28,14 @@ export class ShakingCarIsRearEnd extends BaseGraphicCarRotationModule {
     yOffsetRatio : number = 1.5;
 
     private currentRotate: Vec3 = new Vec3();
+    private currentScale: Vec3 = new Vec3();
 
     public startGame(startIndex: number): void {
         this.movement.node.setRotation(MapSplineManager.current.roadPoints[startIndex].rotation);
         this.movement.carMaterial.setProperty("offset", this.offsetMaterial);
         this.movement.carMaterial.setProperty("strength", this.strength);
-        this.currentRotate = new Vec3(this.startXRotate,0,0);
+        this.currentRotate = new Vec3(0,0,0);
+        this.currentScale = new Vec3(1,1,this.startScaleZ);
     }
 
     updateCarGraphic(dt: number): void {
@@ -45,7 +47,7 @@ export class ShakingCarIsRearEnd extends BaseGraphicCarRotationModule {
     }
 
     updateCameraValue(cameraValue: number): void {
-        this.currentRotate.x = this.startXRotate + cameraValue * this.xRotate;
+        this.currentScale.z = this.startScaleZ + cameraValue * this.scaleZ;
     }
     
     updateMaterial(dt: number): void {
@@ -57,6 +59,7 @@ export class ShakingCarIsRearEnd extends BaseGraphicCarRotationModule {
         this.currentRotate.y = this.yRatio * this.currentGraphicRotate.x;
         this.currentRotate.z = this.zRatio * this.currentGraphicRotate.y;
         this.rotateGraphicNode.eulerAngles = this.currentRotate;
+        this.rotateGraphicNode.setScale(this.currentScale);
     }
 
     public handleInput(currentTouchPosition: Vec2, playerMovement: PlayerMovement): number {

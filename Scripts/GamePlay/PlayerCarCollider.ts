@@ -36,8 +36,11 @@ export class PlayerCarCollider extends CarCollider {
 
     private onCollisionStay (event: ICollisionEvent) {
         if(!this.hasSpank) return;
-        this.frameCount++;
-        if(this.frameCount % 2 != 0) return;
+        this.effect(event);
+        this.effect(event);
+    }
+
+    private effect(event: ICollisionEvent): void{
         var effect = this.spankParticle[this.spankCurrentIndex * 2];
         var effect2 = this.spankParticle[this.spankCurrentIndex * 2 + 1];
         this.spankCurrentIndex++;

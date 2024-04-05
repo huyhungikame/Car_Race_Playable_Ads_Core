@@ -10,8 +10,11 @@ export class StartView extends Component {
     @property(Node)
     holdToRide: Node;
 
-    @property(Widget)
-    hand: Widget;
+    @property(Node)
+    handNode: Node;
+
+    @property(Node)
+    handGraphic: Node;
 
     @property(Node)
     titleImage: Node;
@@ -84,25 +87,40 @@ export class StartView extends Component {
 
     openHoldToRide(): void
     {
-        this.holdToRide.active = true;
-        this.holdToRide.setScale(Vec3.ZERO);
-        tween(this.holdToRide).to(0.2, {scale: Vec3.ONE} , {
-            easing: "backOut",
-            onComplete: () => {
-                this.onHandMove();
-            }
-        }).start();
+        this.onHandMove();
+    }
+
+    protected onDestroy(): void {
+        Tween.stopAllByTarget(this.node);
     }
 
     onHandMove(): void 
     {
-        tween(this.hand)
-            .to(1.2, { horizontalCenter: 185} ,{easing: "sineInOut"})
-            .to(1.2, { horizontalCenter: -170} ,{easing: "sineInOut"})
+        tween(this.holdToRide)
+            .to(0.8, {scale: new Vec3(0.9 ,1.1 ,1)} , {easing: "backIn" })
+            .to(0.45, {scale: Vec3.ONE} , {easing: "backOut" })
             .union()
-            .repeat(99)
-            .start()
+            .repeatForever()
+            .start();
+
+
+        this.handAnimation1();
     }
+
+    handAnimation1() : void {
+        let t1 = tween(this.handGraphic)
+            .to(0.15, { scale: new Vec3(1.1,1.1,1.1)} ,{easing: "sineOut"})
+            .to(0.15, {  scale: new Vec3(1,1,1)} ,{easing: "sineIn"})
+            .union();
+        
+        tween(this.handNode)
+            .then(t1)
+            .to(0.2, { eulerAngles: new Vec3(0,0,-22)}, {easing: "sineOut"})
+            .to(0.4, { eulerAngles: new Vec3(0,0,22)}, {easing: "sineInOut"})
+            .to(0.2, { eulerAngles: Vec3.ZERO}, {easing: "sineIn"})
+            .union().repeatForever().start();
+    }
+
 
     startGame(): void
     {

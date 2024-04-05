@@ -1,4 +1,4 @@
-import { _decorator, Camera, CCBoolean, CCFloat, CCInteger, Component, lerp, Node, Quat, Vec3 } from 'cc';
+import { _decorator, Camera, CCBoolean, CCFloat, CCInteger, clamp01, Component, lerp, Node, Quat, Vec3 } from 'cc';
 import { BaseCameraFollow } from './BaseCameraFollow';
 import { PlayerMovement } from './PlayerMovement';
 import MapSplineManager from './MapSplineManager';
@@ -7,41 +7,47 @@ const { ccclass, property } = _decorator;
 
 @ccclass('ForwardCameraFollow')
 export class ForwardCameraFollow extends BaseCameraFollow {
+    @property({ group: { name: 'Start' , displayOrder: 1}, type: CCInteger }) 
+    startCameraFOV: number = 45;
+
+    @property({ group: { name: 'Add' , displayOrder: 1}, type: CCInteger }) 
+    cameraFOV: number = 8;
+
+    @property({ group: { name: 'Start' , displayOrder: 1}, type: CCFloat }) 
+    startYCamera: number = -4.15;
+
+    @property({ group: { name: 'Add' , displayOrder: 1}, type: CCFloat }) 
+    yCamera: number = 1.05375;
+
+    @property({ group: { name: 'Start' , displayOrder: 1}, type: CCFloat }) 
+    startZCamera: number = -6;
+
+    @property({ group: { name: 'Add' , displayOrder: 1}, type: CCFloat }) 
+    zCamera: number = 1.8;
+
+    @property({ group: { name: 'Camera' , displayOrder: 1}, type: CCFloat }) 
+    cameraTargetXOffset: number = 0.175;
+
+    @property({ group: { name: 'Start' , displayOrder: 1}, type: CCFloat }) 
+    startXRotateCamera: number = 29.6;
+
+    @property({ group: { name: 'Add' , displayOrder: 1}, type: CCFloat }) 
+    xRotateCamera: number = 0.8;
+
+    @property({ group: { name: 'Camera' , displayOrder: 1} }) 
+    cameraOffset: Vec3 = new Vec3(0, 2.91, -3.62)
+
     @property({ group: { name: 'Camera' , displayOrder: 1} }) 
     controlCamera: boolean = true;
 
     @property({ group: { name: 'Camera' , displayOrder: 1}, type: Node }) 
     cameraPosSmooth: Node;
 
-    @property({ group: { name: 'Camera' , displayOrder: 1}, type: CCInteger }) 
-    startCameraFOV: number = 45;
+    @property(CCFloat)
+    overrideCameraValue: number = 0;
 
-    @property({ group: { name: 'Camera' , displayOrder: 1}, type: CCInteger }) 
-    cameraFOV: number = 8;
-
-    @property({ group: { name: 'Camera' , displayOrder: 1}, type: CCFloat }) 
-    startYCamera: number = -4.15;
-
-    @property({ group: { name: 'Camera' , displayOrder: 1}, type: CCFloat }) 
-    yCamera: number = 1.05375;
-
-    @property({ group: { name: 'Camera' , displayOrder: 1}, type: CCFloat }) 
-    startZCamera: number = -6;
-
-    @property({ group: { name: 'Camera' , displayOrder: 1}, type: CCFloat }) 
-    zCamera: number = 1.8;
-
-    @property({ group: { name: 'Camera' , displayOrder: 1}, type: CCFloat }) 
-    cameraTargetXOffset: number = 0.175;
-
-    @property({ group: { name: 'Camera' , displayOrder: 1}, type: CCFloat }) 
-    startXRotateCamera: number = 29.6;
-
-    @property({ group: { name: 'Camera' , displayOrder: 1}, type: CCFloat }) 
-    xRotateCamera: number = 0.8;
-
-    @property({ group: { name: 'Camera' , displayOrder: 1} }) 
-    cameraOffset: Vec3 = new Vec3(0, 2.91, -3.62)
+    @property
+    overrideCamera:boolean = false;
 
     private cameraNextPosSmooth: Vec3 = new Vec3();
     private cameraGraphicPos: Vec3 = new Vec3();
@@ -77,6 +83,9 @@ export class ForwardCameraFollow extends BaseCameraFollow {
         if(!this.controlCamera) return;
         if(this.playerMovement.endGame) return;
         this.cameraValue = ScriptExtensions.inverseLerp(0, 100, this.playerMovement.currentSpeed);
+
+        if(this.overrideCamera) this.cameraValue = clamp01(this.overrideCameraValue);
+
         var valueConvert = ScriptExtensions.easeOutQuad(this.cameraValue);
 
         this.camera.fov = valueConvert * this.cameraFOV + this.startCameraFOV;

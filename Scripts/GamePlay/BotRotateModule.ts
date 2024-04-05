@@ -9,6 +9,7 @@ export class BotRotateModule extends BaseGraphicCarRotationModule {
     private currentRotate: Quat = new Quat();
     private currentEulerAngles: Vec3 = new Vec3();
     private currentRotateChange: number = 0;
+    private currentScaler: Vec3 = new Vec3();
 
     public handleInput(_currentTouchPosition: Vec2, _playerMovement: PlayerMovement): number {
         return 1;
@@ -44,9 +45,11 @@ export class BotRotateModule extends BaseGraphicCarRotationModule {
         var offset = 1 - clamp01(offsetGraphic / 6);
         PlayerMovement.current.rotationModule.rotateGraphicNode.getRotation(this.currentRotate);
         this.currentRotate.getEulerAngles(this.currentEulerAngles);
-        this.currentEulerAngles.multiply3f(offset,0,0);
         this.currentEulerAngles.y = this.currentGraphicRotate.y;
         this.rotateGraphicNode.eulerAngles = this.currentEulerAngles;
+        this.rotateGraphicNode.getScale(this.currentScaler);
+        this.currentScaler.z = PlayerMovement.current.rotationModule.rotateGraphicNode.scale.z * offset;
+        this.rotateGraphicNode.setScale(this.currentScaler);
     }
 
     teleport(): void {
