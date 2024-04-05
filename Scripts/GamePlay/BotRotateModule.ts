@@ -47,9 +47,9 @@ export class BotRotateModule extends BaseGraphicCarRotationModule {
         this.currentRotate.getEulerAngles(this.currentEulerAngles);
         this.currentEulerAngles.y = this.currentGraphicRotate.y;
         this.rotateGraphicNode.eulerAngles = this.currentEulerAngles;
-        this.rotateGraphicNode.getScale(this.currentScaler);
-        this.currentScaler.z = 1 + clamp01((PlayerMovement.current.rotationModule.rotateGraphicNode.scale.z - 1) * offset);
-        this.rotateGraphicNode.setScale(this.currentScaler);
+        // this.rotateGraphicNode.getScale(this.currentScaler);
+        // this.currentScaler.z = 1 + clamp01((PlayerMovement.current.rotationModule.rotateGraphicNode.scale.z - 1) * offset);
+        // this.rotateGraphicNode.setScale(this.currentScaler);
     }
 
     teleport(): void {

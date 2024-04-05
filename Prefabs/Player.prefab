@@ -5417,8 +5417,8 @@
     },
     "yRatio": -20,
     "zRatio": 4.55,
-    "startScaleZ": 1.1,
-    "scaleZ": 0.2,
+    "startScaleZ": 1.05,
+    "scaleZ": 0.15,
     "offsetMaterial": {
       "__type__": "cc.Vec4",
       "x": 0,
