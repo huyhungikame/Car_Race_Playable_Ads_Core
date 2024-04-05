@@ -3887,7 +3887,7 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": 71.685,
+      "x": 91.286,
       "y": -10.25,
       "z": 0
     },
@@ -3928,7 +3928,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 66.37,
+      "width": 103.77,
       "height": 59.5
     },
     "_anchorPoint": {
@@ -3964,7 +3964,7 @@
       "b": 255,
       "a": 255
     },
-    "_string": "CAR\nRACE",
+    "_string": "CAR\nRACE 3D",
     "_horizontalAlign": 0,
     "_verticalAlign": 1,
     "_actualFontSize": 25,
@@ -4003,7 +4003,7 @@
     },
     "_alignFlags": 12,
     "_target": null,
-    "_left": 73.5,
+    "_left": 74.401,
     "_right": 0,
     "_top": 17.588,
     "_bottom": -5,
