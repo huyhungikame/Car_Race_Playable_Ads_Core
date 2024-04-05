@@ -250,7 +250,7 @@ export class PlayerMovement extends BaseMovement {
         }
 
         if(this.lockDirection.y > 0){
-            if(this.currentSpeed > 0) this.currentSpeed *= -1;
+            // if(this.currentSpeed > 0) this.currentSpeed *= -1;
         }
         else
         {
