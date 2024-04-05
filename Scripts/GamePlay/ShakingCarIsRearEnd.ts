@@ -65,10 +65,10 @@ export class ShakingCarIsRearEnd extends BaseGraphicCarRotationModule {
         if(playerMovement.lockDirection.z > 0 && playerMovement.deltaInputHorizontal < 0) playerMovement.deltaInputHorizontal = 0;
 
         if((playerMovement.deltaInputHorizontal < 0 && playerMovement.lastDeltalInput < 0) || (playerMovement.deltaInputHorizontal > 0 && playerMovement.lastDeltalInput > 0)){
-            playerMovement.minMaxDelta = math.clamp(playerMovement.minMaxDelta + 0.65 * game.deltaTime,0.075,0.3) 
+            playerMovement.minMaxDelta = math.clamp(playerMovement.minMaxDelta + 0.7 * game.deltaTime,0.125,0.3) 
         }
         else{
-            playerMovement.minMaxDelta = 0.075;
+            playerMovement.minMaxDelta = 0.125;
         }
         playerMovement.lastDeltalInput = playerMovement.deltaInputHorizontal;
 
