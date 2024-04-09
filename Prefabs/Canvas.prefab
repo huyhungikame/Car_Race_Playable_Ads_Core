@@ -7790,7 +7790,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 597.83,
+      "width": 423.46,
       "height": 151.2
     },
     "_anchorPoint": {
@@ -7829,8 +7829,8 @@
     "_string": "RESPAWN",
     "_horizontalAlign": 1,
     "_verticalAlign": 1,
-    "_actualFontSize": 120,
-    "_fontSize": 120,
+    "_actualFontSize": 85,
+    "_fontSize": 85,
     "_fontFamily": "Arial",
     "_lineHeight": 120,
     "_overflow": 0,
