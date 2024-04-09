@@ -148,9 +148,13 @@ export class StartView extends Component {
         if (!changeWidth && !changeHeight) return;
         this.currentSize = windowSize.clone();
         if(this.currentSize.width > this.currentSize.height) {
-            this.holdToRideWidget.bottom = this.currentSize.height - this.currentSize.height / 4.864864864864865;
+            this.holdToRideWidget.top = 90;
+            this.holdToRideWidget.isAlignBottom = false;
+            this.holdToRideWidget.isAlignTop = true;
         }else{
-            this.holdToRideWidget.bottom = this.currentSize.height / 4.864864864864865;
+            this.holdToRideWidget.bottom = 185;
+            this.holdToRideWidget.isAlignBottom = true;
+            this.holdToRideWidget.isAlignTop = false;
         }
     }
 
