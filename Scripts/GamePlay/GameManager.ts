@@ -18,6 +18,7 @@ export class GameManager extends Component {
 
     @property({ type: Camera })
     mainCamera : Camera = null;
+
     @property({ type: Camera })
     effectCamera : Camera = null;
 
@@ -26,6 +27,15 @@ export class GameManager extends Component {
         input.on(Input.EventType.TOUCH_MOVE, this.onMouseMove, this);
         this.hasAI = this.botMovementInScene.length > 0;
         GameManager.instance = this;
+    }
+
+    hideCar(){
+        for (let i = 0; i < this.botMovementInScene.length; i++) {
+            var element = this.botMovementInScene[i];
+            element.node.parent.active = false;
+        }
+
+        PlayerMovement.current.node.parent.active = false;
     }
 
     synchronizeCamera() {
@@ -80,6 +90,7 @@ export class GameManager extends Component {
         for (let i = 0; i < GameManager.instance.botMovementInScene.length; i++) { 
             GameManager.instance.botMovementInScene[i].isStartGame = true;
         }
+        
         GameManager.instance.disableMouseMove();
     }
 
@@ -94,7 +105,8 @@ export class GameManager extends Component {
         var playerProgress = PlayerMovement.current.progress;
         for (let i = 0; i < this.botMovementInScene.length; i++) { 
             if(this.botMovementInScene[i].progress > playerProgress) rank++;
-         }
-         PlayerMovement.current.rank = rank;
+        }
+        
+        PlayerMovement.current.rank = rank;
     }
 }
