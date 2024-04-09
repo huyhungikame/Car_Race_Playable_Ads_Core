@@ -16,4 +16,12 @@ export class ScriptExtensions {
     static easeOutQuad(x: number): number {
         return 1 - (1 - x) * (1 - x);
     }
+
+    static easeOutSine(x: number): number {
+        return Math.sin((x * Math.PI) / 2);
+    }
+
+    static easeInSine(x: number): number {
+        return 1 - Math.cos((x * Math.PI) / 2);
+    }
 }

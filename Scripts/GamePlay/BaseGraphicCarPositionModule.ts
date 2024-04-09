@@ -1,6 +1,7 @@
-import { _decorator, CCBoolean, CCFloat, Component, Node, Vec3 } from 'cc';
+import { _decorator, CCBoolean, CCFloat, Component, game, lerp, Node, Vec2, Vec3 } from 'cc';
 import { BaseMovement } from './BaseMovement';
 import MapSplineManager from './MapSplineManager';
+import { ScriptExtensions } from '../ScriptExtensions';
 const { ccclass, property } = _decorator;
 
 @ccclass('BaseGraphicCarPositionModule')
@@ -19,6 +20,18 @@ export abstract class BaseGraphicCarPositionModule extends Component {
     protected movement: BaseMovement;
     public centerRadius: Vec3 = new Vec3();
     public angleRadius: number = 0;
+    public currentForceY: number = 0;
+    public targetForceY: number = 0;
+    private lastTargetForceY: number;
+
+    @property({ group: { name: 'Force Fly' , displayOrder: 1}, type: CCFloat }) 
+    protected upSpeed: number = 1;
+
+    @property({ group: { name: 'Force Fly' , displayOrder: 1}, type: CCFloat }) 
+    protected downSpeed: number = 1;
+
+    @property({ group: { name: 'Force Fly' , displayOrder: 1}, type: CCFloat }) 
+    private currentForceRatio: number = 1;
 
     abstract updateCarGraphic(dt: number): void;
     abstract teleport(): void;
@@ -37,12 +50,16 @@ export abstract class BaseGraphicCarPositionModule extends Component {
         if (!this.useFallOut) return;
         var isFallOut = this.movement.isFallOutOfRoad;
         if (isFallOut) this.fallOutOfRoad(dt);
-        if (MapSplineManager.current.roadPoints[this.movement.currentIndex].ignoreControl || isFallOut)
-        {
+        if (MapSplineManager.current.roadPoints[this.movement.currentIndex].ignoreControl 
+            || isFallOut 
+            || this.currentForceY > 0
+        ) {
+            this.movement.isFlying = true;
             this.movement.isFly(dt);
             return
         }
 
+        this.movement.isFlying = false;
         if (!isFallOut) this.movement.isGround();
     }
 
@@ -54,6 +71,31 @@ export abstract class BaseGraphicCarPositionModule extends Component {
         {
             this.timeFallOut = 0;
             this.movement.fallout();
+        }
+    }
+
+    addForceFly(forceDirection: Vec2, ratioSpeed: number): void {
+        this.targetForceY = lerp(forceDirection.x, forceDirection.y, ratioSpeed);
+        this.currentForceRatio = 0;
+    }
+
+    updateForceFly(): void {
+        if(this.movement.isFallOutOfRoad) return;
+        if(this.currentForceRatio >= 1) return;
+        var dt = game.deltaTime;
+        if(this.targetForceY > 0) {
+            this.currentForceRatio += dt * this.upSpeed;
+            var currentRatio = ScriptExtensions.easeOutSine(this.currentForceRatio);
+            this.graphicLocalPosition.y = currentRatio * this.targetForceY;
+            if(this.currentForceRatio >= 1){
+                this.lastTargetForceY = this.targetForceY;
+                this.targetForceY =  0;
+                this.currentForceRatio = 0;
+            }
+        } else{
+            this.currentForceRatio += dt * this.downSpeed;
+            var currentRatio = ScriptExtensions.easeInSine(this.currentForceRatio);
+            this.graphicLocalPosition.y = currentRatio * this.lastTargetForceY;
         }
     }
 }

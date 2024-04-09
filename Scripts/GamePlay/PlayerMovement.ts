@@ -142,6 +142,7 @@ export class PlayerMovement extends BaseMovement {
         if(this.onDie) return;
         if(this.endGame) return;
         if(this.isFallOutOfRoad) return;
+        if(this.isFlying) return;
         this.lastHorizontal = 0;
         if (this.isMouseDown)
         {

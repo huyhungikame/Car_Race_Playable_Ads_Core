@@ -1,4 +1,4 @@
-import { CCBoolean, CCFloat, CCInteger, Component, Quat, TextAsset, Vec3, _decorator } from "cc";
+import { CCBoolean, CCFloat, CCInteger, Component, Quat, TextAsset, Vec2, Vec3, _decorator } from "cc";
 
 const { ccclass, executeInEditMode, property} = _decorator;
 
@@ -31,6 +31,9 @@ export class RoadPoint {
     @property(Vec3)
     public directionToNext: Vec3 = new Vec3();
 
+    @property(Vec2)
+    public addForce: Vec2 = new Vec2();
+
     public setData(
         posX: number = 0,
         posY: number = 0,
@@ -46,7 +49,9 @@ export class RoadPoint {
         progress: number = 0,
         lateralIndex: number = 0,
         semilast: boolean = false,
-        ignoreControl: boolean = false
+        ignoreControl: boolean = false,
+        addForceX: number = 0,
+        addForceY: number = 0
     ) : void {
         this.position = new Vec3(posX, posY, posZ);
         this.rotation = new Quat(rotX, rotY, rotZ, rotW);
@@ -57,6 +62,7 @@ export class RoadPoint {
         this.lateralIndex = lateralIndex;
         this.semilast = semilast;
         this.ignoreControl = ignoreControl;
+        this.addForce = new Vec2(addForceX, addForceY);
     }
 }
 
@@ -125,6 +131,8 @@ export default class MapSplineManager extends Component {
                 parseInt(r[12]),
                 parseInt(r[13]) !== 0,
                 parseInt(r[14]) !== 0,
+                parseFloat(r[15]),
+                parseFloat(r[16])
             );
             this.roadPoints.push(roadPoint); 
         }

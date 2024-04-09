@@ -50,6 +50,7 @@ export class PinelineGraphicPosition extends BaseGraphicCarPositionModule {
             return;
         }
 
+        this.updateForceFly();
         Vec3.lerp(this.positionGraphic.position,this.graphicLocalPosition, this.positionGraphic.position, 0.65);
         this.movement.updateGraphicLocalPos();
         this.movement.materialWheel(dt);

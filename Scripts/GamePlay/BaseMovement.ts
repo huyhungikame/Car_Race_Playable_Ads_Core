@@ -13,10 +13,12 @@ export abstract class BaseMovement extends Component {
     public length: number = 0;
     public currentIndex: number = 0;
     public maxSpeed: number = 100;
+    public currentNitroSpeed: number = 1;
     public isStartGame: boolean = false;
 
     public isFallOutOfRoad: boolean = false;
     public isCheckGround: boolean = false;
+    public isFlying: boolean = false;
     public onDie: boolean = false;
     lastHorizontal: number = 0.0;
     deltaInputHorizontal: number = 0.0;
@@ -37,10 +39,13 @@ export abstract class BaseMovement extends Component {
     @property({ group: { name: 'Settings' , displayOrder: 1}, type: CCFloat }) 
     protected speedFactor: number = 0.25;
 
-    @property({ group: { name: 'Settings' , displayOrder: 1} }) 
+    @property({ group: { name: 'Settings' , displayOrder: 1}, type: CCFloat }) 
+    protected maxNitroFactor: number = 1;
+
+    @property({ group: { name: 'Settings' , displayOrder: 1}, type: CCFloat }) 
     ratioRustSpeedValue: number = 1;
 
-     @property({ group: { name: 'Settings' , displayOrder: 1} }) 
+    @property({ group: { name: 'Settings' , displayOrder: 1}, type: CCFloat }) 
     ratioRustSpeedAmount: number = 0;
 
     @property({ group: { name: 'Settings' , displayOrder: 1} }) 
@@ -93,11 +98,11 @@ export abstract class BaseMovement extends Component {
     }
 
     protected setPosition(dt: number): void{
-        var speedLength = this.currentSpeed * this.speedFactor * this.ratioRustSpeedValue * dt;
+        var speedLength = this.currentSpeed * this.speedFactor * this.ratioRustSpeedValue * dt * this.currentNitroSpeed;
         var isForward = speedLength >= 0;
         if (!isForward) speedLength *= -1;
         this.node.getPosition(this.currentPosition);
-        this.node.getRotation(this.currentRotation)
+        this.node.getRotation(this.currentRotation);
         this.currentRotation.getEulerAngles(this.currentEulerAngles);
         var roadPoints = MapSplineManager.current.roadPoints;
         var nextIndex = isForward ? 1 : -1;
@@ -114,6 +119,10 @@ export abstract class BaseMovement extends Component {
                 speedLength -= distanceCompletedPath;
                 this.currentIndex += nextIndex;
                 this.progress = this.currentIndex;
+                var addForce = roadPoints[this.currentIndex].addForce;
+                if( nextIndex > 0 
+                    && this.currentSpeed > 0 
+                    && (addForce.x + addForce.y) > 0 )  this.positionModule.addForceFly(addForce, (this.currentSpeed * this.currentNitroSpeed) / (this.maxSpeed * this.maxNitroFactor))
                 continue;
             }
 
