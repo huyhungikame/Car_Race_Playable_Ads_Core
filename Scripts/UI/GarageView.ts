@@ -1,4 +1,4 @@
-import { _decorator, Button, Component, Node, Scene, Size, Tween, tween, UITransform, Vec3, view } from 'cc';
+import { _decorator, Button, Color, Component, Node, Scene, Size, Sprite, Tween, tween, UIOpacity, UITransform, Vec3, view } from 'cc';
 import { GameManager } from '../GamePlay/GameManager';
 import { CanvasScaler } from './CanvasScaler';
 import { screen } from 'cc'
@@ -34,6 +34,9 @@ export class GarageView extends Component {
 
     @property(GaragePropeties)
     garageProperties: GaragePropeties;
+
+    @property(UIOpacity)
+    shield: UIOpacity;
     
     protected onEnable(): void {
         this.contentView.active = false;
@@ -47,6 +50,12 @@ export class GarageView extends Component {
         this.playVertical.node.active = false;
         this.playHorizontal.node.active = true;
         this.garageProperties.upgradeProperties(0,0,0);
+
+        this.shield.node.active = true;
+        this.shield.opacity = 225;
+        tween(this.shield)
+            .to(0.5,{opacity: 0}, {onComplete: () => this.garage.active = true})
+            .start();
     }
 
     onClickToggle (event: Event, customEventData: string) {

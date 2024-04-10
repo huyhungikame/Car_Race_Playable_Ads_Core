@@ -1,4 +1,4 @@
-import { _decorator, Component, Label, Node, ParticleSystem, Quat, Sprite, SpriteFrame, tween, UIOpacity, UITransform, Vec3, view, Widget } from 'cc';
+import { _decorator, Component, Label, Node, ParticleSystem, Quat, Sprite, SpriteFrame, tween, UIOpacity, UITransform, Vec3, view, Widget, Color } from 'cc';
 import { PlayerMovement } from '../GamePlay/PlayerMovement';
 import { screen } from 'cc'
 import { CanvasScaler } from './CanvasScaler';
@@ -47,6 +47,18 @@ export class CompletedView extends Component {
 
     playedEffect : boolean = false;
 
+    @property({ group: { name: 'Garage' , displayOrder: 1} }) 
+    openGarage: boolean = false;
+
+    @property({ group: { name: 'Garage' , displayOrder: 1}, type: Node }) 
+    garage: Node;
+
+    @property({ group: { name: 'Garage' , displayOrder: 1}, type: Sprite }) 
+    spriteSplash: Sprite;
+
+    @property({ group: { name: 'Garage' , displayOrder: 1}, type: UIOpacity }) 
+    uiOpacity: UIOpacity;
+
     protected onLoad(): void {
         var designSize = view.getDesignResolutionSize();
         var windowSize = screen.windowSize;
@@ -59,7 +71,16 @@ export class CompletedView extends Component {
 
     protected start(): void {
         PlayerMovement.current.endGame = true;
-        
+        if(this.openGarage) {
+            this.cupSprite.node.active = false;
+            this.buttonSprite.node.active = false;
+            this.spriteSplash.color = Color.BLACK;
+            this.uiOpacity.opacity = 0;
+            tween(this.uiOpacity)
+                .to(0.5,{opacity: 255}, {onComplete: () => this.garage.active = true})
+                .start();
+            return;
+        }
         if(PlayerMovement.current.rank != 1){
             this.cupSprite.spriteFrame = this.cupFailSpriteFrame;
             this.buttonText.string = "TRY AGAIN";

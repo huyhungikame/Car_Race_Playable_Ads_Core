@@ -5330,6 +5330,7 @@
     "rank": 0,
     "progress": 0,
     "speedFactor": 0.325,
+    "maxNitroFactor": 1,
     "ratioRustSpeedValue": 1,
     "ratioRustSpeedAmount": 0,
     "ratioRustSpeedKeep": {
@@ -5395,6 +5396,9 @@
       "__id__": 43
     },
     "initHorizontal": 0,
+    "upSpeed": 1,
+    "downSpeed": 1,
+    "currentForceRatio": 1,
     "_id": ""
   },
   {
@@ -5416,7 +5420,7 @@
       "__id__": 45
     },
     "yRatio": -20,
-    "zRatio": 4.55,
+    "zRatio": 3.5,
     "startScaleZ": 1.05,
     "scaleZ": 0.15,
     "offsetMaterial": {
@@ -5426,7 +5430,7 @@
       "z": 0,
       "w": 0
     },
-    "strength": 1.75,
+    "strength": 2.175,
     "yOffsetRatio": 1.5,
     "_id": ""
   },
