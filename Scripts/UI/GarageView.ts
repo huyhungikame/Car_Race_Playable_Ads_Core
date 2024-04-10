@@ -2,6 +2,7 @@ import { _decorator, Button, Component, Node, Scene, Size, Tween, tween, UITrans
 import { GameManager } from '../GamePlay/GameManager';
 import { CanvasScaler } from './CanvasScaler';
 import { screen } from 'cc'
+import { GarageManager } from './GarageManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('GarageView')
@@ -14,6 +15,9 @@ export class GarageView extends Component {
 
     @property(CanvasScaler)
     canvasScaler: CanvasScaler;
+
+    @property(GarageManager)
+    garageManager: GarageManager;
 
     @property({ group: { name: 'Button' , displayOrder: 1}, type: [Button] }) 
     buttonToggle: Button[] = [];
@@ -57,5 +61,22 @@ export class GarageView extends Component {
             uiTransform.contentSize = new Size(uiTransform.contentSize.x, 60);
         }
        }
+    }
+
+    onClick(index: number, indexButton: number): void {
+        switch (index) {
+            case 0:
+                this.garageManager.enableEngineColorAnimation(indexButton);
+                break;
+            case 1:
+                this.garageManager.enableEngineAnimation(indexButton);
+                break;
+            case 3: 
+                this.garageManager.enableEngineSpolerAnimation(indexButton);
+                break
+
+            default:
+                break;
+        }
     }
 }

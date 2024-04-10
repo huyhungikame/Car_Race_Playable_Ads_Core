@@ -1,4 +1,4 @@
-import { _decorator, CCBoolean, Component, Node } from 'cc';
+import { _decorator, CCBoolean, CCInteger, Component, Node } from 'cc';
 import { GarageView } from './GarageView';
 import { GarageGroup } from './GarageGroup';
 const { ccclass, property } = _decorator;
@@ -7,6 +7,12 @@ const { ccclass, property } = _decorator;
 export class GarageButton extends Component {
     @property()
     isSelect: boolean = false;
+
+    @property(CCInteger)
+    index: number = 0;
+
+    @property(CCInteger)
+    indexButton: number = 0;
 
     @property(GarageGroup)
     group: GarageGroup;
@@ -21,5 +27,6 @@ export class GarageButton extends Component {
         this.group.disableAllButton();
         this.isSelect = true;
         this.select.active = true;
+        this.garageView.onClick(this.index, this.indexButton);
     }
 }
