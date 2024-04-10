@@ -2865,6 +2865,28 @@
         "__id__": 73
       }
     ],
+    "materialCar": {
+      "__uuid__": "ba6781c6-93f7-4600-ba36-cb93ca5b8daa",
+      "__expectedType__": "cc.Material"
+    },
+    "textureColor": [
+      {
+        "__uuid__": "3ca57ca1-dee4-41b9-bb7e-6d0d3d7c2240@6c48a",
+        "__expectedType__": "cc.Texture2D"
+      },
+      {
+        "__uuid__": "2884f26c-51de-4c30-bd1a-9a663967b680@6c48a",
+        "__expectedType__": "cc.Texture2D"
+      },
+      {
+        "__uuid__": "5b7f8b82-5489-4a36-a4f9-02540db09ff4@6c48a",
+        "__expectedType__": "cc.Texture2D"
+      },
+      {
+        "__uuid__": "11384486-c8f3-408c-a207-a3a04074efb2@6c48a",
+        "__expectedType__": "cc.Texture2D"
+      }
+    ],
     "_id": ""
   },
   {

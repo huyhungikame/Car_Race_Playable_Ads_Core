@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, Quat, Tween, tween, Vec3 } from 'cc';
+import { _decorator, Component, Material, Node, Quat, Texture2D, Tween, tween, Vec3 } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('GarageManager')
@@ -21,10 +21,21 @@ export class GarageManager extends Component {
     @property([Node])
     wheel: Node[] = [];
 
+    @property(Material)
+    materialCar: Material;
+
+    @property([Texture2D])
+    textureColor: Texture2D[] = [];
+
     carRotation: Quat = new Quat();
     rotationAdd: Quat = new Quat();
     isRotate: boolean = true;
     currentAnimation: number = -1;
+
+    currentEngineIndex = -1;
+    currentSpoilerIndex = -1;
+    currentWheelIndex = -1;
+    currentColorIndex = -1;
 
     protected update(dt: number): void {
         if(!this.isRotate) return;
@@ -36,27 +47,42 @@ export class GarageManager extends Component {
 
     enableEngineAnimation(level: number): void {
         Tween.stopAllByTag(100);
+        Tween.stopAllByTag(101);
         this.currentAnimation = 1;
+
+        if(this.currentEngineIndex  == level) return;
+        if(this.currentEngineIndex == -1) this.currentEngineIndex = 0;
         for (let i = 0; i < this.engine.length; i++) {
             var element = this.engine[i];
             element.active = level == i;
-            if(level == i) this.animationCabinLib(element);
+            if(level == i) this.animationCabinLib(element, this.currentEngineIndex != level);
         }
+        this.currentEngineIndex = level
     }
 
-    animationCabinLib(animaiton: Node): void {
+    animationCabinLib(animaiton: Node, upgrade: boolean): void {
         this.isRotate = false;
         tween(this.cabinLid)
             .to(0.3, {eulerAngles: new Vec3(-75, 0, 0)}, {easing: "backOut"})
             .tag(100)
             .start();
 
-        tween(this.car)
+        if(!upgrade) {
+            tween(this.car)
             .to(0.25, {eulerAngles: new Vec3(0, -25, 0)},{easing: "backOut"})
-            .to(0.15, {scale: new Vec3(1.05, 0.9,1)}, {easing: "backOut"})
-            .to(0.1, {scale: Vec3.ONE}, {easing: 'backOut'})
+            .to(0.15, {scale: new Vec3(1.02, 0.98,1)}, {easing: "backOut"})
+            .to(0.1, {scale: Vec3.ONE}, {easing: 'backOut', onComplete: () => this.isRotate = true})
             .tag(100)
             .start();
+            return;
+        }
+
+        tween(this.car)
+        .to(0.25, {eulerAngles: new Vec3(0, -25, 0)},{easing: "backOut"})
+        .to(0.15, {scale: new Vec3(1.05, 0.9,1)}, {easing: "backOut"})
+        .to(0.1, {scale: Vec3.ONE}, {easing: 'backOut'})
+        .tag(100)
+        .start();
 
         animaiton.setScale(new Vec3(0.5,1.5,1));
         animaiton.setPosition(new Vec3(0,1.5,0));
@@ -76,7 +102,7 @@ export class GarageManager extends Component {
         this.isRotate = false;
         tween(this.cabinLid)
             .to(0.3, {eulerAngles: new Vec3(0, 0, 0)}, {easing: "sineOut"})
-            .tag(100)
+            .tag(101)
             .start();
 
         for (let i = 0; i < this.engine.length; i++) {
@@ -86,30 +112,52 @@ export class GarageManager extends Component {
     }
 
     enableEngineColorAnimation(index: number): void{
-        Tween.stopAllByTag(100);
+        Tween.stopAllByTag(101);
         if(this.currentAnimation == 1){
             this.closeCabinLib();
-        }
+        } 
         this.currentAnimation = 0;
+        Tween.stopAllByTag(100);
+        this.isRotate = false;
+        tween(this.car)
+            .to(0.15, {eulerAngles: new Vec3(0, -45, 0)},{easing: "sineOut", onComplete: () => this.materialCar.setProperty("matcapTexture",this.textureColor[index])})
+            .to(0.1, {scale: new Vec3(1.02, 0.98,1)}, {easing: "backOut"})
+            .to(0.075, {scale: Vec3.ONE}, {easing: 'backOut', onComplete: ()=> this.isRotate = true})
+            .tag(100)
+            .start();
     }
 
     enableEngineSpolerAnimation(index: number) : void {
-        Tween.stopAllByTag(100);
+        Tween.stopAllByTag(101);
         if(this.currentAnimation == 1){
             this.closeCabinLib();
         } 
         this.currentAnimation = 3;
-
+        if(this.currentSpoilerIndex == index) return;
+        Tween.stopAllByTag(100);
+        if(this.currentSpoilerIndex == -1) this.currentSpoilerIndex = 0;
         for (let i = 0; i < this.spoiler.length; i++) {
             var element = this.spoiler[i];
             element.active = index == i;
-            if(index == i) this.animationSpoiler(element);
+            if(index == i) this.animationSpoiler(element, this.currentSpoilerIndex != index);
         } 
+
+        this.currentSpoilerIndex = index;
     }
 
-    animationSpoiler(animaiton: Node): void {
+    animationSpoiler(animaiton: Node,  upgrade: boolean): void {
         this.isRotate = false;
 
+        if(!upgrade) {
+                tween(this.car)
+                .to(0.25, {eulerAngles: new Vec3(0, 155, 0)},{easing: "backOut"})
+                .to(0.15, {scale: new Vec3(1.02, 0.98,1)}, {easing: "backOut"})
+                .to(0.1, {scale: Vec3.ONE}, {easing: 'backOut', onComplete: () => this.isRotate = true})
+                .tag(100)
+                .start();
+                return;
+            }
+    
         tween(this.car)
             .to(0.25, {eulerAngles: new Vec3(0, 155, 0)},{easing: "backOut"})
             .to(0.15, {scale: new Vec3(1.05, 0.9,1)}, {easing: "backOut"})
@@ -133,22 +181,35 @@ export class GarageManager extends Component {
 
 
     enableEngineWheelAnimation(index: number) : void {
-        Tween.stopAllByTag(100);
+        Tween.stopAllByTag(101);
         if(this.currentAnimation == 1){
             this.closeCabinLib();
         } 
         this.currentAnimation = 2;
-
+        if(this.currentWheelIndex == index) return;
+        Tween.stopAllByTag(100);
+        if(this.currentWheelIndex == -1) this.currentWheelIndex = 0;
         for (let i = 0; i < this.wheel.length; i++) {
             var element = this.wheel[i];
             element.active = index == i;
-            if(index == i) this.animationWheel(element);
+            if(index == i) this.animationWheel(element, this.currentWheelIndex != index);
         } 
+        this.currentWheelIndex = index;
     }
 
-    animationWheel(animaiton: Node): void {
+    animationWheel(animaiton: Node, upgrade: boolean): void {
         this.isRotate = false;
 
+        if(!upgrade) {
+            tween(this.car)
+                .to(0.25, {eulerAngles: new Vec3(0, 90, 0)},{easing: "backOut"})
+                .to(0.15, {scale: new Vec3(1.02, 0.98,1)}, {easing: "backOut"})
+                .to(0.1, {scale: Vec3.ONE}, {easing: 'backOut', onComplete: () => this.isRotate = true})
+                .tag(100)
+                .start();
+                return;
+            }
+    
         tween(this.car)
             .to(0.25, {eulerAngles: new Vec3(0, 90, 0)},{easing: "backOut"})
             .to(0.15, {scale: new Vec3(1.025, 0.985,1)}, {easing: "backOut"})

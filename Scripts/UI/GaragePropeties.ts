@@ -1,14 +1,29 @@
-import { _decorator, Component, Node } from 'cc';
+import { _decorator, Component, Label, Node, Sprite } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('GaragePropeties')
 export class GaragePropeties extends Component {
-    start() {
+    @property(Sprite)
+    maxSpeed: Sprite;
+    
+    @property(Sprite)
+    acc: Sprite;
 
-    }
+    @property(Sprite)
+    handling: Sprite;
 
-    update(deltaTime: number) {
-        
-    }
+    @property(Label)
+    maxSpeedAmount: Label;
+
+    @property(Label)
+    accAmount: Label;
+
+    @property(Label)
+    handlingAmount: Label;
+
+    max_Speed: number = 300;
+    max_Acc: number = 100;
+    max_Handling: number = 255;
+
+    
 }
-
