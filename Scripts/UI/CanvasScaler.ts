@@ -35,4 +35,12 @@ export class CanvasScaler extends Component {
         this.scaleFactor *= Math.pow(kLogBase, logWeightedAverage);
         return this.scaleFactor
     }
+
+    caculatorScale(value: number): number{
+        var kLogBase = 2;
+        let logWidth = Math.log(this.currentSize.width / this.designSize.width) / Math.log(kLogBase);
+        let logHeight = Math.log(this.currentSize.height / this.designSize.height) / Math.log(kLogBase);
+        let logWeightedAverage = lerp(logWidth, logHeight, clamp01(value));
+        return Math.pow(kLogBase, logWeightedAverage);
+    }
 }

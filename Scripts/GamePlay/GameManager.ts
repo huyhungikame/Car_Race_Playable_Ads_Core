@@ -1,4 +1,4 @@
-import { _decorator, Camera, Component, EventTouch, Input, input, Vec2 } from 'cc';
+import { _decorator, Camera, Component, EventTouch, Input, input, Vec2, Node } from 'cc';
 import { BotMovement } from './BotMovement';
 import { PlayerMovement } from './PlayerMovement';
 import { PlayableAdsManager } from '../../../../TemplatePA/PlayableAdsManager';
@@ -16,6 +16,9 @@ export class GameManager extends Component {
     static instance : GameManager;
     static mousePos: Vec2;
 
+    @property({type: Node})
+    garageView: Node;
+
     @property({ type: Camera })
     mainCamera : Camera = null;
 
@@ -27,7 +30,11 @@ export class GameManager extends Component {
         input.on(Input.EventType.TOUCH_MOVE, this.onMouseMove, this);
         this.hasAI = this.botMovementInScene.length > 0;
         GameManager.instance = this;
+        setTimeout ( ()=>{
+            this.garageView.active = true;
+        }, 2500)
     }
+    
 
     hideCar(){
         for (let i = 0; i < this.botMovementInScene.length; i++) {
