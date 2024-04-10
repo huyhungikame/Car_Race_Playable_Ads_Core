@@ -3,6 +3,7 @@ import { GameManager } from '../GamePlay/GameManager';
 import { CanvasScaler } from './CanvasScaler';
 import { screen } from 'cc'
 import { GarageManager } from './GarageManager';
+import { GaragePropeties } from './GaragePropeties';
 const { ccclass, property } = _decorator;
 
 @ccclass('GarageView')
@@ -30,6 +31,9 @@ export class GarageView extends Component {
 
     @property({ group: { name: 'Content' , displayOrder: 1}, type: [Node] }) 
     nodeView: Node[] = [];
+
+    @property(GaragePropeties)
+    garageProperties: GaragePropeties;
     
     protected onEnable(): void {
         this.contentView.active = false;
@@ -42,6 +46,7 @@ export class GarageView extends Component {
         this.node.scale = new Vec3(scale,scale,scale);
         this.playVertical.node.active = false;
         this.playHorizontal.node.active = true;
+        this.garageProperties.upgradeProperties(0,0,0);
     }
 
     onClickToggle (event: Event, customEventData: string) {
@@ -77,9 +82,10 @@ export class GarageView extends Component {
             case 3: 
                 this.garageManager.enableEngineSpolerAnimation(indexButton);
                 break
-
             default:
                 break;
         }
+
+        this.garageProperties.upgradeProperties(this.garageManager.currentEngineIndex, this.garageManager.currentWheelIndex, this.garageManager.currentSpoilerIndex);
     }
 }
