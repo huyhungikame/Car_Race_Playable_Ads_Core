@@ -55,7 +55,7 @@ export class GarageView extends Component {
         if(isTap){
             tween(uiTransform)
                 .to(0.15, {contentSize: new Size(uiTransform.contentSize.x, 69.5)})
-                .start();
+                .start(); 
         }
         else{
             uiTransform.contentSize = new Size(uiTransform.contentSize.x, 60);
@@ -70,6 +70,9 @@ export class GarageView extends Component {
                 break;
             case 1:
                 this.garageManager.enableEngineAnimation(indexButton);
+                break;
+            case 2:
+                this.garageManager.enableEngineWheelAnimation(indexButton);
                 break;
             case 3: 
                 this.garageManager.enableEngineSpolerAnimation(indexButton);
