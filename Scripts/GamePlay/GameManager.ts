@@ -19,8 +19,8 @@ export class GameManager extends Component {
     @property({ type: Camera })
     mainCamera : Camera = null;
 
-    @property({type: Node})
-    garageView: Node;
+    // @property({type: Node})
+    // garageView: Node;
 
     @property({ type: Camera })
     effectCamera : Camera = null;
@@ -31,9 +31,9 @@ export class GameManager extends Component {
         this.hasAI = this.botMovementInScene.length > 0;
         GameManager.instance = this;
 
-        setTimeout ( ()=>{
-            this.garageView.active = true;
-        }, 2500)
+        // setTimeout ( ()=>{
+        //     this.garageView.active = true;
+        // }, 2500)
     }
     
 
