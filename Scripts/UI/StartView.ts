@@ -33,7 +33,6 @@ export class StartView extends Component {
 
     protected onLoad(): void {
         StartView.current = this;
-        view.resizeWithBrowserSize(true);
         this.currentSize = view.getDesignResolutionSize();
         this.updateCanvas();
     }
@@ -134,8 +133,6 @@ export class StartView extends Component {
         GameManager.startGame();
     }
 
-    @property(CCFloat)
-    matchWidthOrHeight: number = 0.5;
     private currentSize: Size;
 
     protected lateUpdate(_dt: number): void {

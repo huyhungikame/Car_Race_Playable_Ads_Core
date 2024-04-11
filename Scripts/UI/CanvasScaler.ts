@@ -1,4 +1,4 @@
-import { _decorator, CCFloat, clamp01, Component, lerp, Size, Vec3, view } from 'cc';
+import { _decorator, CCFloat, clamp01, Component, lerp, Size, Vec3, view, Widget } from 'cc';
 import { screen } from 'cc'
 const { ccclass, property } = _decorator;
 
@@ -36,11 +36,11 @@ export class CanvasScaler extends Component {
         return this.scaleFactor
     }
 
-    caculatorScale(value: number): number{
-        var kLogBase = 2;
-        let logWidth = Math.log(this.currentSize.width / this.designSize.width) / Math.log(kLogBase);
-        let logHeight = Math.log(this.currentSize.height / this.designSize.height) / Math.log(kLogBase);
-        let logWeightedAverage = lerp(logWidth, logHeight, clamp01(value));
-        return Math.pow(kLogBase, logWeightedAverage);
+    overriderMatchWidthOrHeight(value: number): void {
+        this.matchWidthOrHeight = value;
+        this.node.setScale(Vec3.ONE.clone().multiplyScalar(this.handleScaleWithScreenSize()));
+        this.node.getComponentsInChildren(Widget).forEach(element => {
+            element.updateAlignment();
+        });
     }
 }

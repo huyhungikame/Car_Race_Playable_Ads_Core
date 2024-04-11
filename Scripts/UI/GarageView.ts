@@ -1,4 +1,4 @@
-import { _decorator, Button, Color, Component, Node, Scene, Size, Sprite, Tween, tween, UIOpacity, UITransform, Vec3, view } from 'cc';
+import { _decorator, Button, Color, Component, Label, Node, Scene, Size, Sprite, Tween, tween, UIOpacity, UITransform, Vec3, view } from 'cc';
 import { GameManager } from '../GamePlay/GameManager';
 import { CanvasScaler } from './CanvasScaler';
 import { screen } from 'cc'
@@ -37,25 +37,47 @@ export class GarageView extends Component {
 
     @property(UIOpacity)
     shield: UIOpacity;
+
+    private currentSize: Size;
     
     protected onEnable(): void {
         this.contentView.active = false;
         this.garage.active = true;
         GameManager.instance.hideCar();
-
-        if(screen.windowSize.width < screen.windowSize.height) return;
-        var scale = this.node.scale.x / this.canvasScaler.scaleFactor;
-        scale *= this.canvasScaler.caculatorScale(0.05);
-        this.node.scale = new Vec3(scale,scale,scale);
-        this.playVertical.node.active = false;
-        this.playHorizontal.node.active = true;
         this.garageProperties.upgradeProperties(0,0,0);
-
+        this.currentSize = view.getDesignResolutionSize();
+        this.updateCanvas();
         this.shield.node.active = true;
         this.shield.opacity = 225;
         tween(this.shield)
-            .to(0.5,{opacity: 0}, {onComplete: () => this.garage.active = true})
+            .to(0.5,{opacity: 0}, {onComplete: () => this.shield.node.active = false})
             .start();
+    }
+
+    protected lateUpdate(_dt: number): void {
+        this.updateCanvas();
+    }
+    updateCanvas() : void {
+        var windowSize = screen.windowSize;
+        var changeWidth = Math.abs(this.currentSize.width - windowSize.width) > 1;
+        var changeHeight = Math.abs(this.currentSize.height - windowSize.height) > 1;
+        if (!changeWidth && !changeHeight) return;
+        this.currentSize = windowSize.clone();
+        var ratio = this.currentSize.width / this.currentSize.height;
+        if(ratio < 0.64){
+            this.canvasScaler.overriderMatchWidthOrHeight(0.5);
+            this.playVertical.node.active = true;
+            this.playHorizontal.node.active = false;
+        }else if(ratio < 1.4){
+
+            this.canvasScaler.overriderMatchWidthOrHeight(1);
+            this.playVertical.node.active = true;
+            this.playHorizontal.node.active = false;
+        }else{
+            this.canvasScaler.overriderMatchWidthOrHeight(0.75);
+            this.playVertical.node.active = false;
+            this.playHorizontal.node.active = true;
+        }
     }
 
     onClickToggle (event: Event, customEventData: string) {
