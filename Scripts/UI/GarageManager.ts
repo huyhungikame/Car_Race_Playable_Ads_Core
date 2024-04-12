@@ -48,9 +48,10 @@ export class GarageManager extends Component {
     enableEngineAnimation(level: number): void {
         Tween.stopAllByTag(100);
         Tween.stopAllByTag(101);
+        Tween.stopAllByTag(102);
+        var lastAnimation = this.currentAnimation;
         this.currentAnimation = 1;
-
-        if(this.currentEngineIndex  == level) return;
+        if(this.currentEngineIndex == level && lastAnimation == 1) return;
         if(this.currentEngineIndex == -1) this.currentEngineIndex = 0;
         for (let i = 0; i < this.engine.length; i++) {
             var element = this.engine[i];
@@ -69,20 +70,23 @@ export class GarageManager extends Component {
 
         if(!upgrade) {
             tween(this.car)
-            .to(0.25, {eulerAngles: new Vec3(0, -25, 0)},{easing: "backOut"})
+            .to(0.25, {eulerAngles: new Vec3(0, 10, 0)},{easing: "backOut"})
             .to(0.15, {scale: new Vec3(1.02, 0.98,1)}, {easing: "backOut"})
             .to(0.1, {scale: Vec3.ONE}, {easing: 'backOut', onComplete: () => this.isRotate = true})
             .tag(100)
             .start();
+            this.updateCamera();
             return;
         }
 
         tween(this.car)
-        .to(0.25, {eulerAngles: new Vec3(0, -25, 0)},{easing: "backOut"})
+        .to(0.25, {eulerAngles: new Vec3(0, 10, 0)},{easing: "backOut"})
         .to(0.15, {scale: new Vec3(1.05, 0.9,1)}, {easing: "backOut"})
         .to(0.1, {scale: Vec3.ONE}, {easing: 'backOut'})
         .tag(100)
         .start();
+
+        this.updateCamera();
 
         animaiton.setScale(new Vec3(0.5,1.5,1));
         animaiton.setPosition(new Vec3(0,1.5,0));
@@ -98,13 +102,33 @@ export class GarageManager extends Component {
             .start()
     }
 
+    updateCamera(): void {
+        tween(this.camera)
+        .to(0.25, {
+            position: new Vec3(0, 5.678, 8.58),
+            eulerAngles: new Vec3(-30, 0, 0)
+        },{easing: "backOut"})
+        .tag(102)
+        .start();
+    }
+
+    hideCamera(): void {
+        tween(this.camera)
+            .to(0.2, {
+                position: new Vec3(0, 1.878, 8.58),
+                eulerAngles: new Vec3(-9, 0, 0)
+            },{easing: "backOut"})
+            .tag(102)
+            .start();
+    }
+
     closeCabinLib(): void {
         this.isRotate = false;
         tween(this.cabinLid)
             .to(0.3, {eulerAngles: new Vec3(0, 0, 0)}, {easing: "sineOut"})
             .tag(101)
             .start();
-
+        this.hideCamera();
         for (let i = 0; i < this.engine.length; i++) {
             var element = this.engine[i];
             element.active = false;
@@ -113,6 +137,7 @@ export class GarageManager extends Component {
 
     enableEngineColorAnimation(index: number): void{
         Tween.stopAllByTag(101);
+        Tween.stopAllByTag(102);
         if(this.currentAnimation == 1){
             this.closeCabinLib();
         } 
@@ -129,11 +154,13 @@ export class GarageManager extends Component {
 
     enableEngineSpolerAnimation(index: number) : void {
         Tween.stopAllByTag(101);
+        Tween.stopAllByTag(102);
         if(this.currentAnimation == 1){
             this.closeCabinLib();
         } 
+        var lastAnimation = this.currentAnimation;
         this.currentAnimation = 3;
-        if(this.currentSpoilerIndex == index) return;
+        if(this.currentSpoilerIndex == index && lastAnimation == 3) return;
         Tween.stopAllByTag(100);
         if(this.currentSpoilerIndex == -1) this.currentSpoilerIndex = 0;
         for (let i = 0; i < this.spoiler.length; i++) {
@@ -182,11 +209,13 @@ export class GarageManager extends Component {
 
     enableEngineWheelAnimation(index: number) : void {
         Tween.stopAllByTag(101);
+        Tween.stopAllByTag(102);
         if(this.currentAnimation == 1){
             this.closeCabinLib();
         } 
+        var lastAnimation = this.currentAnimation;
         this.currentAnimation = 2;
-        if(this.currentWheelIndex == index) return;
+        if(this.currentWheelIndex == index && lastAnimation == 2) return;
         Tween.stopAllByTag(100);
         if(this.currentWheelIndex == -1) this.currentWheelIndex = 0;
         for (let i = 0; i < this.wheel.length; i++) {
