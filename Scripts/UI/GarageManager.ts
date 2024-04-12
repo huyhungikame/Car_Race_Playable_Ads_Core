@@ -217,15 +217,15 @@ export class GarageManager extends Component {
             .tag(100)
             .start();
 
-        animaiton.setScale(new Vec3(0.5,1.5,1));
+        animaiton.setScale(new Vec3(0.5,1.25,1));
         animaiton.setPosition(new Vec3(0.63,0.234 - 1.5, 0.984));
         animaiton.active = false;
         tween(animaiton)
             .delay(0.15)
             .to(0.15, {
                 position: new Vec3(0.63,0.234, 0.984),
-                scale: new Vec3(1, 0.5,1)
-            }, {easing: "sineOut", onStart: () => animaiton.active = true})
+                scale: new Vec3(1, 0.8,1)
+            }, {easing: "backOut", onStart: () => animaiton.active = true})
             .to(0.2, {scale: Vec3.ONE}, {easing: 'backOut', onComplete: () => this.isRotate = true})
             .tag(100)
             .start()
