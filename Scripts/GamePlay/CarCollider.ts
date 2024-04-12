@@ -34,6 +34,7 @@ export class CarCollider extends Component {
     {
         if (this.controller instanceof PlayerMovement) {
             let movement: PlayerMovement = this.controller;
+            if(movement.isNitro) return;
             movement.actionReviveView();
             return;
         }

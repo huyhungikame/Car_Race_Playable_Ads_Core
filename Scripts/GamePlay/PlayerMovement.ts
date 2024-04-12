@@ -1,4 +1,4 @@
-import { _decorator, CCBoolean, clamp, EventTouch, game, Input, input, Node, Quat, Vec2, Vec3, ParticleSystem, Camera, lerp, CCFloat, CCInteger, math } from 'cc';
+import { _decorator, CCBoolean, clamp, EventTouch, game, Input, input, Node, Quat, Vec2, Vec3, ParticleSystem, Camera, lerp, CCFloat, CCInteger, math, clamp01 } from 'cc';
 import { BaseMovement } from './BaseMovement';
 import { GameManager } from './GameManager';
 import MapSplineManager from './MapSplineManager';
@@ -95,6 +95,13 @@ export class PlayerMovement extends BaseMovement {
         }
         
         this.windEffect.node.active = true;
+        
+        setTimeout ( ()=>{
+            this.isNitro = true;
+            setTimeout ( ()=>{
+                this.isNitro = false;
+            }, 3000)
+        }, 2000)
     }
 
     onDestroy() {
@@ -103,6 +110,7 @@ export class PlayerMovement extends BaseMovement {
         input.off(Input.EventType.TOUCH_MOVE, this.onMouseMove, this);
     }
 
+    currentNitroRatio: number = 0;
     protected update(dt: number): void {
         this.input(dt);
         this.updateRustSpeedValue();
@@ -114,6 +122,17 @@ export class PlayerMovement extends BaseMovement {
         }
         this.updateCarGraphic(dt);
         CheckPointManager.current.onPlayerChangeCheckPoint(this.currentIndex, this.node.eulerAngles);
+
+        if(this.isNitro){
+            this.currentNitroRatio += 3 * dt;
+            this.currentNitroRatio = clamp01(this.currentNitroRatio);
+            this.currentNitroSpeed = lerp(1, this.maxNitroFactor,this.currentNitroRatio);
+            this.currentSpeed = this.maxSpeed;
+        }else{
+            this.currentNitroRatio -= 3 * dt;
+            this.currentNitroRatio = clamp01(this.currentNitroRatio);
+            this.currentNitroSpeed = lerp(1, this.maxNitroFactor,this.currentNitroRatio);
+        }
     }
 
     //#region Input
@@ -181,7 +200,7 @@ export class PlayerMovement extends BaseMovement {
         }
         else
         {
-            if (!ignoreControl && this.lockDirection.x == 0) {
+            if (!ignoreControl && this.lockDirection.x == 0 && !this.isNitro) {
                 if(this.currentSpeed >= 0){
 
                     this.currentSpeed -= this.speedChange * 4.5 * dt;
@@ -215,7 +234,7 @@ export class PlayerMovement extends BaseMovement {
     //#region Camera
  
     setCameraPosition(dt: number): void{
-        var speedLength = this.currentSpeed * this.speedFactor * this.ratioRustSpeedValue * dt;
+        var speedLength = this.currentSpeed * this.speedFactor * this.ratioRustSpeedValue * dt * this.currentNitroSpeed;
         var isForward = speedLength >= 0;
         if (!isForward) speedLength *= -1;
         this.cameraForwardPosSmooth.getPosition(this.cameraCurrentTargetPosition);

@@ -4603,7 +4603,7 @@
     "rank": 0,
     "progress": 0,
     "speedFactor": 1,
-    "maxNitroFactor": 1,
+    "maxNitroFactor": 2,
     "ratioRustSpeedValue": 1,
     "ratioRustSpeedAmount": 0,
     "ratioRustSpeedKeep": {

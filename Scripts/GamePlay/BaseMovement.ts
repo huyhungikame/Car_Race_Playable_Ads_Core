@@ -22,6 +22,7 @@ export abstract class BaseMovement extends Component {
     public onDie: boolean = false;
     lastHorizontal: number = 0.0;
     deltaInputHorizontal: number = 0.0;
+    isNitro: boolean = false;
 
     private currentPosition: Vec3 = new Vec3();
     private currentRotation: Quat = new Quat();
