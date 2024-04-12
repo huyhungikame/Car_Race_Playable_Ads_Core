@@ -1,4 +1,4 @@
-import { _decorator, CCBoolean, CCFloat, Component, game, lerp, Node, Vec2, Vec3 } from 'cc';
+import { _decorator, CCBoolean, CCFloat, Component, game, lerp, Node, randomRange, Vec2, Vec3 } from 'cc';
 import { BaseMovement } from './BaseMovement';
 import MapSplineManager from './MapSplineManager';
 import { ScriptExtensions } from '../ScriptExtensions';
@@ -86,6 +86,10 @@ export abstract class BaseGraphicCarPositionModule extends Component {
         this.currentForceRatio = 0;
     }
 
+    canControl(): boolean{
+        return this.graphicLocalPosition.y < 0.05;
+    }
+
     updateForceFly(): void {
         if(this.movement.isFallOutOfRoad) return;
         if(this.currentForceRatio >= 1) return;
@@ -112,5 +116,6 @@ export abstract class BaseGraphicCarPositionModule extends Component {
 
     forceFlyGround(): void {
         CameraShake.current.shake();
+        this.movement.rotationModule.currentGraphicRotate.y += randomRange(-10,10);
     }
 }

@@ -150,7 +150,7 @@ export class PlayerMovement extends BaseMovement {
             {
                 this.onMouseMove_currentTouchPosition.set(event.getLocation());
                 
-                if (!MapSplineManager.current.roadPoints[this.currentIndex].ignoreControl && !this.isCheckGround)
+                if (!MapSplineManager.current.roadPoints[this.currentIndex].ignoreControl && this.positionModule.canControl() && !this.isCheckGround)
                 {
                      this.moveGraphic(this.onMouseMove_currentTouchPosition);
                 }
@@ -170,7 +170,7 @@ export class PlayerMovement extends BaseMovement {
 
     input(dt: number): void {
         this.lastHorizontal = 0;
-        var ignoreControl = MapSplineManager.current.roadPoints[this.currentIndex].ignoreControl;
+        var ignoreControl = MapSplineManager.current.roadPoints[this.currentIndex].ignoreControl || !this.positionModule.canControl();
         if (this.isMouseDown)
         {
             if(this.lockDirection.y == 0){

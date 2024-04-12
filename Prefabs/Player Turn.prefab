@@ -4581,6 +4581,7 @@
       "__id__": 35
     },
     "effectPool": null,
+    "spankCurrentIndex": 0,
     "_id": ""
   },
   {
@@ -4598,9 +4599,18 @@
     "__prefab": {
       "__id__": 336
     },
+    "currentSpeed": 0,
     "rank": 0,
     "progress": 0,
     "speedFactor": 1,
+    "maxNitroFactor": 1,
+    "ratioRustSpeedValue": 1,
+    "ratioRustSpeedAmount": 0,
+    "ratioRustSpeedKeep": {
+      "__type__": "cc.Vec2",
+      "x": 0,
+      "y": 0
+    },
     "positionModule": {
       "__id__": 337
     },
@@ -4658,6 +4668,12 @@
       "__id__": 43
     },
     "initHorizontal": 0,
+    "currentForceY": 0,
+    "targetForceY": 0,
+    "lastTargetForceY": 0,
+    "upSpeed": 3,
+    "downSpeed": 1.5,
+    "currentForceRatio": 1,
     "_id": ""
   },
   {
