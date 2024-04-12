@@ -3,6 +3,12 @@ const { ccclass, property } = _decorator;
 
 @ccclass('CameraShake')
 export class CameraShake extends Component {
+    public static current: CameraShake;
+    
+    protected onLoad(): void {
+        CameraShake.current = this;
+    }
+
     public shake(): void 
     {
         Tween.stopAllByTarget(this.node);

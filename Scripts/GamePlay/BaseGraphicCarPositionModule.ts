@@ -2,6 +2,7 @@ import { _decorator, CCBoolean, CCFloat, Component, game, lerp, Node, Vec2, Vec3
 import { BaseMovement } from './BaseMovement';
 import MapSplineManager from './MapSplineManager';
 import { ScriptExtensions } from '../ScriptExtensions';
+import { CameraShake } from './Feels/CameraShake';
 const { ccclass, property } = _decorator;
 
 @ccclass('BaseGraphicCarPositionModule')
@@ -20,9 +21,15 @@ export abstract class BaseGraphicCarPositionModule extends Component {
     protected movement: BaseMovement;
     public centerRadius: Vec3 = new Vec3();
     public angleRadius: number = 0;
+
+    @property(CCFloat)
     public currentForceY: number = 0;
+
+    @property(CCFloat)
     public targetForceY: number = 0;
-    private lastTargetForceY: number;
+    
+    @property(CCFloat)
+    private lastTargetForceY: number = 0;
 
     @property({ group: { name: 'Force Fly' , displayOrder: 1}, type: CCFloat }) 
     protected upSpeed: number = 1;
@@ -95,7 +102,15 @@ export abstract class BaseGraphicCarPositionModule extends Component {
         } else{
             this.currentForceRatio += dt * this.downSpeed;
             var currentRatio = ScriptExtensions.easeInSine(this.currentForceRatio);
-            this.graphicLocalPosition.y = currentRatio * this.lastTargetForceY;
+            this.graphicLocalPosition.y = (1 - currentRatio) * this.lastTargetForceY;
+            if(this.graphicLocalPosition.y <= 0) {
+                this.graphicLocalPosition.y = 0;
+                this.forceFlyGround();
+            }
         }
+    }
+
+    forceFlyGround(): void {
+        CameraShake.current.shake();
     }
 }
