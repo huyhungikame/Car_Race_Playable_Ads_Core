@@ -96,12 +96,12 @@ export class PlayerMovement extends BaseMovement {
         
         this.windEffect.node.active = true;
         
-        setTimeout ( ()=>{
-            this.isNitro = true;
-            setTimeout ( ()=>{
-                this.isNitro = false;
-            }, 3000)
-        }, 2000)
+        // setTimeout ( ()=>{
+        //     this.isNitro = true;
+        //     setTimeout ( ()=>{
+        //         this.isNitro = false;
+        //     }, 3000)
+        // }, 2000)
     }
 
     onDestroy() {

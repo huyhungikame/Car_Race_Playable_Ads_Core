@@ -16,7 +16,8 @@ export class TurnCar extends BaseGraphicCarRotationModule {
     worldRotation: Quat = new Quat();
 
     public handleInput(currentTouchPosition: Vec2, playerMovement: PlayerMovement): number {
-        playerMovement.deltaInputHorizontal = (currentTouchPosition.x - playerMovement.previousTouchPosition.x) * 2.25 * game.deltaTime;
+        var value = this.movement.isNitro ? 1.75 : 2.25;
+        playerMovement.deltaInputHorizontal = (currentTouchPosition.x - playerMovement.previousTouchPosition.x) * value * game.deltaTime;
         var ratio = clamp01(ScriptExtensions.inverseLerp(5, 55, playerMovement.currentSpeed) + 0.1);
         playerMovement.deltaInputHorizontal = clamp(playerMovement.deltaInputHorizontal, -0.55, 0.55);
         return ratio;

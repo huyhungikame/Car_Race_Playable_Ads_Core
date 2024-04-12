@@ -41,7 +41,7 @@ export abstract class BaseMovement extends Component {
     protected speedFactor: number = 0.25;
 
     @property({ group: { name: 'Settings' , displayOrder: 1}, type: CCFloat }) 
-    protected maxNitroFactor: number = 1;
+    public maxNitroFactor: number = 1;
 
     @property({ group: { name: 'Settings' , displayOrder: 1}, type: CCFloat }) 
     ratioRustSpeedValue: number = 1;

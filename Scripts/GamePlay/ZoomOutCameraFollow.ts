@@ -35,7 +35,9 @@ export class ZoomOutCameraFollow extends BaseCameraFollow {
         this.playerMovement.positionModule.positionGraphic.getWorldPosition(this.onLateUpdate_graphicPosition);
         this.onLateUpdate_graphicPosition.x *= -1;
         this.onLateUpdate_offset.set(this.cameraOffset);
-        this.onLateUpdate_offsetDirection.z = -1.75 * ScriptExtensions.inverseLerp(0, 100, this.playerMovement.currentSpeed);
+        var valueZ = -1.75 * ScriptExtensions.inverseLerp(0, 100, this.playerMovement.currentSpeed);
+        valueZ += -2 * ScriptExtensions.inverseLerp(1, this.playerMovement.maxNitroFactor, this.playerMovement.currentNitroSpeed);
+        this.onLateUpdate_offsetDirection.z = valueZ;
         this.onLateUpdate_offset.add(this.onLateUpdate_offsetDirection);
 
         if(this.playerMovement.endGame) return;
