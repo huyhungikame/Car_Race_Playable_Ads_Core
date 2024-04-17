@@ -34,6 +34,9 @@ export class RoadPoint {
     @property(Vec2)
     public addForce: Vec2 = new Vec2();
 
+    @property(Vec2)
+    public addForceRance: Vec2 = new Vec2();
+
     public setData(
         posX: number = 0,
         posY: number = 0,
@@ -51,7 +54,9 @@ export class RoadPoint {
         semilast: boolean = false,
         ignoreControl: boolean = false,
         addForceX: number = 0,
-        addForceY: number = 0
+        addForceY: number = 0,
+        addForceRangeX: number = 0,
+        addForceRangeY: number = 0,
     ) : void {
         this.position = new Vec3(posX, posY, posZ);
         this.rotation = new Quat(rotX, rotY, rotZ, rotW);
@@ -63,6 +68,7 @@ export class RoadPoint {
         this.semilast = semilast;
         this.ignoreControl = ignoreControl;
         this.addForce = new Vec2(addForceX, addForceY);
+        this.addForceRance = new Vec2(addForceRangeX, addForceRangeY);
     }
 }
 
@@ -132,7 +138,9 @@ export default class MapSplineManager extends Component {
                 parseInt(r[13]) !== 0,
                 parseInt(r[14]) !== 0,
                 parseFloat(r[15]),
-                parseFloat(r[16])
+                parseFloat(r[16]),
+                parseFloat(r[17]),
+                parseFloat(r[18])
             );
             this.roadPoints.push(roadPoint); 
         }
