@@ -123,7 +123,7 @@ export abstract class BaseMovement extends Component {
                 var addForce = roadPoints[this.currentIndex].addForce;
                 if( nextIndex > 0 
                     && this.currentSpeed > 0 
-                    && (addForce.x + addForce.y) > 0 )  this.positionModule.addForceFly(addForce, (this.currentSpeed * this.currentNitroSpeed) / (this.maxSpeed * this.maxNitroFactor))
+                    && (addForce.x + addForce.y) > 0 )  this.positionModule.addForceFly(addForce, roadPoints[this.currentIndex].addForceRance, (this.currentSpeed * this.currentNitroSpeed) / (this.maxSpeed * this.maxNitroFactor))
                 continue;
             }
 

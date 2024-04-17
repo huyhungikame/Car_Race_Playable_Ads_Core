@@ -81,7 +81,9 @@ export abstract class BaseGraphicCarPositionModule extends Component {
         }
     }
 
-    addForceFly(forceDirection: Vec2, ratioSpeed: number): void {
+    addForceFly(forceDirection: Vec2,forceRange: Vec2, ratioSpeed: number): void {
+        if(this.graphicLocalPosition.x <= forceRange.x) return;
+        if(this.graphicLocalPosition.x >= forceRange.y) return;
         this.targetForceY = lerp(forceDirection.x, forceDirection.y, ratioSpeed);
         this.currentForceRatio = 0;
     }
