@@ -1,4 +1,4 @@
-import { _decorator, Camera, Component, EventTouch, Input, input, Vec2, Node } from 'cc';
+import { _decorator, Camera, Component, EventTouch, Input, input, Vec2, Node, AudioSource } from 'cc';
 import { BotMovement } from './BotMovement';
 import { PlayerMovement } from './PlayerMovement';
 import { PlayableAdsManager } from '../../../../TemplatePA/PlayableAdsManager';
@@ -25,12 +25,15 @@ export class GameManager extends Component {
     @property({ type: Camera })
     effectCamera : Camera = null;
 
+    @property(AudioSource)
+    background: AudioSource;
+
     onLoad() {
         input.on(Input.EventType.TOUCH_START, this.onMouseDown, this);
         input.on(Input.EventType.TOUCH_MOVE, this.onMouseMove, this);
         this.hasAI = this.botMovementInScene.length > 0;
         GameManager.instance = this;
-
+        this.background.play();
         // setTimeout ( ()=>{
         //     this.garageView.active = true;
         // }, 2500)

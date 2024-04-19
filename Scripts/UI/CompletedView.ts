@@ -1,7 +1,8 @@
-import { _decorator, Component, Label, Node, ParticleSystem, Quat, Sprite, SpriteFrame, tween, UIOpacity, UITransform, Vec3, view, Widget, Color, CCFloat } from 'cc';
+import { _decorator, Component, Label, Node, ParticleSystem, Quat, Sprite, SpriteFrame, tween, UIOpacity, UITransform, Vec3, view, Widget, Color, CCFloat, CCBoolean } from 'cc';
 import { PlayerMovement } from '../GamePlay/PlayerMovement';
 import { screen } from 'cc'
 import { CanvasScaler } from './CanvasScaler';
+import { PlayableAdsManager } from '../../../../TemplatePA/PlayableAdsManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('CompletedView')
@@ -62,6 +63,9 @@ export class CompletedView extends Component {
     @property(Vec3)
     cameraEndPos: Vec3 = new Vec3(228,17.82,-236.1);
 
+    @property(CCBoolean)
+    endGameGoToStore: boolean = false;
+
     protected onLoad(): void {
         var designSize = view.getDesignResolutionSize();
         var windowSize = screen.windowSize;
@@ -113,6 +117,7 @@ export class CompletedView extends Component {
                                 this.effectFirework.active = true;
                                 this.effectFirework.children[0].children[0].getComponent(ParticleSystem).play();
                                 this.effectFirework.children[1].children[0].getComponent(ParticleSystem).play();
+                                if(this.endGameGoToStore) PlayableAdsManager.instance.OpenURL_Button();
                                 tween(this.button)
                                 .to(1.2,{scale: new Vec3(1.15,1.15,1)},{
                                     easing: "linear",
