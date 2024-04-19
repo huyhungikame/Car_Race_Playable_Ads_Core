@@ -95,13 +95,6 @@ export class PlayerMovement extends BaseMovement {
         }
         
         this.windEffect.node.active = true;
-        
-        // setTimeout ( ()=>{
-        //     this.isNitro = true;
-        //     setTimeout ( ()=>{
-        //         this.isNitro = false;
-        //     }, 3000)
-        // }, 2000)
     }
 
     onDestroy() {
@@ -128,6 +121,12 @@ export class PlayerMovement extends BaseMovement {
             this.currentNitroRatio = clamp01(this.currentNitroRatio);
             this.currentNitroSpeed = lerp(1, this.maxNitroFactor,this.currentNitroRatio);
             this.currentSpeed = this.maxSpeed;
+            this.currentNitroBoosterValue.x -= 0.3 * dt;
+            if(this.currentNitroBoosterValue.x <= 0){
+                this.currentNitroBoosterValue.x = 0;
+                this.isNitro = false;
+                this.nitroEffect.active = false;
+            }
         }else{
             this.currentNitroRatio -= 3 * dt;
             this.currentNitroRatio = clamp01(this.currentNitroRatio);

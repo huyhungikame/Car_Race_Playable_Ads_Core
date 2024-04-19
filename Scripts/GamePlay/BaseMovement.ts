@@ -17,6 +17,7 @@ export abstract class BaseMovement extends Component {
     public currentBoosterSpeed: Vec3 = new Vec3(1, 1, 1);
     public currentBoosterMaxSpeed: number = 1.5;
     public isStartGame: boolean = false;
+    public currentNitroBoosterValue = new Vec2(0,0);
 
     public isFallOutOfRoad: boolean = false;
     public isCheckGround: boolean = false;
@@ -83,6 +84,9 @@ export abstract class BaseMovement extends Component {
 
     @property({ group: { name: 'Effect' , displayOrder: 3}, type: Material }) 
     carMaterial: Material;
+
+    @property({ group: { name: 'Effect' , displayOrder: 3}, type: Node }) 
+    nitroEffect: Node;
 
     private currentWheelRotate: number = 0.0;
     handleMaterials: boolean = false;
@@ -299,5 +303,13 @@ export abstract class BaseMovement extends Component {
             .to(0.65,{x : 1})
             .union()
             .start()
+    }
+
+    addNitro(value : Vec2): void {
+        this.currentNitroBoosterValue.x = clamp01((this.isNitro ? value.y : value.x) + this.currentNitroBoosterValue.x);
+        if(this.currentNitroBoosterValue.x >= 1){
+            this.isNitro = true;
+            this.nitroEffect.active = true;
+        }
     }
 }
