@@ -1,4 +1,4 @@
-import { _decorator, Component, Label, Node, ParticleSystem, Quat, Sprite, SpriteFrame, tween, UIOpacity, UITransform, Vec3, view, Widget, Color } from 'cc';
+import { _decorator, Component, Label, Node, ParticleSystem, Quat, Sprite, SpriteFrame, tween, UIOpacity, UITransform, Vec3, view, Widget, Color, CCFloat } from 'cc';
 import { PlayerMovement } from '../GamePlay/PlayerMovement';
 import { screen } from 'cc'
 import { CanvasScaler } from './CanvasScaler';
@@ -59,6 +59,9 @@ export class CompletedView extends Component {
     @property({ group: { name: 'Garage' , displayOrder: 1}, type: UIOpacity }) 
     uiOpacity: UIOpacity;
 
+    @property(Vec3)
+    cameraEndPos: Vec3 = new Vec3(228,17.82,-236.1);
+
     protected onLoad(): void {
         var designSize = view.getDesignResolutionSize();
         var windowSize = screen.windowSize;
@@ -93,7 +96,7 @@ export class CompletedView extends Component {
             }
         }).start();
 
-        tween(PlayerMovement.current.cameraFollow.camera.node).to(1.75,{ worldPosition: new Vec3(228,17.82,-236.1)}).start();
+        tween(PlayerMovement.current.cameraFollow.camera.node).to(1.75,{ worldPosition: this.cameraEndPos}).start();
     }
 
     startAnimationCompleted(): void
