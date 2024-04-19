@@ -1,4 +1,4 @@
-import { _decorator, BoxCollider, CCFloat, CCInteger, clamp, clamp01, Component, game, lerp, Material, Node, ParticleSystem, Quat, RigidBody, Vec2, Vec3, Vec4 } from 'cc';
+import { _decorator, BoxCollider, CCFloat, CCInteger, clamp, clamp01, Component, game, lerp, Material, Node, ParticleSystem, Quat, RigidBody, Tween, tween, Vec2, Vec3, Vec4 } from 'cc';
 import { CheckPointManager } from './CheckPointManager';
 import MapSplineManager from './MapSplineManager';
 import { BaseGraphicCarRotationModule } from './BaseGraphicCarRotationModule';
@@ -14,6 +14,8 @@ export abstract class BaseMovement extends Component {
     public currentIndex: number = 0;
     public maxSpeed: number = 100;
     public currentNitroSpeed: number = 1;
+    public currentBoosterSpeed: Vec3 = new Vec3(1, 1, 1);
+    public currentBoosterMaxSpeed: number = 1.5;
     public isStartGame: boolean = false;
 
     public isFallOutOfRoad: boolean = false;
@@ -99,7 +101,7 @@ export abstract class BaseMovement extends Component {
     }
 
     protected setPosition(dt: number): void{
-        var speedLength = this.currentSpeed * this.speedFactor * this.ratioRustSpeedValue * dt * this.currentNitroSpeed;
+        var speedLength = this.currentSpeed * this.speedFactor * this.ratioRustSpeedValue * dt * this.currentNitroSpeed * this.currentBoosterSpeed.x;
         var isForward = speedLength >= 0;
         if (!isForward) speedLength *= -1;
         this.node.getPosition(this.currentPosition);
@@ -289,4 +291,13 @@ export abstract class BaseMovement extends Component {
     abstract fallout() : void;
 
     //#endregion
+
+    addBooster() : void {
+        Tween.stopAllByTarget(this.currentBoosterSpeed)
+        tween(this.currentBoosterSpeed)
+            .to(0.5, {x : this.currentBoosterMaxSpeed}, {easing: "cubicOut"})
+            .to(0.65,{x : 1})
+            .union()
+            .start()
+    }
 }

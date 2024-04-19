@@ -37,6 +37,7 @@ export class ZoomOutCameraFollow extends BaseCameraFollow {
         this.onLateUpdate_offset.set(this.cameraOffset);
         var valueZ = -1.75 * ScriptExtensions.inverseLerp(0, 100, this.playerMovement.currentSpeed);
         valueZ += -2 * ScriptExtensions.inverseLerp(1, this.playerMovement.maxNitroFactor, this.playerMovement.currentNitroSpeed);
+        valueZ += -1.5 * ScriptExtensions.inverseLerp(1, this.playerMovement.currentBoosterMaxSpeed, this.playerMovement.currentBoosterSpeed.x);
         this.onLateUpdate_offsetDirection.z = valueZ;
         this.onLateUpdate_offset.add(this.onLateUpdate_offsetDirection);
 

@@ -234,7 +234,7 @@ export class PlayerMovement extends BaseMovement {
     //#region Camera
  
     setCameraPosition(dt: number): void{
-        var speedLength = this.currentSpeed * this.speedFactor * this.ratioRustSpeedValue * dt * this.currentNitroSpeed;
+        var speedLength = this.currentSpeed * this.speedFactor * this.ratioRustSpeedValue * dt * this.currentNitroSpeed * this.currentBoosterSpeed.x;
         var isForward = speedLength >= 0;
         if (!isForward) speedLength *= -1;
         this.cameraForwardPosSmooth.getPosition(this.cameraCurrentTargetPosition);
