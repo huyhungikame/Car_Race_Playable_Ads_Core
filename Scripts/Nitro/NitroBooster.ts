@@ -18,6 +18,7 @@ export class NitroBooster extends Component {
     }
 
     private onCollision (event: ITriggerEvent) {
+        if(!this.particaleSystem.enabled) return;
         var movement = event.otherCollider.node.getComponent(CarCollider).controller;
         movement.addNitro(this.addValueNitro);
         this.particaleSystem.enabled = false;

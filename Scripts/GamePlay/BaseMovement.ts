@@ -309,7 +309,7 @@ export abstract class BaseMovement extends Component {
         this.currentNitroBoosterValue.x = clamp01((this.isNitro ? value.y : value.x) + this.currentNitroBoosterValue.x);
         if(this.currentNitroBoosterValue.x >= 1){
             this.isNitro = true;
-            this.nitroEffect.active = true;
+            if(this.nitroEffect != null) this.nitroEffect.active = true;
         }
     }
 }
