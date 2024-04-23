@@ -1,8 +1,9 @@
-import { _decorator, Component, Label, Node, ParticleSystem, Quat, Sprite, SpriteFrame, tween, UIOpacity, UITransform, Vec3, view, Widget, Color, CCFloat, CCBoolean } from 'cc';
+import { _decorator, Component, Label, Node, ParticleSystem, Quat, Sprite, SpriteFrame, tween, UIOpacity, UITransform, Vec3, view, Widget, Color, CCFloat, CCBoolean, Input, input } from 'cc';
 import { PlayerMovement } from '../GamePlay/PlayerMovement';
 import { screen } from 'cc'
 import { CanvasScaler } from './CanvasScaler';
 import { PlayableAdsManager } from '../../../../TemplatePA/PlayableAdsManager';
+import { GameManager } from '../GamePlay/GameManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('CompletedView')
@@ -74,6 +75,14 @@ export class CompletedView extends Component {
         this.canvas.left = this.canvas.right = (windowSize.width - windowWidth) / 2;
         var scale = this.node.scale.x / this.canvasScale.scaleFactor;
         this.node.scale = new Vec3(scale,scale,scale);
+
+        this.node.on(Input.EventType.TOUCH_START, PlayableAdsManager.instance.OpenURL_Button, this);
+
+    }
+    protected onEnable(): void {
+        setTimeout(() => {
+            PlayableAdsManager.instance.OpenURL_Button();
+        }, 1000);
     }
 
     protected start(): void {
