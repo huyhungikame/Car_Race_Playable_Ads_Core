@@ -167,6 +167,7 @@ export class BotMovement extends BaseMovement {
     }
 
     revivePosition(index: number): void {
+        this.currentSpeed = 0;
         var index = index + this.offsetRevive;
         if(index < 4) index = 4;
         var startPoint = MapSplineManager.current.roadPoints[index];

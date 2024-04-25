@@ -1,4 +1,5 @@
 import { _decorator, CCInteger, Component, Node, Vec3 } from 'cc';
+import { CameraShake } from './Feels/CameraShake';
 const { ccclass, property } = _decorator;
 
 @ccclass('CheckPointManager')
@@ -11,6 +12,9 @@ export class CheckPointManager extends Component {
     @property({ type:CCInteger})
     goToStore: number[] = [];
 
+    @property({ type:CCInteger})
+    cameraSnake: number[] = [];
+
     @property(CCInteger)
     endIndex: number = 390;
 
@@ -21,6 +25,7 @@ export class CheckPointManager extends Component {
     currentRotation: Vec3 = new Vec3();
     index: number = 0; 
     indexGoToStore: number = 0;
+    indexCameraSnake: number = 0;
 
     protected onLoad(): void {
         CheckPointManager.current = this;
@@ -37,6 +42,11 @@ export class CheckPointManager extends Component {
         if(this.indexGoToStore < this.goToStore.length && currentIndex == this.goToStore[this.indexGoToStore]){
             //GoToStore.Open();
             this.indexGoToStore++;
+        }
+
+        if(this.indexCameraSnake < this.cameraSnake.length && currentIndex == this.cameraSnake[this.indexCameraSnake]){
+            CameraShake.current.shake();
+            this.indexCameraSnake++;
         }
        
         if (this.index >= this.roadLaterals.length || this.roadLaterals[this.index] != currentIndex) return;
