@@ -9,4 +9,6 @@ export abstract class BaseCameraFollow extends Component {
 
     abstract onStart(movement: PlayerMovement): void;
     abstract onLateUpdate(dt: number): void;
+    abstract fallout(): void;
+    abstract revive(): void;
 }

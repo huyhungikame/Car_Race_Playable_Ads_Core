@@ -299,6 +299,7 @@ export class PlayerMovement extends BaseMovement {
     fallout(): void {
         if(this.onDie) return;
         this.die();
+        this.cameraFollow.fallout();
         this.isMouseDown = false;
         this.isTouchDrag = false;
         this.lastHorizontal = 0;
@@ -314,6 +315,7 @@ export class PlayerMovement extends BaseMovement {
 
     revivePlayer() : void
     {
+        this.cameraFollow.revive();
         this.revive();
         GameManager.instance.openTutorial();
         var quatRotation = this.node.rotation;

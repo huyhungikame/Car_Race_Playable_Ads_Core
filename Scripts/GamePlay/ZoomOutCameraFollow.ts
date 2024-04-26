@@ -20,6 +20,7 @@ export class ZoomOutCameraFollow extends BaseCameraFollow {
     private directionOffset: Vec3 = new Vec3(0,0,3.5);
     private onLateUpdate_targetUp: Vec3 = new Vec3();
     private resultQuat: Quat = new Quat();
+    private isFallOut: boolean = false;
 
     onStart(movement: PlayerMovement): void {
         this.playerMovement = movement;
@@ -31,6 +32,7 @@ export class ZoomOutCameraFollow extends BaseCameraFollow {
     }
 
     onLateUpdate(dt: number): void {
+        if(this.isFallOut) return;
         this.playerMovement.node.getRotation(this.onLateUpdate_rotation);
         this.playerMovement.positionModule.positionGraphic.getWorldPosition(this.onLateUpdate_graphicPosition);
         this.onLateUpdate_graphicPosition.x *= -1;
@@ -56,5 +58,13 @@ export class ZoomOutCameraFollow extends BaseCameraFollow {
         var lookDirection = (this.onLateUpdate_cameraPosition.subtract(this.playerMovement.cameraTransform.position)).normalize();
         Quat.fromViewUp(this.resultQuat, lookDirection, this.onLateUpdate_targetUp);
         this.playerMovement.cameraTransform.setRotation(this.resultQuat);
+    }
+
+    fallout(): void {
+        this.isFallOut = true;
+    }
+
+    revive(): void {
+        this.isFallOut = false;
     }
 }

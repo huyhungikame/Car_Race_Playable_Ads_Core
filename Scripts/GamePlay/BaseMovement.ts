@@ -171,7 +171,7 @@ export abstract class BaseMovement extends Component {
         this.isCheckGround = true;
         var ratio = clamp01(ScriptExtensions.inverseLerp(5, 55, Math.abs(this.currentSpeed)) + 0.1);
         this.lastHorizontal = this.positionModule.graphicLocalPosition.x;
-        this.positionModule.graphicLocalPosition.x = this.positionModule.graphicLocalPosition.x + this.deltaInputHorizontal * ratio;
+        this.positionModule.graphicLocalPosition.x = this.positionModule.graphicLocalPosition.x + this.deltaInputHorizontal * ratio * 0.3;
     
         this.lastHorizontal = this.positionModule.graphicLocalPosition.x - this.lastHorizontal;
     
@@ -188,7 +188,11 @@ export abstract class BaseMovement extends Component {
         this.isCheckGround = false;
         var roadLateral = MapSplineManager.current.roadLaterals[MapSplineManager.current.roadPoints[this.currentIndex].lateralIndex];
         var offset = roadLateral.maxOffset;
-        if(Math.abs(this.positionModule.graphicLocalPosition.x) <= offset) return;
+        if(offset == 0){
+            this.isFallOutOfRoad = true;
+            return;
+        }
+        if(Math.abs(this.positionModule.graphicLocalPosition.x) <= offset + 2) return;
         this.isFallOutOfRoad = true;
     }
 
@@ -270,9 +274,12 @@ export abstract class BaseMovement extends Component {
         if(this.onDie) return;
         this.onDie = true;
         this.currentSpeed = 0;
-        this.rotationModule.resetState();
-        this.explosionCar.node.active = true;
-        this.explosionCar.play();
+        // this.rotationModule.resetState();
+        if(!this.isFallOutOfRoad){
+            this.explosionCar.node.active = true;
+            this.explosionCar.play();
+        }
+
         this.colliderNode.enabled = false;
     }
 

@@ -23,9 +23,6 @@ export abstract class BaseGraphicCarPositionModule extends Component {
     public angleRadius: number = 0;
 
     @property(CCFloat)
-    public currentForceY: number = 0;
-
-    @property(CCFloat)
     public targetForceY: number = 0;
     
     @property(CCFloat)
@@ -39,6 +36,9 @@ export abstract class BaseGraphicCarPositionModule extends Component {
 
     @property({ group: { name: 'Force Fly' , displayOrder: 1}, type: CCFloat }) 
     private currentForceRatio: number = 1;
+
+    @property({ group: { name: 'Force Fly' , displayOrder: 1}, type: Vec2 }) 
+    private randomRotate: Vec2 = new Vec2(-10,10);
 
     abstract updateCarGraphic(dt: number): void;
     abstract teleport(): void;
@@ -59,7 +59,7 @@ export abstract class BaseGraphicCarPositionModule extends Component {
         if (isFallOut) this.fallOutOfRoad(dt);
         if (MapSplineManager.current.roadPoints[this.movement.currentIndex].ignoreControl 
             || isFallOut 
-            || this.currentForceY > 0
+            || !this.canControl()
         ) {
             this.movement.isFlying = true;
             this.movement.isFly(dt);
@@ -73,8 +73,9 @@ export abstract class BaseGraphicCarPositionModule extends Component {
     fallOutOfRoad(dt: number)
     {
         this.graphicLocalPosition.y -= dt * 30;
+        this.graphicLocalPosition.z += dt * 60;
         this.timeFallOut += dt;
-        if(this.timeFallOut > 0.75)
+        if(this.timeFallOut > 1.25)
         {
             this.timeFallOut = 0;
             this.movement.fallout();
@@ -85,6 +86,7 @@ export abstract class BaseGraphicCarPositionModule extends Component {
         if(this.graphicLocalPosition.x <= forceRange.x) return;
         if(this.graphicLocalPosition.x >= forceRange.y) return;
         this.targetForceY = lerp(forceDirection.x, forceDirection.y, ratioSpeed);
+        console.log(this.targetForceY)
         this.currentForceRatio = 0;
     }
 
@@ -117,7 +119,11 @@ export abstract class BaseGraphicCarPositionModule extends Component {
     }
 
     forceFlyGround(): void {
-        CameraShake.current.shake();
-        this.movement.rotationModule.currentGraphicRotate.y += randomRange(-10,10);
+        if(this.lastTargetForceY > 20){
+            CameraShake.current.shake2();
+        }else{
+            CameraShake.current.shake();
+        }
+        this.movement.rotationModule.currentGraphicRotate.y += randomRange(this.randomRotate.x,this.randomRotate.y);
     }
 }

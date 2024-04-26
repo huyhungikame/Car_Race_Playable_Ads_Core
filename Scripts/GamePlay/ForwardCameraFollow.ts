@@ -119,4 +119,12 @@ export class ForwardCameraFollow extends BaseCameraFollow {
       
         this.playerMovement.cameraTransform.rotation = Quat.fromViewUp(this.setCameraPositionAndRotation_outRotation,lookDirection,this.setCameraPositionAndRotation_targetUp);
     }
+
+    fallout(): void {
+        
+    }
+
+    revive(): void {
+        
+    }
 }
