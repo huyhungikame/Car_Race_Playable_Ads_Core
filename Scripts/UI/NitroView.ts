@@ -7,9 +7,6 @@ export class NitroView extends Component {
     @property(Sprite)
     nitroSprite: Sprite;
 
-    @property(PlayerMovement)
-    playerMovement: PlayerMovement;
-
     public static current: NitroView;
 
     protected onLoad(): void {
@@ -17,6 +14,6 @@ export class NitroView extends Component {
     }
 
     protected lateUpdate(dt: number): void {
-        this.nitroSprite.fillStart = lerp(this.nitroSprite.fillStart,this.playerMovement.currentNitroBoosterValue.x,0.35);
+        this.nitroSprite.fillStart = lerp(this.nitroSprite.fillStart,PlayerMovement.current.currentNitroBoosterValue.x,0.35);
     }
 }
