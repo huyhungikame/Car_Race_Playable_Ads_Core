@@ -1,0 +1,85 @@
+CCEffect %{
+  techniques:
+  - name: opaque
+    passes:
+    - vert: unlit-vs:vert
+      frag: unlit-fs:frag
+      properties: &props
+        mainTexture:     { value: white }
+        wheelTexture:     { value: white }
+        matcapTexture:     { value: white,  editor: { displayName: Matcap } }
+        wheelRotate:  { value: 0 }
+        offset:  { value: [0, 0, 0, 1] }
+        strength:  { value: 1 }
+}%
+
+
+CCProgram unlit-vs %{
+  precision highp float;
+  #include <legacy/input>
+  #include <builtin/uniforms/cc-global>
+  #include <legacy/decode-base>
+  #include <legacy/local-batch>
+
+
+  out vec2 v_uv;
+  out vec2 v_uv2;
+  out vec3 v_normal;
+  
+  in vec2 a_texCoord1;
+
+  
+  uniform Constant {
+vec4 offset;
+    float strength;
+  	float wheelRotate;
+  };
+
+
+  highp vec4 vert () {
+
+    highp vec4 position;
+    CCVertInput(position);	
+
+    highp mat4 matWorld;
+    CCGetWorldMatrix(matWorld);
+
+    vec4 p = (cc_matView * matWorld) * position;
+	  v_normal = normalize((matWorld * vec4(a_normal.xyz, 0.0)).xyz);
+
+    float d = strength/p.z;
+		float z = offset.z * d * d * d * d * p.x;
+    float w = offset.w * d * d * d * d * p.x;
+	  vec4 pos = vec4(0.0,0.0,z,w);
+
+    v_uv = a_texCoord;
+    v_uv2 = a_texCoord1+vec2(0,wheelRotate*0.01);
+
+    return cc_matProj * (cc_matView * matWorld) * position + pos;
+  }
+}%
+
+CCProgram unlit-fs %{
+  precision highp float;
+  #include <legacy/output>
+  #include <builtin/uniforms/cc-global>
+
+  in vec2 v_uv;
+  in vec2 v_uv2;
+  in vec3 v_normal;
+  uniform sampler2D mainTexture;
+  uniform sampler2D wheelTexture;
+  uniform sampler2D matcapTexture;
+
+
+  vec4 frag () {
+    highp vec2 muv = vec2(cc_matView * vec4(normalize(v_normal), 0))*0.5+vec2(0.5,0.5);
+    vec4 col = texture(matcapTexture, vec2(muv.x, 1.0-muv.y));
+    vec4 map1 = texture(mainTexture, v_uv);
+    vec4 map2 = texture(wheelTexture, v_uv);
+    vec4 map3 = texture(wheelTexture, v_uv2);
+	vec4 o = mix(map1,map3,map2.a);
+	vec4 final = mix(col,o,map1.a);
+    return CCFragOutput(final);
+  }
+}%
