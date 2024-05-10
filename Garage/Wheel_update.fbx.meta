@@ -1,0 +1,155 @@
+{
+  "ver": "2.3.8",
+  "importer": "fbx",
+  "imported": true,
+  "uuid": "e76050cb-b877-4cc4-ac5c-d1328fd9cf9b",
+  "files": [],
+  "subMetas": {
+    "74007": {
+      "importer": "gltf-scene",
+      "uuid": "e76050cb-b877-4cc4-ac5c-d1328fd9cf9b@74007",
+      "displayName": "",
+      "id": "74007",
+      "name": "Wheel_update.prefab",
+      "userData": {
+        "gltfIndex": 0
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "4aba5": {
+      "importer": "gltf-mesh",
+      "uuid": "e76050cb-b877-4cc4-ac5c-d1328fd9cf9b@4aba5",
+      "displayName": "",
+      "id": "4aba5",
+      "name": "Scene.015.mesh",
+      "userData": {
+        "gltfIndex": 0,
+        "triangleCount": 1237
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "4bb9a": {
+      "importer": "gltf-mesh",
+      "uuid": "e76050cb-b877-4cc4-ac5c-d1328fd9cf9b@4bb9a",
+      "displayName": "",
+      "id": "4bb9a",
+      "name": "Scene.019.mesh",
+      "userData": {
+        "gltfIndex": 1,
+        "triangleCount": 1245
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "8d838": {
+      "importer": "gltf-mesh",
+      "uuid": "e76050cb-b877-4cc4-ac5c-d1328fd9cf9b@8d838",
+      "displayName": "",
+      "id": "8d838",
+      "name": "Scene.010.mesh",
+      "userData": {
+        "gltfIndex": 2,
+        "triangleCount": 926
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "7d6ab": {
+      "importer": "texture",
+      "uuid": "e76050cb-b877-4cc4-ac5c-d1328fd9cf9b@7d6ab",
+      "displayName": "",
+      "id": "7d6ab",
+      "name": "base_color_texture.texture",
+      "userData": {
+        "wrapModeS": "repeat",
+        "wrapModeT": "repeat",
+        "minfilter": "linear",
+        "magfilter": "linear",
+        "mipfilter": "none",
+        "anisotropy": 0,
+        "isUuid": false,
+        "imageUuidOrDatabaseUri": "db://assets/Core/Car_Race_Playable_Ads_Core/Garage/Tire_D.png"
+      },
+      "ver": "1.0.22",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "imageMetas": [
+      {
+        "name": "base_color_texture",
+        "uri": "db://assets/Core/Car_Race_Playable_Ads_Core/Garage/Tire_D.png"
+      }
+    ],
+    "fbx": {
+      "smartMaterialEnabled": true,
+      "matchMeshNames": false
+    },
+    "redirect": "e76050cb-b877-4cc4-ac5c-d1328fd9cf9b@74007",
+    "assetFinder": {
+      "meshes": [
+        "e76050cb-b877-4cc4-ac5c-d1328fd9cf9b@4aba5",
+        "e76050cb-b877-4cc4-ac5c-d1328fd9cf9b@4bb9a",
+        "e76050cb-b877-4cc4-ac5c-d1328fd9cf9b@8d838"
+      ],
+      "skeletons": [],
+      "textures": [
+        "e76050cb-b877-4cc4-ac5c-d1328fd9cf9b@7d6ab"
+      ],
+      "materials": [
+        "80984c01-961f-4f9f-abe6-8f10353f999a"
+      ],
+      "scenes": [
+        "e76050cb-b877-4cc4-ac5c-d1328fd9cf9b@74007"
+      ]
+    },
+    "dumpMaterials": true,
+    "materialDumpDir": "db://assets/Garage/Materials_Wheel_update",
+    "allowMeshDataAccess": false,
+    "normals": 2,
+    "tangents": 1,
+    "lods": {
+      "enable": false,
+      "hasBuiltinLOD": false,
+      "options": [
+        {
+          "screenRatio": 0.25,
+          "faceCount": 1
+        },
+        {
+          "screenRatio": 0.125,
+          "faceCount": 0.25
+        },
+        {
+          "screenRatio": 0.01,
+          "faceCount": 0.1
+        }
+      ]
+    }
+  }
+}

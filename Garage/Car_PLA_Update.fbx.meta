@@ -1,0 +1,327 @@
+{
+  "ver": "2.3.8",
+  "importer": "fbx",
+  "imported": true,
+  "uuid": "eced0a64-80ee-48b9-a77d-3af9ec88ffe9",
+  "files": [],
+  "subMetas": {
+    "c4b14": {
+      "importer": "gltf-mesh",
+      "uuid": "eced0a64-80ee-48b9-a77d-3af9ec88ffe9@c4b14",
+      "displayName": "",
+      "id": "c4b14",
+      "name": "Car_PlayableAds.002.mesh",
+      "userData": {
+        "gltfIndex": 0,
+        "triangleCount": 104
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "4e103": {
+      "importer": "gltf-mesh",
+      "uuid": "eced0a64-80ee-48b9-a77d-3af9ec88ffe9@4e103",
+      "displayName": "",
+      "id": "4e103",
+      "name": "Car_PlayableAds.003.mesh",
+      "userData": {
+        "gltfIndex": 1,
+        "triangleCount": 112
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "0a37f": {
+      "importer": "gltf-mesh",
+      "uuid": "eced0a64-80ee-48b9-a77d-3af9ec88ffe9@0a37f",
+      "displayName": "",
+      "id": "0a37f",
+      "name": "Car_PlayableAds.004.mesh",
+      "userData": {
+        "gltfIndex": 2,
+        "triangleCount": 172
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "cf1a7": {
+      "importer": "gltf-mesh",
+      "uuid": "eced0a64-80ee-48b9-a77d-3af9ec88ffe9@cf1a7",
+      "displayName": "",
+      "id": "cf1a7",
+      "name": "Cube.011.mesh",
+      "userData": {
+        "gltfIndex": 3,
+        "triangleCount": 318
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "41ac8": {
+      "importer": "gltf-mesh",
+      "uuid": "eced0a64-80ee-48b9-a77d-3af9ec88ffe9@41ac8",
+      "displayName": "",
+      "id": "41ac8",
+      "name": "Cube.001.mesh",
+      "userData": {
+        "gltfIndex": 4,
+        "triangleCount": 714
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "c6e33": {
+      "importer": "gltf-mesh",
+      "uuid": "eced0a64-80ee-48b9-a77d-3af9ec88ffe9@c6e33",
+      "displayName": "",
+      "id": "c6e33",
+      "name": "Cube.002.mesh",
+      "userData": {
+        "gltfIndex": 5,
+        "triangleCount": 615
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "4aba5": {
+      "importer": "gltf-mesh",
+      "uuid": "eced0a64-80ee-48b9-a77d-3af9ec88ffe9@4aba5",
+      "displayName": "",
+      "id": "4aba5",
+      "name": "Scene.015.mesh",
+      "userData": {
+        "gltfIndex": 6,
+        "triangleCount": 1237
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "4bb9a": {
+      "importer": "gltf-mesh",
+      "uuid": "eced0a64-80ee-48b9-a77d-3af9ec88ffe9@4bb9a",
+      "displayName": "",
+      "id": "4bb9a",
+      "name": "Scene.019.mesh",
+      "userData": {
+        "gltfIndex": 7,
+        "triangleCount": 1245
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "8d838": {
+      "importer": "gltf-mesh",
+      "uuid": "eced0a64-80ee-48b9-a77d-3af9ec88ffe9@8d838",
+      "displayName": "",
+      "id": "8d838",
+      "name": "Scene.010.mesh",
+      "userData": {
+        "gltfIndex": 8,
+        "triangleCount": 926
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "2eb03": {
+      "importer": "gltf-mesh",
+      "uuid": "eced0a64-80ee-48b9-a77d-3af9ec88ffe9@2eb03",
+      "displayName": "",
+      "id": "2eb03",
+      "name": "Car_PlayableAds.001.mesh",
+      "userData": {
+        "gltfIndex": 9,
+        "triangleCount": 2027
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "71af8": {
+      "importer": "gltf-mesh",
+      "uuid": "eced0a64-80ee-48b9-a77d-3af9ec88ffe9@71af8",
+      "displayName": "",
+      "id": "71af8",
+      "name": "Car_PlayableAds.014.mesh",
+      "userData": {
+        "gltfIndex": 10,
+        "triangleCount": 212
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "d3e67": {
+      "importer": "gltf-mesh",
+      "uuid": "eced0a64-80ee-48b9-a77d-3af9ec88ffe9@d3e67",
+      "displayName": "",
+      "id": "d3e67",
+      "name": "Car_PlayableAds.017.mesh",
+      "userData": {
+        "gltfIndex": 11,
+        "triangleCount": 48
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "7d6ab": {
+      "importer": "texture",
+      "uuid": "eced0a64-80ee-48b9-a77d-3af9ec88ffe9@7d6ab",
+      "displayName": "",
+      "id": "7d6ab",
+      "name": "base_color_texture.texture",
+      "userData": {
+        "wrapModeS": "repeat",
+        "wrapModeT": "repeat",
+        "minfilter": "linear",
+        "magfilter": "linear",
+        "mipfilter": "none",
+        "anisotropy": 0,
+        "isUuid": false,
+        "imageUuidOrDatabaseUri": "db://assets/Core/Car_Race_Playable_Ads_Core/Garage/Tire_D.png"
+      },
+      "ver": "1.0.22",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "5f786": {
+      "importer": "gltf-scene",
+      "uuid": "eced0a64-80ee-48b9-a77d-3af9ec88ffe9@5f786",
+      "displayName": "",
+      "id": "5f786",
+      "name": "Car_PLA_Update.prefab",
+      "userData": {
+        "gltfIndex": 0
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "imageMetas": [
+      {
+        "name": "base_color_texture",
+        "uri": "db://assets/Core/Car_Race_Playable_Ads_Core/Garage/Tire_D.png"
+      }
+    ],
+    "fbx": {
+      "smartMaterialEnabled": true,
+      "matchMeshNames": false
+    },
+    "redirect": "eced0a64-80ee-48b9-a77d-3af9ec88ffe9@5f786",
+    "assetFinder": {
+      "meshes": [
+        "eced0a64-80ee-48b9-a77d-3af9ec88ffe9@c4b14",
+        "eced0a64-80ee-48b9-a77d-3af9ec88ffe9@4e103",
+        "eced0a64-80ee-48b9-a77d-3af9ec88ffe9@0a37f",
+        "eced0a64-80ee-48b9-a77d-3af9ec88ffe9@cf1a7",
+        "eced0a64-80ee-48b9-a77d-3af9ec88ffe9@41ac8",
+        "eced0a64-80ee-48b9-a77d-3af9ec88ffe9@c6e33",
+        "eced0a64-80ee-48b9-a77d-3af9ec88ffe9@4aba5",
+        "eced0a64-80ee-48b9-a77d-3af9ec88ffe9@4bb9a",
+        "eced0a64-80ee-48b9-a77d-3af9ec88ffe9@8d838",
+        "eced0a64-80ee-48b9-a77d-3af9ec88ffe9@2eb03",
+        "eced0a64-80ee-48b9-a77d-3af9ec88ffe9@71af8",
+        "eced0a64-80ee-48b9-a77d-3af9ec88ffe9@d3e67"
+      ],
+      "skeletons": [],
+      "textures": [
+        "eced0a64-80ee-48b9-a77d-3af9ec88ffe9@7d6ab"
+      ],
+      "materials": [
+        "53ff9099-5cc8-4cb0-adc6-20371b1b192d",
+        "d1e7cbfb-96fa-4f19-950e-dcd151e4fd92"
+      ],
+      "scenes": [
+        "eced0a64-80ee-48b9-a77d-3af9ec88ffe9@5f786"
+      ]
+    },
+    "dumpMaterials": true,
+    "materialDumpDir": "db://assets/Garage/Materials_Car_PLA_Update",
+    "allowMeshDataAccess": false,
+    "tangents": 1,
+    "normals": 2,
+    "lods": {
+      "enable": false,
+      "hasBuiltinLOD": false,
+      "options": [
+        {
+          "screenRatio": 0.25,
+          "faceCount": 1
+        },
+        {
+          "screenRatio": 0.125,
+          "faceCount": 0.25
+        },
+        {
+          "screenRatio": 0.01,
+          "faceCount": 0.1
+        }
+      ]
+    }
+  }
+}
