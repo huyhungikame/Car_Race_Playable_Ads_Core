@@ -14,7 +14,7 @@ export class BannerNitroView extends Component {
             this.node.active = false;
             this.startView.active = true;
             this.gamePlayView.active = true;
-        }, 2800)    
+        }, 3900)    
     }
 }
 
