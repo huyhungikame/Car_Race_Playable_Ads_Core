@@ -1,5 +1,5 @@
 {
-  "ver": "2.3.8",
+  "ver": "2.3.4",
   "importer": "fbx",
   "imported": true,
   "uuid": "e76050cb-b877-4cc4-ac5c-d1328fd9cf9b",
@@ -14,7 +14,7 @@
       "userData": {
         "gltfIndex": 0
       },
-      "ver": "1.0.14",
+      "ver": "1.0.12",
       "imported": true,
       "files": [
         ".json"
@@ -31,7 +31,7 @@
         "gltfIndex": 0,
         "triangleCount": 1237
       },
-      "ver": "1.1.1",
+      "ver": "1.1.0",
       "imported": true,
       "files": [
         ".bin",
@@ -49,7 +49,7 @@
         "gltfIndex": 1,
         "triangleCount": 1245
       },
-      "ver": "1.1.1",
+      "ver": "1.1.0",
       "imported": true,
       "files": [
         ".bin",
@@ -67,7 +67,7 @@
         "gltfIndex": 2,
         "triangleCount": 926
       },
-      "ver": "1.1.1",
+      "ver": "1.1.0",
       "imported": true,
       "files": [
         ".bin",
@@ -122,7 +122,7 @@
         "e76050cb-b877-4cc4-ac5c-d1328fd9cf9b@7d6ab"
       ],
       "materials": [
-        "80984c01-961f-4f9f-abe6-8f10353f999a"
+        "759cbde3-fe35-470c-b611-c54c39c5fc17"
       ],
       "scenes": [
         "e76050cb-b877-4cc4-ac5c-d1328fd9cf9b@74007"

@@ -76,13 +76,13 @@ export class CompletedView extends Component {
         var scale = this.node.scale.x / this.canvasScale.scaleFactor;
         this.node.scale = new Vec3(scale,scale,scale);
 
-        this.node.on(Input.EventType.TOUCH_START, PlayableAdsManager.instance.OpenURL_Button, this);
+        //this.node.on(Input.EventType.TOUCH_START, PlayableAdsManager.instance.OpenURL_Button, this);
 
     }
     protected onEnable(): void {
-        setTimeout(() => {
-            PlayableAdsManager.instance.OpenURL_Button();
-        }, 1000);
+        // setTimeout(() => {
+        //     PlayableAdsManager.instance.OpenURL_Button();
+        // }, 1000);
     }
 
     protected start(): void {

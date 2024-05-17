@@ -25,6 +25,9 @@ export class GameManager extends Component {
     @property({ type: Camera })
     effectCamera : Camera = null;
 
+    @property(StartView)
+    StartView : StartView;
+
 
     @property(AudioSource)
     backgroundMusic: AudioSource = null;
@@ -35,12 +38,9 @@ export class GameManager extends Component {
         input.on(Input.EventType.TOUCH_MOVE, this.onMouseMove, this);
         this.hasAI = this.botMovementInScene.length > 0;
         GameManager.instance = this;
-        // setTimeout ( ()=>{
-        //     this.garageView.active = true;
-        // }, 2500)
     }
     
-
+//
     hideCar(){
         for (let i = 0; i < this.botMovementInScene.length; i++) {
             var element = this.botMovementInScene[i];
@@ -55,16 +55,19 @@ export class GameManager extends Component {
     }
     
     onMouseDown(event: EventTouch) {
-        if(!this.firstClick){
-            //console.log("GameManager Start");
-            this.backgroundMusic.play();
-            this.backgroundMusic.volume = 1;
-            this.firstClick = true;
+        if(StartView.current != null){
+            if(!this.firstClick){
+                //console.log("GameManager Start");
+                this.backgroundMusic.play();
+                this.backgroundMusic.volume = 1;
+                this.firstClick = true;
+            }
+            GameManager.mousePos = event.getLocation();
+            this.uiStartGame();
+            input.off(Input.EventType.TOUCH_START, this.onMouseDown, this);
         }
 
-        GameManager.mousePos = event.getLocation();
-        this.uiStartGame();
-        input.off(Input.EventType.TOUCH_START, this.onMouseDown, this);
+        
     }
 
     onMouseMove(event: EventTouch) {
@@ -100,7 +103,9 @@ export class GameManager extends Component {
 
     uiStartGame(): void
     {
-        StartView.current.startUi();
+        if(StartView.current != null){
+            StartView.current.startUi();
+        }
     }
 
     static startGame(): void

@@ -1,16 +1,16 @@
 {
-  "ver": "1.0.26",
+  "ver": "1.0.25",
   "importer": "image",
   "imported": true,
-  "uuid": "341197c9-c85f-4573-a9a7-9404e0454a7c",
+  "uuid": "c7198333-c353-4989-89ba-7c2f7ea2e75c",
   "files": [
-    ".jpg",
-    ".json"
+    ".json",
+    ".png"
   ],
   "subMetas": {
     "6c48a": {
       "importer": "texture",
-      "uuid": "341197c9-c85f-4573-a9a7-9404e0454a7c@6c48a",
+      "uuid": "c7198333-c353-4989-89ba-7c2f7ea2e75c@6c48a",
       "displayName": "MatCap_Red",
       "id": "6c48a",
       "name": "texture",
@@ -22,8 +22,8 @@
         "mipfilter": "none",
         "anisotropy": 0,
         "isUuid": true,
-        "imageUuidOrDatabaseUri": "341197c9-c85f-4573-a9a7-9404e0454a7c",
-        "visible": false
+        "imageUuidOrDatabaseUri": "c7198333-c353-4989-89ba-7c2f7ea2e75c",
+        "visible": true
       },
       "ver": "1.0.22",
       "imported": true,
@@ -34,9 +34,9 @@
     }
   },
   "userData": {
+    "fixAlphaTransparencyArtifacts": true,
     "hasAlpha": false,
     "type": "texture",
-    "fixAlphaTransparencyArtifacts": true,
-    "redirect": "341197c9-c85f-4573-a9a7-9404e0454a7c@6c48a"
+    "redirect": "c7198333-c353-4989-89ba-7c2f7ea2e75c@6c48a"
   }
 }

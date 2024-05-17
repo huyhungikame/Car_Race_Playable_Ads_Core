@@ -1,5 +1,5 @@
 {
-  "ver": "2.3.8",
+  "ver": "2.3.4",
   "importer": "fbx",
   "imported": true,
   "uuid": "eced0a64-80ee-48b9-a77d-3af9ec88ffe9",
@@ -15,7 +15,7 @@
         "gltfIndex": 0,
         "triangleCount": 104
       },
-      "ver": "1.1.1",
+      "ver": "1.1.0",
       "imported": true,
       "files": [
         ".bin",
@@ -33,7 +33,7 @@
         "gltfIndex": 1,
         "triangleCount": 112
       },
-      "ver": "1.1.1",
+      "ver": "1.1.0",
       "imported": true,
       "files": [
         ".bin",
@@ -51,7 +51,7 @@
         "gltfIndex": 2,
         "triangleCount": 172
       },
-      "ver": "1.1.1",
+      "ver": "1.1.0",
       "imported": true,
       "files": [
         ".bin",
@@ -69,7 +69,7 @@
         "gltfIndex": 3,
         "triangleCount": 318
       },
-      "ver": "1.1.1",
+      "ver": "1.1.0",
       "imported": true,
       "files": [
         ".bin",
@@ -87,7 +87,7 @@
         "gltfIndex": 4,
         "triangleCount": 714
       },
-      "ver": "1.1.1",
+      "ver": "1.1.0",
       "imported": true,
       "files": [
         ".bin",
@@ -105,7 +105,7 @@
         "gltfIndex": 5,
         "triangleCount": 615
       },
-      "ver": "1.1.1",
+      "ver": "1.1.0",
       "imported": true,
       "files": [
         ".bin",
@@ -123,7 +123,7 @@
         "gltfIndex": 6,
         "triangleCount": 1237
       },
-      "ver": "1.1.1",
+      "ver": "1.1.0",
       "imported": true,
       "files": [
         ".bin",
@@ -141,7 +141,7 @@
         "gltfIndex": 7,
         "triangleCount": 1245
       },
-      "ver": "1.1.1",
+      "ver": "1.1.0",
       "imported": true,
       "files": [
         ".bin",
@@ -159,7 +159,7 @@
         "gltfIndex": 8,
         "triangleCount": 926
       },
-      "ver": "1.1.1",
+      "ver": "1.1.0",
       "imported": true,
       "files": [
         ".bin",
@@ -177,7 +177,7 @@
         "gltfIndex": 9,
         "triangleCount": 2027
       },
-      "ver": "1.1.1",
+      "ver": "1.1.0",
       "imported": true,
       "files": [
         ".bin",
@@ -195,7 +195,7 @@
         "gltfIndex": 10,
         "triangleCount": 212
       },
-      "ver": "1.1.1",
+      "ver": "1.1.0",
       "imported": true,
       "files": [
         ".bin",
@@ -213,7 +213,7 @@
         "gltfIndex": 11,
         "triangleCount": 48
       },
-      "ver": "1.1.1",
+      "ver": "1.1.0",
       "imported": true,
       "files": [
         ".bin",
@@ -253,7 +253,7 @@
       "userData": {
         "gltfIndex": 0
       },
-      "ver": "1.0.14",
+      "ver": "1.0.12",
       "imported": true,
       "files": [
         ".json"
@@ -293,8 +293,8 @@
         "eced0a64-80ee-48b9-a77d-3af9ec88ffe9@7d6ab"
       ],
       "materials": [
-        "53ff9099-5cc8-4cb0-adc6-20371b1b192d",
-        "d1e7cbfb-96fa-4f19-950e-dcd151e4fd92"
+        "039716a0-5aff-4c4c-b258-142d75274e98",
+        "3abed1fb-4203-4698-a9ed-01345f8abb05"
       ],
       "scenes": [
         "eced0a64-80ee-48b9-a77d-3af9ec88ffe9@5f786"
