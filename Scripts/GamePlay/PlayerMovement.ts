@@ -41,6 +41,9 @@ export class PlayerMovement extends BaseMovement {
     forwardContent: boolean = true;
 
     @property({ group: { name: 'Settings' , displayOrder: 1} }) 
+    ighoreForwardContentOnStart: boolean = false;
+
+    @property({ group: { name: 'Settings' , displayOrder: 1} }) 
     resetRotationOnMouseDown: boolean = true;
 
     @property({ group: { name: 'Effect' , displayOrder: 3}, type: ParticleSystem }) 
@@ -75,7 +78,7 @@ export class PlayerMovement extends BaseMovement {
         this.positionModule.startGame(this.startIndex);
         this.rotationModule.startGame(this.startIndex);
 
-        if(this.forwardContent) this.setRotation();
+        if(this.forwardContent && !this.ighoreForwardContentOnStart) this.setRotation();
         this.cameraFollow.onStart(this);
         this.smokeEffect1.active = true;
         this.smokeEffect2.active = true;
