@@ -21,8 +21,12 @@ export class BotPositionModule extends BaseGraphicCarPositionModule {
     updateCarGraphic(dt: number): void {
         var roadPoint = MapSplineManager.current.roadPoints[this.movement.currentIndex];
         var roadLateral = MapSplineManager.current.roadLaterals[roadPoint.lateralIndex];
+        var ignoreControl = roadPoint.ignoreControl;
         var offset = roadLateral.maxOffset;
-        this.graphicLocalPosition.x = clamp(this.graphicLocalPosition.x, -offset, offset);
+        if (!ignoreControl && !this.movement.isFallOutOfRoad && !this.movement.isCheckGround)  this.graphicLocalPosition.x = clamp(this.graphicLocalPosition.x, -offset, offset);
+        var radius = roadLateral.radius;
+        if (radius > 0 && !this.movement.isFallOutOfRoad) return;
+        this.updateForceFly();
         Vec3.lerp(this.positionGraphic.position,this.graphicLocalPosition, this.positionGraphic.position, 0.65);
         this.movement.updateGraphicLocalPos();
         this.movement.materialWheel(dt);
