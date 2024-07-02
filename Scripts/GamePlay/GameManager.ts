@@ -7,7 +7,6 @@ const { ccclass, property } = _decorator;
 
 @ccclass('GameManager')
 export class GameManager extends Component {
-
     @property({ type: [BotMovement] })
     botMovementInScene: BotMovement[] = [];
 
@@ -28,12 +27,15 @@ export class GameManager extends Component {
     @property(StartView)
     StartView : StartView;
 
-
     @property(AudioSource)
     backgroundMusic: AudioSource = null;
 
+    @property({type: Node})
+    playerMovement: Node;
+
     firstClick : boolean = false;
     onLoad() {
+        PlayerMovement.current = this.playerMovement.getComponent(PlayerMovement);
         input.on(Input.EventType.TOUCH_START, this.onMouseDown, this);
         input.on(Input.EventType.TOUCH_MOVE, this.onMouseMove, this);
         this.hasAI = this.botMovementInScene.length > 0;
