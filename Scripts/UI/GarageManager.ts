@@ -33,9 +33,9 @@ export class GarageManager extends Component {
     currentAnimation: number = -1;
 
     currentEngineIndex = -1;
-    currentSpoilerIndex = -1;
+    public currentSpoilerIndex = -1;
     currentWheelIndex = -1;
-    currentColorIndex = -1;
+    public currentColorIndex = -1;
 
     protected update(dt: number): void {
         if(!this.isRotate) return;
@@ -145,7 +145,9 @@ export class GarageManager extends Component {
         Tween.stopAllByTag(100);
         this.isRotate = false;
         tween(this.car)
-            .to(0.15, {eulerAngles: new Vec3(0, -45, 0)},{easing: "sineOut", onComplete: () => this.materialCar.setProperty("matcapTexture",this.textureColor[index])})
+            .to(0.15, {eulerAngles: new Vec3(0, -45, 0)},{easing: "sineOut", onComplete: () => {
+                this.currentColorIndex = index;
+                this.materialCar.setProperty("matcapTexture",this.textureColor[index])}})
             .to(0.1, {scale: new Vec3(1.02, 0.98,1)}, {easing: "backOut"})
             .to(0.075, {scale: Vec3.ONE}, {easing: 'backOut', onComplete: ()=> this.isRotate = true})
             .tag(100)
