@@ -1,4 +1,4 @@
-import { _decorator, Button, Color, Component, Label, Node, Scene, Size, Sprite, Tween, tween, UIOpacity, UITransform, Vec3, view } from 'cc';
+import { _decorator, Button, Camera, Color, Component, Label, Node, Scene, Size, Sprite, Tween, tween, UIOpacity, UITransform, Vec3, view } from 'cc';
 import { GameManager } from '../GamePlay/GameManager';
 import { CanvasScaler } from './CanvasScaler';
 import { screen } from 'cc'
@@ -37,6 +37,12 @@ export class GarageView extends Component {
 
     @property(UIOpacity)
     shield: UIOpacity;
+
+    @property(UIOpacity)
+    allView: UIOpacity;
+
+    @property(Camera)
+    camera: Camera;
 
     private currentSize: Size;
     
@@ -118,5 +124,17 @@ export class GarageView extends Component {
         }
 
         this.garageProperties.upgradeProperties(this.garageManager.currentEngineIndex, this.garageManager.currentWheelIndex, this.garageManager.currentSpoilerIndex);
+    }
+
+    public closeGarage (): void {
+        this.contentView.active = true;
+        this.garage.active = false;
+        GameManager.instance.showCar();
+        this.allView.opacity = 225;
+        tween(this.allView)
+            .to(0.5,{opacity: 0}, {onComplete: () => 
+                this.node.active = false
+            })
+            .start();
     }
 }

@@ -52,6 +52,15 @@ export class GameManager extends Component {
         PlayerMovement.current.node.parent.active = false;
     }
 
+    showCar(){
+        for (let i = 0; i < this.botMovementInScene.length; i++) {
+            var element = this.botMovementInScene[i];
+            element.node.parent.active = true;
+        }
+
+        PlayerMovement.current.node.parent.active = true;
+    }
+
     synchronizeCamera() {
         this.effectCamera.orthoHeight = this.mainCamera.orthoHeight;
     }
