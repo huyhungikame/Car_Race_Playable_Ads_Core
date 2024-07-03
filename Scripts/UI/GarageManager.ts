@@ -120,6 +120,7 @@ export class GarageManager extends Component {
             },{easing: "backOut"})
             .tag(102)
             .start();
+            //
     }
 
     closeCabinLib(): void {
