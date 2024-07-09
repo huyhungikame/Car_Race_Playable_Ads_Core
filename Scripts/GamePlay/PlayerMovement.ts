@@ -1,4 +1,4 @@
-import { _decorator, CCBoolean, clamp, EventTouch, game, Input, input, Node, Quat, Vec2, Vec3, ParticleSystem, Camera, lerp, CCFloat, CCInteger, math, clamp01 } from 'cc';
+import { _decorator, CCBoolean, clamp, EventTouch, game, Input, input, Node, Quat, Vec2, Vec3, ParticleSystem, Camera, lerp, CCFloat, CCInteger, math, clamp01, animation } from 'cc';
 import { BaseMovement } from './BaseMovement';
 import { GameManager } from './GameManager';
 import MapSplineManager from './MapSplineManager';
@@ -69,6 +69,11 @@ export class PlayerMovement extends BaseMovement {
     minMaxDelta: number = 0.035;
     lastDeltalInput: number = 0;
 
+    @property(animation.AnimationController)
+    animationPlayer: animation.AnimationController;
+
+    isMoving: boolean = false;
+
     start() {
         PlayerMovement.current = this;
         input.on(Input.EventType.TOUCH_END, this.onMouseUp, this);
@@ -82,6 +87,8 @@ export class PlayerMovement extends BaseMovement {
         this.cameraFollow.onStart(this);
         this.smokeEffect1.active = true;
         this.smokeEffect2.active = true;
+        this.animationPlayer.setValue("default", true);
+        this.animationPlayer.setValue("ground", true);
     }
 
     public getStartRotation(): Quat {
@@ -218,6 +225,23 @@ export class PlayerMovement extends BaseMovement {
         this.currentSpeed = clamp(this.currentSpeed, -this.maxSpeed, this.maxSpeed);
 
         this.rotationModule.removeRotate(this.isMouseDown);
+
+        if (this.currentSpeed > 0)
+        {
+            if (!this.isMoving)
+            {
+                this.animationPlayer.setValue("ride", true);
+                this.isMoving = true;
+            }
+        }
+        else
+        {
+            if (this.isMoving)
+            {
+                this.animationPlayer.setValue("ride", false);
+                this.isMoving = false;
+            }
+        }
     }
 
     //#endregion

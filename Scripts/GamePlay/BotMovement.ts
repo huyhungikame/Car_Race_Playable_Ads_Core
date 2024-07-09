@@ -1,4 +1,4 @@
-import { _decorator, CCFloat, CCInteger, clamp, clamp01, game, lerp, math, Vec2, Vec3 } from 'cc';
+import { _decorator, animation, CCFloat, CCInteger, clamp, clamp01, game, lerp, math, Vec2, Vec3 } from 'cc';
 import { BaseMovement } from './BaseMovement';
 import MapSplineManager from './MapSplineManager';
 const { ccclass, property } = _decorator;
@@ -44,16 +44,39 @@ export class BotMovement extends BaseMovement {
     isFirstLoop: boolean = true;
     speedChangeSpeed: number = 0;
 
+    @property(animation.AnimationController)
+    animationPlayer: animation.AnimationController;
+
+    isMoving: boolean = false;
+
     start() {
         this.isFirstLoop = true;
         this.positionModule.startGame(this.startIndex);
         this.rotationModule.startGame(this.startIndex);
+        this.animationPlayer.setValue("default", true);
+        this.animationPlayer.setValue("ground", true);
     }
 
     protected update(dt: number): void {
         if (!this.isStartGame) return;
         this.timeActive += dt;
         if (this.onDie) return;
+        if (this.currentSpeed > 0)
+        {
+            if (!this.isMoving)
+            {
+                this.animationPlayer.setValue("ride", true);
+                this.isMoving = true;
+            }
+        }
+        else
+        {
+            if (this.isMoving)
+            {
+                this.animationPlayer.setValue("ride", false);
+                this.isMoving = false;
+            }
+        }
         this.speed(dt);
         this.rotate(dt);
         this.setPosition(dt);
