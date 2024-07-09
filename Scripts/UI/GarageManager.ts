@@ -23,7 +23,7 @@ export class GarageManager extends Component {
 
     @property(Material)
     materialCar: Material;
-
+//
     @property([Texture2D])
     textureColor: Texture2D[] = [];
 

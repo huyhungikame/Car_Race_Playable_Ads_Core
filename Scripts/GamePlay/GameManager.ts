@@ -54,8 +54,9 @@ export class GameManager extends Component {
 
     showCar(){
         for (let i = 0; i < this.botMovementInScene.length; i++) {
-            var element = this.botMovementInScene[i];
-            element.node.parent.active = true;
+            if(this.botMovementInScene[i] != null){
+                this.botMovementInScene[i].node.parent.active = true;
+            }
         }
 
         PlayerMovement.current.node.parent.active = true;
@@ -67,18 +68,21 @@ export class GameManager extends Component {
     
     onMouseDown(event: EventTouch) {
         if(StartView.current != null){
-            if(!this.firstClick){
-                //console.log("GameManager Start");
-                this.backgroundMusic.play();
-                this.backgroundMusic.volume = 1;
-                this.firstClick = true;
-            }
+            this.ActionFirstClick();
             GameManager.mousePos = event.getLocation();
             this.uiStartGame();
             input.off(Input.EventType.TOUCH_START, this.onMouseDown, this);
         }
 
         
+    }
+    ActionFirstClick(){
+        if(!this.firstClick){
+            //console.log("GameManager Start");
+            this.backgroundMusic.play();
+            this.backgroundMusic.volume = 1;
+            this.firstClick = true;
+        }
     }
 
     onMouseMove(event: EventTouch) {

@@ -21,7 +21,8 @@ export class GarageGroup extends Component {
     protected onEnable(): void {
         for (let i = 0; i < this.buttonMember.length; i++) {
             var element = this.buttonMember[i];
-            if(element.isSelect) element.onClick();
+            if(element.isSelect) element.eventButton();
         }
     }
+    
 }

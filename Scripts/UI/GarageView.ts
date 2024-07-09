@@ -87,6 +87,7 @@ export class GarageView extends Component {
     }
 
     onClickToggle (event: Event, customEventData: string) {
+     GameManager.instance.ActionFirstClick();
        for (let i = 0; i < this.buttonToggle.length; i++) {
         var element = this.buttonToggle[i];
         var isTap = i.toString() == customEventData;
@@ -122,7 +123,6 @@ export class GarageView extends Component {
             default:
                 break;
         }
-
         this.garageProperties.upgradeProperties(this.garageManager.currentEngineIndex, this.garageManager.currentWheelIndex, this.garageManager.currentSpoilerIndex);
     }
 
