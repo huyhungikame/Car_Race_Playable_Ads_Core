@@ -64,7 +64,7 @@ export class GameManager extends Component {
     synchronizeCamera() {
         this.effectCamera.orthoHeight = this.mainCamera.orthoHeight;
     }
-    
+    //
     onMouseDown(event: EventTouch) {
         if(StartView.current != null){
             if(!this.firstClick){
