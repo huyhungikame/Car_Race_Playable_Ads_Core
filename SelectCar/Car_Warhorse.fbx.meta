@@ -1,0 +1,170 @@
+{
+  "ver": "2.3.4",
+  "importer": "fbx",
+  "imported": true,
+  "uuid": "64136d32-a4d4-4d7f-bfdc-6c452b47085d",
+  "files": [],
+  "subMetas": {
+    "15557": {
+      "importer": "gltf-material",
+      "uuid": "64136d32-a4d4-4d7f-bfdc-6c452b47085d@15557",
+      "displayName": "",
+      "id": "15557",
+      "name": "CarBody.material",
+      "userData": {
+        "gltfIndex": 1
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "0ac5c": {
+      "importer": "gltf-mesh",
+      "uuid": "64136d32-a4d4-4d7f-bfdc-6c452b47085d@0ac5c",
+      "displayName": "",
+      "id": "0ac5c",
+      "name": "Car22_LOD0_Material0.mesh",
+      "userData": {
+        "gltfIndex": 0
+      },
+      "ver": "1.1.0",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "7c09f": {
+      "importer": "gltf-embeded-image",
+      "uuid": "64136d32-a4d4-4d7f-bfdc-6c452b47085d@7c09f",
+      "displayName": "",
+      "id": "7c09f",
+      "name": "alpha_texture.image",
+      "userData": {
+        "gltfIndex": 0
+      },
+      "ver": "1.0.3",
+      "imported": true,
+      "files": [
+        ".json",
+        ".png"
+      ],
+      "subMetas": {}
+    },
+    "43a9c": {
+      "importer": "texture",
+      "uuid": "64136d32-a4d4-4d7f-bfdc-6c452b47085d@43a9c",
+      "displayName": "",
+      "id": "43a9c",
+      "name": "alpha_texture.texture",
+      "userData": {
+        "wrapModeS": "repeat",
+        "wrapModeT": "repeat",
+        "minfilter": "linear",
+        "magfilter": "linear",
+        "mipfilter": "none",
+        "anisotropy": 0,
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "64136d32-a4d4-4d7f-bfdc-6c452b47085d@7c09f"
+      },
+      "ver": "1.0.22",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "7d6ab": {
+      "importer": "texture",
+      "uuid": "64136d32-a4d4-4d7f-bfdc-6c452b47085d@7d6ab",
+      "displayName": "",
+      "id": "7d6ab",
+      "name": "base_color_texture.texture",
+      "userData": {
+        "wrapModeS": "repeat",
+        "wrapModeT": "repeat",
+        "minfilter": "linear",
+        "magfilter": "linear",
+        "mipfilter": "none",
+        "anisotropy": 0,
+        "isUuid": false,
+        "imageUuidOrDatabaseUri": "db://assets/Core/Car_Race_Playable_Ads_Core/SelectCar/Warhorse.png"
+      },
+      "ver": "1.0.22",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "b3b37": {
+      "importer": "gltf-material",
+      "uuid": "64136d32-a4d4-4d7f-bfdc-6c452b47085d@b3b37",
+      "displayName": "",
+      "id": "b3b37",
+      "name": "Light.material",
+      "userData": {
+        "gltfIndex": 0
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "8e955": {
+      "importer": "gltf-scene",
+      "uuid": "64136d32-a4d4-4d7f-bfdc-6c452b47085d@8e955",
+      "displayName": "",
+      "id": "8e955",
+      "name": "Car_Warhorse.prefab",
+      "userData": {
+        "gltfIndex": 0
+      },
+      "ver": "1.0.12",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "imageMetas": [
+      {
+        "name": "alpha_texture",
+        "uri": "64136d32-a4d4-4d7f-bfdc-6c452b47085d@7c09f"
+      },
+      {
+        "name": "base_color_texture",
+        "uri": "db://assets/Core/Car_Race_Playable_Ads_Core/SelectCar/Warhorse.png"
+      }
+    ],
+    "fbx": {
+      "smartMaterialEnabled": true
+    },
+    "redirect": "64136d32-a4d4-4d7f-bfdc-6c452b47085d@8e955",
+    "assetFinder": {
+      "meshes": [
+        "64136d32-a4d4-4d7f-bfdc-6c452b47085d@0ac5c"
+      ],
+      "skeletons": [],
+      "textures": [
+        "64136d32-a4d4-4d7f-bfdc-6c452b47085d@43a9c",
+        "64136d32-a4d4-4d7f-bfdc-6c452b47085d@7d6ab"
+      ],
+      "materials": [
+        "64136d32-a4d4-4d7f-bfdc-6c452b47085d@b3b37",
+        "64136d32-a4d4-4d7f-bfdc-6c452b47085d@15557"
+      ],
+      "scenes": [
+        "64136d32-a4d4-4d7f-bfdc-6c452b47085d@8e955"
+      ]
+    }
+  }
+}

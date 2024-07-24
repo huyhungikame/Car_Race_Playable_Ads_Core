@@ -1,4 +1,4 @@
-import { _decorator, Button, Camera, Color, Component, Label, Node, Scene, Size, Sprite, Tween, tween, UIOpacity, UITransform, Vec3, view } from 'cc';
+import { _decorator, Button, Camera, Color, Component, Label, Node, Scene, Size, Sprite, Tween, tween, UIOpacity, UITransform, Vec3, view, Widget } from 'cc';
 import { GameManager } from '../GamePlay/GameManager';
 import { CanvasScaler } from './CanvasScaler';
 import { screen } from 'cc'
@@ -91,39 +91,39 @@ export class GarageView extends Component {
         var element = this.buttonToggle[i];
         var isTap = i.toString() == customEventData;
         element.interactable = !isTap;
-        var uiTransform = element.getComponent(UITransform);
+        var uiTransform = element.getComponent(Widget);
         Tween.stopAllByTarget(uiTransform);
-        this.nodeView[i].active = isTap;
+        // this.nodeView[i].active = isTap;
         if(isTap){
             tween(uiTransform)
-                .to(0.15, {contentSize: new Size(uiTransform.contentSize.x, 69.5)})
+                .to(0.15, {verticalCenter: -115})
                 .start(); 
         }
         else{
-            uiTransform.contentSize = new Size(uiTransform.contentSize.x, 60);
+            uiTransform.verticalCenter = -135;
+        }
+
+        if(isTap) {
+            this.garageManager.enableCar(i);
+            this.onClick(i);
         }
        }
     }
 
-    onClick(index: number, indexButton: number): void {
+    onClick(index: number): void {
         switch (index) {
             case 0:
-                this.garageManager.enableEngineColorAnimation(indexButton);
+                this.garageProperties.upgradeProperties(1, 2, 0);
                 break;
             case 1:
-                this.garageManager.enableEngineAnimation(indexButton);
+                this.garageProperties.upgradeProperties(1, 2, 2);
                 break;
             case 2:
-                this.garageManager.enableEngineWheelAnimation(indexButton);
+                this.garageProperties.upgradeProperties(5, 3, 3);
                 break;
-            case 3: 
-                this.garageManager.enableEngineSpolerAnimation(indexButton);
-                break
             default:
                 break;
         }
-
-        this.garageProperties.upgradeProperties(this.garageManager.currentEngineIndex, this.garageManager.currentWheelIndex, this.garageManager.currentSpoilerIndex);
     }
 
     public closeGarage (): void {

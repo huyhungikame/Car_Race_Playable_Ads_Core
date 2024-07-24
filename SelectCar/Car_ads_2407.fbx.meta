@@ -1,0 +1,268 @@
+{
+  "ver": "2.3.4",
+  "importer": "fbx",
+  "imported": true,
+  "uuid": "a70158a4-f6d1-41cb-98b9-1db1c7aaf9f2",
+  "files": [],
+  "subMetas": {
+    "15557": {
+      "importer": "gltf-material",
+      "uuid": "a70158a4-f6d1-41cb-98b9-1db1c7aaf9f2@15557",
+      "displayName": "",
+      "id": "15557",
+      "name": "CarBody.material",
+      "userData": {
+        "gltfIndex": 0
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "0ac5c": {
+      "importer": "gltf-mesh",
+      "uuid": "a70158a4-f6d1-41cb-98b9-1db1c7aaf9f2@0ac5c",
+      "displayName": "",
+      "id": "0ac5c",
+      "name": "Car22_LOD0_Material0.mesh",
+      "userData": {
+        "gltfIndex": 0
+      },
+      "ver": "1.1.0",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "0f9ab": {
+      "importer": "gltf-mesh",
+      "uuid": "a70158a4-f6d1-41cb-98b9-1db1c7aaf9f2@0f9ab",
+      "displayName": "",
+      "id": "0f9ab",
+      "name": "Car18_LOD0_Material0.mesh",
+      "userData": {
+        "gltfIndex": 1
+      },
+      "ver": "1.1.0",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "dade4": {
+      "importer": "gltf-embeded-image",
+      "uuid": "a70158a4-f6d1-41cb-98b9-1db1c7aaf9f2@dade4",
+      "displayName": "",
+      "id": "dade4",
+      "name": "alpha_texture-1.image",
+      "userData": {
+        "gltfIndex": 1
+      },
+      "ver": "1.0.3",
+      "imported": true,
+      "files": [
+        ".json",
+        ".png"
+      ],
+      "subMetas": {}
+    },
+    "0a1ef": {
+      "importer": "texture",
+      "uuid": "a70158a4-f6d1-41cb-98b9-1db1c7aaf9f2@0a1ef",
+      "displayName": "",
+      "id": "0a1ef",
+      "name": "base_color_texture-0.texture",
+      "userData": {
+        "wrapModeS": "repeat",
+        "wrapModeT": "repeat",
+        "minfilter": "linear",
+        "magfilter": "linear",
+        "mipfilter": "none",
+        "anisotropy": 0,
+        "isUuid": false,
+        "imageUuidOrDatabaseUri": "db://assets/Core/Car_Race_Playable_Ads_Core/SelectCar/Warhorse.png"
+      },
+      "ver": "1.0.22",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "3fb77": {
+      "importer": "texture",
+      "uuid": "a70158a4-f6d1-41cb-98b9-1db1c7aaf9f2@3fb77",
+      "displayName": "",
+      "id": "3fb77",
+      "name": "alpha_texture-1.texture",
+      "userData": {
+        "wrapModeS": "repeat",
+        "wrapModeT": "repeat",
+        "minfilter": "linear",
+        "magfilter": "linear",
+        "mipfilter": "none",
+        "anisotropy": 0,
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "a70158a4-f6d1-41cb-98b9-1db1c7aaf9f2@dade4"
+      },
+      "ver": "1.0.22",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "b8518": {
+      "importer": "texture",
+      "uuid": "a70158a4-f6d1-41cb-98b9-1db1c7aaf9f2@b8518",
+      "displayName": "",
+      "id": "b8518",
+      "name": "base_color_texture-2.texture",
+      "userData": {
+        "wrapModeS": "repeat",
+        "wrapModeT": "repeat",
+        "minfilter": "linear",
+        "magfilter": "linear",
+        "mipfilter": "none",
+        "anisotropy": 0,
+        "isUuid": false,
+        "imageUuidOrDatabaseUri": "db://assets/Core/Car_Race_Playable_Ads_Core/SelectCar/spider.png"
+      },
+      "ver": "1.0.22",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "b3b37": {
+      "importer": "gltf-material",
+      "uuid": "a70158a4-f6d1-41cb-98b9-1db1c7aaf9f2@b3b37",
+      "displayName": "",
+      "id": "b3b37",
+      "name": "Light.material",
+      "userData": {
+        "gltfIndex": 1
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "4ff8a": {
+      "importer": "gltf-material",
+      "uuid": "a70158a4-f6d1-41cb-98b9-1db1c7aaf9f2@4ff8a",
+      "displayName": "",
+      "id": "4ff8a",
+      "name": "CarBody_02.material",
+      "userData": {
+        "gltfIndex": 2
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "b6716": {
+      "importer": "gltf-scene",
+      "uuid": "a70158a4-f6d1-41cb-98b9-1db1c7aaf9f2@b6716",
+      "displayName": "",
+      "id": "b6716",
+      "name": "Car_ads_2407.prefab",
+      "userData": {
+        "gltfIndex": 0
+      },
+      "ver": "1.0.12",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "imageMetas": [
+      {
+        "name": "base_color_texture",
+        "uri": "db://assets/Core/Car_Race_Playable_Ads_Core/SelectCar/Warhorse.png"
+      },
+      {
+        "name": "alpha_texture",
+        "uri": "a70158a4-f6d1-41cb-98b9-1db1c7aaf9f2@dade4"
+      },
+      {
+        "name": "base_color_texture",
+        "uri": "db://assets/Core/Car_Race_Playable_Ads_Core/SelectCar/spider.png"
+      }
+    ],
+    "fbx": {
+      "smartMaterialEnabled": true
+    },
+    "redirect": "a70158a4-f6d1-41cb-98b9-1db1c7aaf9f2@b6716",
+    "assetFinder": {
+      "meshes": [
+        "a70158a4-f6d1-41cb-98b9-1db1c7aaf9f2@0ac5c",
+        "a70158a4-f6d1-41cb-98b9-1db1c7aaf9f2@0f9ab"
+      ],
+      "skeletons": [],
+      "textures": [
+        "a70158a4-f6d1-41cb-98b9-1db1c7aaf9f2@0a1ef",
+        "a70158a4-f6d1-41cb-98b9-1db1c7aaf9f2@3fb77",
+        "a70158a4-f6d1-41cb-98b9-1db1c7aaf9f2@b8518"
+      ],
+      "materials": [
+        "a70158a4-f6d1-41cb-98b9-1db1c7aaf9f2@15557",
+        "a70158a4-f6d1-41cb-98b9-1db1c7aaf9f2@b3b37",
+        "a70158a4-f6d1-41cb-98b9-1db1c7aaf9f2@4ff8a"
+      ],
+      "scenes": [
+        "a70158a4-f6d1-41cb-98b9-1db1c7aaf9f2@b6716"
+      ]
+    },
+    "materials": {
+      "a70158a4-f6d1-41cb-98b9-1db1c7aaf9f2@4ff8a": {
+        "__type__": "cc.Material",
+        "_name": "",
+        "_objFlags": 0,
+        "_native": "",
+        "_effectAsset": {
+          "__uuid__": "64ce838f-38be-4189-aa5a-e7de1bbb58ad",
+          "__expectedType__": "cc.EffectAsset"
+        },
+        "_techIdx": 0,
+        "_defines": [
+          {}
+        ],
+        "_states": [
+          {
+            "rasterizerState": {},
+            "depthStencilState": {},
+            "blendState": {
+              "targets": [
+                {}
+              ]
+            }
+          }
+        ],
+        "_props": [
+          {
+            "mainTexture": {
+              "__uuid__": "a70158a4-f6d1-41cb-98b9-1db1c7aaf9f2@b8518",
+              "__expectedType__": "cc.Texture2D"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

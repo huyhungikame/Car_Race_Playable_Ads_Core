@@ -8,24 +8,22 @@ export class SpoilerInGame extends Component {
     garageManager: GarageManager;
 
     @property([Texture2D])
-    textureColor: Texture2D[] = [];
+    texture: Texture2D[] = [];
 
     @property(Material)
     materialCar: Material;
 
     @property([Node])
-    spoiler: Node[] = [];
+    car: Node[] = [];
 
     protected onEnable(): void {
-        var index = this.garageManager.currentSpoilerIndex;
-        for (let i = 0; i < this.spoiler.length; i++) {
-            var element = this.spoiler[i];
+        var index = this.garageManager.currentCarIndex;
+        for (let i = 0; i < this.car.length; i++) {
+            var element = this.car[i];
             element.active = index == i;
         } 
 
-        var indexTexture = this.garageManager.currentColorIndex;
-        if(indexTexture == -1) indexTexture = 0;
-        this.materialCar.setProperty("matcapTexture",this.textureColor[indexTexture])
+        this.materialCar.setProperty("mainTexture",this.texture[index])
     }
 }
 
