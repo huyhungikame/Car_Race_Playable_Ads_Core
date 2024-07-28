@@ -165,6 +165,8 @@
       "scenes": [
         "64136d32-a4d4-4d7f-bfdc-6c452b47085d@8e955"
       ]
-    }
+    },
+    "tangents": 1,
+    "allowMeshDataAccess": false
   }
 }

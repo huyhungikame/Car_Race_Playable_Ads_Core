@@ -96,11 +96,13 @@ export class GarageView extends Component {
         // this.nodeView[i].active = isTap;
         if(isTap){
             tween(uiTransform)
-                .to(0.15, {verticalCenter: -115})
+                .to(0.2, {verticalCenter: -115}, {easing : 'sineIn'})
                 .start(); 
         }
         else{
-            uiTransform.verticalCenter = -135;
+            tween(uiTransform)
+                .to(0.2, {verticalCenter: -135},{easing : 'smooth'})
+                .start(); 
         }
 
         if(isTap) {
