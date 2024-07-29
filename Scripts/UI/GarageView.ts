@@ -4,6 +4,7 @@ import { CanvasScaler } from './CanvasScaler';
 import { screen } from 'cc'
 import { GarageManager } from './GarageManager';
 import { GaragePropeties } from './GaragePropeties';
+import { AudioManager, AudioType } from '../../../../Scripts/Template/PaManager/AudioManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('GarageView')
@@ -31,6 +32,16 @@ export class GarageView extends Component {
 
     @property({ group: { name: 'Content' , displayOrder: 1}, type: [Node] }) 
     nodeView: Node[] = [];
+    
+    @property({type : Node, group : "Tutorial"})
+    handTutorial : Node;
+
+    @property({ group : "Tutorial"})
+    timeMove : number = 1;
+
+    @property({ group : "Tutorial"})
+    delayTutorial : number = 0;
+
 
     @property(GaragePropeties)
     garageProperties: GaragePropeties;
@@ -58,6 +69,24 @@ export class GarageView extends Component {
         tween(this.shield)
             .to(0.5,{opacity: 0}, {onComplete: () => this.shield.node.active = false})
             .start();
+        this.Tutorial();
+    }
+
+    Tutorial(){
+        tween(this.handTutorial)
+        .to(this.timeMove, {worldPosition: this.buttonToggle[0].node.worldPosition} , {easing: 'backInOut'} )
+        .delay(this.delayTutorial)
+        .to(this.timeMove, {worldPosition: this.buttonToggle[1].node.worldPosition} , {easing: "backInOut"})
+        .delay(this.delayTutorial)
+        .to(this.timeMove, {worldPosition: this.buttonToggle[2].node.worldPosition} , {easing: "backInOut"})
+        .delay(this.delayTutorial)
+        .union()
+        .repeatForever()
+        .start();
+    }
+
+    DeactiveTutorial(){
+        this.handTutorial.active = false;
     }
 
     protected lateUpdate(_dt: number): void {
@@ -91,6 +120,8 @@ export class GarageView extends Component {
         var element = this.buttonToggle[i];
         var isTap = i.toString() == customEventData;
         element.interactable = !isTap;
+        GameManager.instance.ActionFirstClick();
+        AudioManager.instance.PlayAudio(AudioType.ButtonClick)
         var uiTransform = element.getComponent(Widget);
         Tween.stopAllByTarget(uiTransform);
         // this.nodeView[i].active = isTap;

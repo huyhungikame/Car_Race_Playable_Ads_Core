@@ -27,6 +27,6 @@ export class GarageButton extends Component {
         this.group.disableAllButton();
         this.isSelect = true;
         this.select.active = true;
-        this.garageView.onClick(this.index, this.indexButton);
+        this.garageView.onClick(this.index);
     }
 }

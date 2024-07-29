@@ -3,6 +3,7 @@ import { BotMovement } from './BotMovement';
 import { PlayerMovement } from './PlayerMovement';
 import { PlayableAdsManager } from '../../../../TemplatePA/PlayableAdsManager';
 import { StartView } from '../UI/StartView';
+import { GarageView } from '../UI/GarageView';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameManager')
@@ -18,8 +19,8 @@ export class GameManager extends Component {
     @property({ type: Camera })
     mainCamera : Camera = null;
 
-    // @property({type: Node})
-    // garageView: Node;
+    @property({type: GarageView})
+    garageView: GarageView;
 
     @property({ type: Camera })
     effectCamera : Camera = null;
@@ -66,19 +67,23 @@ export class GameManager extends Component {
     }
     
     onMouseDown(event: EventTouch) {
+        this.ActionFirstClick();
         if(StartView.current != null){
-            if(!this.firstClick){
-                //console.log("GameManager Start");
-                this.backgroundMusic.play();
-                this.backgroundMusic.volume = 1;
-                this.firstClick = true;
-            }
             GameManager.mousePos = event.getLocation();
             this.uiStartGame();
             input.off(Input.EventType.TOUCH_START, this.onMouseDown, this);
         }
+    }
 
-        
+    ActionFirstClick(){
+        if(!this.firstClick){
+            if(this.garageView != null){
+                this.garageView.DeactiveTutorial();
+            }
+            this.backgroundMusic.play();
+            this.backgroundMusic.volume = 1;
+            this.firstClick = true;
+        }
     }
 
     onMouseMove(event: EventTouch) {

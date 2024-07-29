@@ -80,9 +80,11 @@ export class CompletedView extends Component {
 
     }
     protected onEnable(): void {
-        // setTimeout(() => {
-        //     PlayableAdsManager.instance.OpenURL_Button();
-        // }, 1000);
+        if(!this.openGarage){
+            setTimeout(() => {
+                PlayableAdsManager.instance.OpenURL_Button();
+            }, 1500);
+        }
     }
 
     protected start(): void {
